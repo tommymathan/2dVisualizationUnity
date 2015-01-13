@@ -92,6 +92,7 @@ public class VisZero : MonoBehaviour {
 			Vector3 point1 = new Vector3(orginX, orginY, 0f);
 			Vector3 point2=  new Vector3((givenData[i+2]+orginX), (givenData[i+3]+orginY), 0f);
 
+			//Experimental code attempting to draw arrows
 			GL.End();
 			drawArrowHead(point1,point2);
 			GL.Begin(GL.LINES);
@@ -99,9 +100,11 @@ public class VisZero : MonoBehaviour {
 		}
 
 	}
+
+	//Tony's arrow drawing method 
 	void drawArrowHead(Vector3 point1, Vector3 point2)
 	{
-		float arrowHeadSize = 0.03f;
+		float arrowHeadSize = 0.3f;
 		
 		//vector along line
 		Vector3 vec = new Vector3();
@@ -130,6 +133,7 @@ public class VisZero : MonoBehaviour {
 		
 		
 		GL.Begin(GL.TRIANGLES);
+		GL.Color (Color.red);
 		GL.Vertex3(point2.x, point2.y, 0.0f);
 		GL.Vertex3(point4.x, point4.y, 0.0f);
 		GL.Vertex3(point5.x, point5.y, 0.0f);
