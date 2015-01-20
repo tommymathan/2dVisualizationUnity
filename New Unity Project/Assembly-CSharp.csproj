@@ -51,8 +51,11 @@
      <Compile Include="Assets\Scripts\DebugGraphScript.cs" />
      <Compile Include="Assets\Scripts\DebugUI.cs" />
      <Compile Include="Assets\Scripts\Parser.cs" />
+     <Compile Include="Assets\Scripts\SafeDataStandard.cs" />
      <Compile Include="Assets\Scripts\ShiftedCordinateDrawer.cs" />
+     <Compile Include="Assets\Scripts\Utility.cs" />
      <Compile Include="Assets\Scripts\VisZero.cs" />
+     <Compile Include="Assets\Scripts\Visualization\ParentVisualization.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>E:/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/4.6.1/UnityEngine.UI.dll</HintPath>
  </Reference>
