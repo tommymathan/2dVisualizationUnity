@@ -4,6 +4,7 @@ using System.Linq;
 
 public class CollocatedVis : Visualization {
 
+
 	//Debug code
 	static float givenXMax;
 	static float givenYMax; // x and y max are used to determine camera perspective size
@@ -12,17 +13,15 @@ public class CollocatedVis : Visualization {
 
 	// Use this for initialization
 	void Start () {
-
-		
-
 		//Debug code
 		givenXMax = 10;
 		givenYMax = 10;
 		List<float> test = new List<float> (new float[] {0,0,1,1,3,2,5,2,6,0,7,0});
-		for (int i = 0; i < 100; i++) {
-			test.Add ((Random.value *10) % 10);
-		}
-		utilityObject.GetComponent<Utility>().AnimateContiguousLineSegments(.02f, test);
+		//for (int i = 0; i < 100; i++) {
+		//	test.Add ((Random.value *10) % 10);
+		//}
+		//utilityObject.GetComponent<Utility>().AnimateContiguousLineSegments(.02f, test);
+		visMeshObject = utilityObject.GetComponent<Utility>().DrawContiguousLineSegments(0.02f, test);
 		//////////////////////////
 
 		//gameObject.GetComponent<Camera> ().orthographicSize = 5;

@@ -4,10 +4,11 @@ using System.Linq;
 
 public class Utility : MonoBehaviour
 {
-		private Renderer meshRenderer;
-		private MeshFilter meshFilter; // used for mesh rendering
+		public GameObject currentVisObject;//used to store meshfilter and rendering data
+		private Renderer meshRenderer; // this will refer to the MR for any spawned children
+		private MeshFilter meshFilter; // this will refer to the MF for any spawned children
 		private Mesh mesh; //the actual mesh in space
-		private int zDist; //hack to move the camera back for easier debugging
+		private int zDist; //backdist for camera(has no affect on FOV in ortho mode
 		
 		//Incoming variables
 		private float lineWidth;
@@ -26,8 +27,6 @@ public class Utility : MonoBehaviour
 		// Use this for initialization
 		void Start ()
 		{
-				meshFilter = gameObject.GetComponent<MeshFilter> ();
-				meshRenderer = gameObject.GetComponent<MeshRenderer> ();
 
 				//Initalize variables
 				frameCounter = 0;
@@ -42,8 +41,9 @@ public class Utility : MonoBehaviour
 				if (animateOnUpdate ) {
 						AnimateCurrentFrame ();		
 				}
-				if (!animateOnUpdate)
-						DrawContiguousLineSegments (lineWidth, incomingDataSet);
+				if (!animateOnUpdate){
+						//DrawContiguousLineSegments (lineWidth, incomingDataSet); //update is called every frame
+				}
 
 		}
 
@@ -112,7 +112,7 @@ public class Utility : MonoBehaviour
 
 		}
 
-		public void DrawContiguousLineSegments (float width, List<float> dataSet)
+		public GameObject DrawContiguousLineSegments (float width, List<float> dataSet)
 		{
 				Vector3 currentVector = new Vector3 (0, 0, 0); //used to gather a direction of the line to properly set the edges of the generated quad
 				Vector3 up = new Vector3 (0, 0, -10); //used for cross product
@@ -122,7 +122,13 @@ public class Utility : MonoBehaviour
 		
 				List<Vector3> organizedPoints = new List<Vector3> ();
 				List<Vector2> organizedPointUvs = new List<Vector2> ();
-		
+
+				currentVisObject = (GameObject)Instantiate (currentVisObject, gameObject.transform.position, Quaternion.identity);//reassign currentVisObject to be a new instantiation of this object
+				currentVisObject.transform.SetParent(gameObject.transform);//child this object to the utility object
+				meshFilter = currentVisObject.GetComponent<MeshFilter> ();
+				meshRenderer = currentVisObject.GetComponent<MeshRenderer> (); //set filter and renderer to the new child
+				currentVisObject.name ="VisObject ID: "+currentVisObject.GetHashCode();
+
 				//put the data in this format {v3, v3, v3, v3};
 				for (int i=0; i < dataSet.Count; i+=2) {
 						organizedData.Add (new Vector3 (dataSet [i], dataSet [i + 1], zDist));
@@ -186,19 +192,25 @@ public class Utility : MonoBehaviour
 				mesh.vertices = newVerts;
 				mesh.uv = newUv;
 				mesh.triangles = newTriangles;
+		return currentVisObject;
 		}
 
-		///////////////////////////////////////////////////////WARNING DO NOT CROSS THIS POINT/////////////////////////////////////// 
+		///////////////////////////////////////////////////////WARNING DO NOT CROSS THIS POINT/////////////////////////////////////// (lol)
 
 
 
 		public void zoomFunction (Camera input)
 		{
 				if (Input.GetAxis ("Mouse ScrollWheel") > 0) { // forward
-						input.orthographicSize++;
+					input.orthographicSize++;
 				}
 				if (Input.GetAxis ("Mouse ScrollWheel") < 0) { // back
+					if((input.orthographicSize <= 1.0) && (input.orthographicSize>0.1)){ //dont allow the ortho size to hit 0 because it freaks the f out
+						input.orthographicSize-=0.1f;
+					}
+				else if(input.orthographicSize>0.1){
 						input.orthographicSize--;
+					}
 				}
 		
 		}
