@@ -7,51 +7,54 @@ public class UIMangerScript : MonoBehaviour {
 	private float mouseX;
 	public GameObject panelOpen;
 	public GameObject fileButton;
+	public GameObject openBtn;
+	public GameObject exitBtn;
+	bool isPanelOpen = false;
+	FileMouseOver fileBtn;
+	FileMouseOver panel;
+	FileMouseOver open;
+	FileMouseOver exit;
 
-	public void OpenFilePanel()
+	void Start()
 	{
-		//dialog.
-		dialog.enabled = true;
-		//dialog.SetBool ("isHidden", false);
-		//dialog.SetBool ("isOpen",true);	
-
+		fileBtn = fileButton.GetComponent<FileMouseOver> ();
+		panel = panelOpen.GetComponent<FileMouseOver> ();
+		open = openBtn.GetComponent<FileMouseOver> ();
+		exit = exitBtn.GetComponent<FileMouseOver> ();
 	}
-
-	public void CloseFilePanel()
-	{
-		Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
-		RaycastHit hit;
-
-		Vector3 vec = dialog.bodyPosition;
-		/*
-		if (Input.mousePosition.x < 150) {
-			dialog.SetBool ("isHidden", true);
-			dialog.SetBool ("isOpen",false);	
-		
-		}
-	*/
-	}
+	
 	void Update()
 	{
-		//dialog.enabled = true;
 
-		mouseX = Input.mousePosition.x;
-		Transform panelObj = panelOpen.transform;
-		Transform buttonObj = fileButton.transform;
+		bool mouseOverFile = fileBtn.getState();
+		bool mouseOverPanel = panel.getState ();
+		bool mouseOverOpenBtn = open.getState ();
+		bool mouseOVerExitBtn = exit.getState ();
 
 
-		Debug.Log ("X: " + mouseX);
-		Debug.Log ("X: " + mouseX);
-		Debug.Log ("Dialog X: "  + panelObj.position.x);
+		if (mouseOverFile || mouseOverPanel || mouseOverOpenBtn || mouseOVerExitBtn) {
 
-		if (Input.mousePosition.x > panelObj.position.x) {
-			//dialog.SetBool ("isHidden", true);
-			//dialog.SetBool ("isOpen",false);	
-			
+			animOpenFile(panelOpen,"OpenFileAnim", 1);
+			animOpenFile(openBtn,"OpenFileAnim", 1);
+			animOpenFile(exitBtn, "OpenFileAnim", 1);
+		
+			isPanelOpen = true;
+		} 
+		else if (isPanelOpen == true) {
+			animOpenFile(panelOpen,"OpenFileAnim", -1);
+			animOpenFile(openBtn,"OpenFileAnim", -1);
+			animOpenFile(exitBtn,"OpenFileAnim", -1);
+
+			isPanelOpen=  false;
+
 		}
 
+	}
 
-		//Vector3 pos = new Vector3 (obj.position);
-
+	//set gameobject to do an Animation
+	void animOpenFile(GameObject g, string anim, int speed)
+	{
+		g.animation [anim].speed = speed;
+		g.animation.Play ();
 	}
 }

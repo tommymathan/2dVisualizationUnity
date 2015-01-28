@@ -46,6 +46,7 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\FileMouseOver.cs" />
      <Compile Include="Assets\Scripts\BasicPoint.cs" />
      <Compile Include="Assets\Scripts\DataParserScript.cs" />
      <Compile Include="Assets\Scripts\DebugGraphScript.cs" />
