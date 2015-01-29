@@ -68,6 +68,7 @@
      <Compile Include="Assets\Scripts\VisZero.cs" />
      <Compile Include="Assets\Scripts\Visualization\ParentVisualization.cs" />
      <Compile Include="Assets\UIMangerScript.cs" />
+     <Compile Include="Assets\WelcomeSplash.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/4.6.1/UnityEngine.UI.dll</HintPath>
  </Reference>
