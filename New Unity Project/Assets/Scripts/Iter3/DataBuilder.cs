@@ -5,6 +5,7 @@ using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using UnityEngine;
 
 public struct DataObject
 {
@@ -24,7 +25,7 @@ public class DataBuilder
 		public DataBuilder ()
 		{
 				//Later will set the file path when the constructor is called
-				path += "forestfiresFullDataSet.csv"; //Put your file into the datasets folder to test
+				path += "forestfires.csv"; //Put your file into the datasets folder to test
 
 				//Bring the file in via a file reader, put lines into an array
 				fileLines = System.IO.File.ReadAllLines (path);
@@ -43,15 +44,15 @@ public class DataBuilder
 						foreach (string dataElement in delimitedLine) {
 								if (columnWise)
 										count++;					
-								// Debug.Log("Attempting to add" + dataElement);
+								 Debug.Log("Attempting to add" + dataElement);
 								if (float.TryParse (dataElement, out tempFloat)) {
 										//  Debug.Log("Temp float is" + tempFloat);
 										//  Debug.Log("count is" + count);
 										dataObject.incomingData [count].Add (tempFloat);						
 								}					
 						}
-						if (!columnWise)
-								count++;	
+			count = columnWise ? 0 : count+1;
+
 			
 				}//End of for each
 		}//End of databuilder constructor
