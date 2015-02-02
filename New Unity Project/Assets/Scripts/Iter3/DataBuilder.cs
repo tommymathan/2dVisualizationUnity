@@ -25,7 +25,7 @@ public class DataBuilder
 		public DataBuilder ()
 		{
 				//Later will set the file path when the constructor is called
-				path += "forestfires.csv"; //Put your file into the datasets folder to test
+				path += "WriteLines.csv"; //Put your file into the datasets folder to test
 
 				//Bring the file in via a file reader, put lines into an array
 				fileLines = System.IO.File.ReadAllLines (path);
@@ -51,7 +51,7 @@ public class DataBuilder
 										dataObject.incomingData [count].Add (tempFloat);						
 								}					
 						}
-			count = columnWise ? 0 : count+1;
+			count = columnWise ? 0 : count++;
 
 			
 				}//End of for each
