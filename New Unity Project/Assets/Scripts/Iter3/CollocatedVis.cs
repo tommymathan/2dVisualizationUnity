@@ -12,7 +12,6 @@ public class CollocatedVis : Visualization {
 	Mesh mesh;
 	DrawUtil drawingUtility;
 
-<<<<<<< HEAD
 	int counter;
 	List<float> test;
 	//////////////////////////////
@@ -109,9 +108,7 @@ public class CollocatedVis : Visualization {
 	//		Debug.Log ("Vert count after: " + MeshHolder.transform.GetComponent<MeshFilter> ().mesh.vertexCount);
 	//	}
 	//}
-	
->>>>>>> origin/master
-	
+
 	
 	////////////////////////////////////////////////TEMP CODE FOR DEBUGGING///////////////////////////////////////
 	void OnPostRender ()
