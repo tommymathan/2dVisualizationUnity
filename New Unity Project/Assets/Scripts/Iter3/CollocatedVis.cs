@@ -12,6 +12,7 @@ public class CollocatedVis : Visualization {
 	Mesh mesh;
 	DrawUtil drawingUtility;
 
+<<<<<<< HEAD
 	int counter;
 	List<float> test;
 	//////////////////////////////
@@ -77,7 +78,39 @@ public class CollocatedVis : Visualization {
 
 
 
-
+	//void CombineMeshes(){
+	//	Debug.Log ("Child count is: "+MeshHolder.transform.childCount);
+	//	Debug.Log ("Vert count: " + MeshHolder.transform.GetComponent<MeshFilter> ().mesh.vertexCount);
+	//	if (MeshHolder.transform.childCount > 0) {
+	//					MeshFilter[] meshFilters = MeshHolder.GetComponentsInChildren<MeshFilter> ();
+	//					//	GameObject[] toBeDestoryed = GetComponentsInChildren<GameObject> ();
+	//					CombineInstance[] combine = new CombineInstance[meshFilters.Length - 1];
+	//					int i = 0;
+	//					while (i<meshFilters.Length-1) {
+	//
+	//							combine [i].mesh = meshFilters [i].sharedMesh;
+	//							combine [i].transform = meshFilters [i].transform.localToWorldMatrix;
+	//							
+	//							//meshFilters [i].gameObject.active = false;
+	//							
+	//							i++;
+	//					}
+	//					
+	//					MeshHolder.transform.GetComponent<MeshFilter> ().mesh = new Mesh ();
+	//					MeshHolder.transform.GetComponent<MeshFilter> ().mesh.CombineMeshes (combine);
+	//					MeshHolder.transform.gameObject.SetActive (true);
+	//						//List<GameObject> children = new List<GameObject>();
+	//						//for(int x = 0; x < MeshHolder.transform.childCount; x++){
+	//						//	children.Add (MeshHolder.transform.GetChild(x).gameObject);
+	//						//}
+	//						//foreach(GameObject go in children){
+	//						//	Destroy (go);
+	//						//}
+	//		Debug.Log ("Vert count after: " + MeshHolder.transform.GetComponent<MeshFilter> ().mesh.vertexCount);
+	//	}
+	//}
+	
+>>>>>>> origin/master
 	
 	
 	////////////////////////////////////////////////TEMP CODE FOR DEBUGGING///////////////////////////////////////

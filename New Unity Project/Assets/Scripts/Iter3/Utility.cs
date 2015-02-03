@@ -9,6 +9,7 @@ public class Utility : MonoBehaviour
 		private MeshFilter meshFilter; // this will refer to the MF for any spawned children
 		private Mesh mesh; //the actual mesh in space
 		private int zDist; //backdist for camera(has no affect on FOV in ortho mode
+		private GameObject givenParent;
 		
 		//Incoming variables
 		private float lineWidth;
@@ -47,13 +48,14 @@ public class Utility : MonoBehaviour
 
 		}
 
-		public void AnimateContiguousLineSegments (float w, List<float> d)
+		public void AnimateContiguousLineSegments (float w, List<float> d, GameObject thisParent)
 		{
 				animateOnUpdate = true;
 				//Track when we start so we can preform opperations relative to the starting frame
 				animationFrame = frameCounter;
 				lineWidth = w;
 				incomingDataSet = d;
+				givenParent = thisParent;
 		}
 
 
@@ -106,28 +108,31 @@ public class Utility : MonoBehaviour
 										((float)((frameCounter % ANIMATIONSPEED - 1) / 2) / ANIMATIONSPEED)
 				        			  + previousY);
 						}	
-						DrawContiguousLineSegments (lineWidth, temp);
+						DrawContiguousLineSegments (lineWidth, temp, givenParent);
 				} else
 						animateOnUpdate = false;
 
 		}
 
-		public GameObject DrawContiguousLineSegments (float width, List<float> dataSet)
+		public GameObject DrawContiguousLineSegments (float width, List<float> dataSet, GameObject thisParent)
 		{
 				Vector3 currentVector = new Vector3 (0, 0, 0); //used to gather a direction of the line to properly set the edges of the generated quad
 				Vector3 up = new Vector3 (0, 0, -10); //used for cross product
 				Vector3 right = new Vector3 (0, 0, 0); // used to push verts out from the lines to form quads
-		
+				givenParent = thisParent;
 				List<Vector3> organizedData = new List<Vector3> ();
 		
 				List<Vector3> organizedPoints = new List<Vector3> ();
 				List<Vector2> organizedPointUvs = new List<Vector2> ();
 
 				currentVisObject = (GameObject)Instantiate (currentVisObject, gameObject.transform.position, Quaternion.identity);//reassign currentVisObject to be a new instantiation of this object
-				currentVisObject.transform.SetParent(gameObject.transform);//child this object to the utility object
+				currentVisObject.transform.SetParent(givenParent.transform);//child this object to the utility object
 				meshFilter = currentVisObject.GetComponent<MeshFilter> ();
 				meshRenderer = currentVisObject.GetComponent<MeshRenderer> (); //set filter and renderer to the new child
 				currentVisObject.name ="VisObject ID: "+currentVisObject.GetHashCode();
+				
+		if (dataSet.Count % 2 == 1)
+						dataSet.Insert (0, dataSet [0]);
 
 				//put the data in this format {v3, v3, v3, v3};
 				for (int i=0; i < dataSet.Count; i+=2) {
@@ -192,6 +197,7 @@ public class Utility : MonoBehaviour
 				mesh.vertices = newVerts;
 				mesh.uv = newUv;
 				mesh.triangles = newTriangles;
+		Debug.Log ("Vert count before merge: "+ mesh.vertexCount);
 		return currentVisObject;
 		}
 

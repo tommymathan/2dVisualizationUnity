@@ -4,6 +4,7 @@ using System.Linq;
 
 public abstract class Visualization: MonoBehaviour {
 
+
 	private static List<float> givenData;
 	public GameObject vectorTemplate;
 	public GameObject[] meshContainmentArray;
@@ -11,6 +12,7 @@ public abstract class Visualization: MonoBehaviour {
 	public void UpdateData(){
 		Debug.Log ("Update called on " + this.gameObject.ToString());
 	}
+
 	
 	public void createMeshMonster(){
 		vectorTemplate = new GameObject ();
@@ -22,3 +24,4 @@ public abstract class Visualization: MonoBehaviour {
 		vectorTemplate.name = "ParentVector";
 	}
 }
+
