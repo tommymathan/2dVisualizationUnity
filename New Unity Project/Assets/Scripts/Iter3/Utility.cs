@@ -22,7 +22,7 @@ public class Utility : MonoBehaviour
 		private float previousX;
 		private float previousY;
 		private bool animateOnUpdate;
-		private int ANIMATIONSPEED = 10;
+		private int ANIMATIONSPEED = 100;
 
 
 		// Use this for initialization

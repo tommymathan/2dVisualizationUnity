@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets\GUILayoutx.cs">
@@ -14,4 +15,23 @@
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+=======
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Iter3\DataBuilder.cs">
+    <Files>
+      <File FileName="Assets\Scripts\Iter3\CollocatedVis.cs" Line="33" Column="3" />
+      <File FileName="Assets\Scripts\Iter3\DataManager.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Iter3\ShiftedVis.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Iter3\DataBuilder.cs" Line="28" Column="25" />
+      <File FileName="Assets\Scripts\Iter3\Visualization.cs" Line="1" Column="1" />
+      <File FileName="Assets\UIMangerScript.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Iter3\DrawUtil.cs" Line="42" Column="26" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+>>>>>>> FETCH_HEAD
 </Properties>

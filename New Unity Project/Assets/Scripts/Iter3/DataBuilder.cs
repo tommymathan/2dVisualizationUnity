@@ -25,7 +25,7 @@ public class DataBuilder
 		public DataBuilder ()
 		{
 				//Later will set the file path when the constructor is called
-				path += "WriteLines.csv"; //Put your file into the datasets folder to test
+				path += "forestFires.csv"; //Put your file into the datasets folder to test
 
 				//Bring the file in via a file reader, put lines into an array
 				fileLines = System.IO.File.ReadAllLines (path);

@@ -3,46 +3,100 @@ using System.Collections.Generic;
 using System.Linq;
 
 public class CollocatedVis : Visualization {
-
-
+	
+	
 	//Debug code
 	static float givenXMax;
 	static float givenYMax; // x and y max are used to determine camera perspective size
 	static Material lineMaterial;
-	//////////////////////////////
+	Mesh mesh;
+	DrawUtil[] drawingUtility;
 
-	int combineCounter = 1;
+	int numbeOfIncomingVectors;
+	int counter;
+
+	//////////////////////////////
+	
 	// Use this for initialization
 	void Start () {
 		//Debug code
-		CreateMeshMonster ();
+
+
 		givenXMax = 10;
 		givenYMax = 10;
+		counter = 0;
+		//test = new List<float> (new float[] {0,0,1,1,3,2,5,2,6,0,7,0});
 
-		DataBuilder build = new DataBuilder ();
+
+		//real code - We may need to find some efficiency improvements here, there is a signifcant delay
+		//when opening a large dataset. If that is not possible we can create a loading bar animation.
 
 
-		for (int x = 0; x<2; x++) {
-			List<float> test = new List<float> (new float[] {0,0});
-			for (int i = 0; i < 8; i++) {
-				test.Add ((Random.value *10) % 10);
-			}
-			//utilityObject.GetComponent<Utility>().AnimateContiguousLineSegments(.02f, test, gameObject);
-			visMeshObject = utilityObject.GetComponent<Utility>().DrawContiguousLineSegments(0.02f, build.getDataObject().incomingData[2],MeshHolder);
+		//Set up the dataObject
+		DataBuilder data = new DataBuilder ();
+		//Get the number of incoming vectors, we will need this number often
+		numbeOfIncomingVectors = data.getDataObject ().incomingData.Count;
+
+		//Create an array of drawing utilitys, one for each game object we will be drawing
+		drawingUtility = new DrawUtil[numbeOfIncomingVectors];
+
+		for (int i = 0; i < numbeOfIncomingVectors; i++) {
+
+			drawingUtility[i] = new DrawUtil (0.02f, getRandomFloatArray(), this.camera);
+				}
+
+
+
+		createMeshMonster ();
+		meshContainmentArray = new GameObject[numbeOfIncomingVectors];
+
+		Debug.Log ("the count is" + numbeOfIncomingVectors);
+
+		//When we do a list of objects we will add the game object to the first element of the array
+		//for now we just use this loop to test
+
+
+		for(int i = 0; i < numbeOfIncomingVectors; i++ ) {
+			meshContainmentArray[i] = new GameObject ();
+			meshContainmentArray[i].AddComponent<MeshFilter> ();
+			meshContainmentArray[i].AddComponent<MeshRenderer> ();
+			meshContainmentArray[i].AddComponent<StayPut> ();
+			//meshContainmentArray[i] = (GameObject) Instantiate(vectorTemplate, gameObject.transform.position, Quaternion.identity);
+			meshContainmentArray[i].transform.SetParent (gameObject.transform);
+			meshContainmentArray[i].name = "Vector:" + i;
+		
 		}
-
-		//////////////////////////
-
-		//gameObject.GetComponent<Camera> ().orthographicSize = 5;
-		//gameObject.transform.position = new Vector3 (2f, 2f, gameObject.transform.position.z);
 	}
 	
 	// Update is called once per frame
 	void Update () {
-
 		//Zoom functionality
-		utilityObject.GetComponent<Utility> ().zoomFunction (this.camera);
+		//////////////////////////
+		//Graphics.DrawMesh(drawingUtility.AnimateCurrentFrame(counter), Vector3.zero, Quaternion.identity, lineMaterial, 0);
+
+		counter++;
+		Debug.Log ("currentCounter" + counter);
+		for (int i = 0; i < numbeOfIncomingVectors; i++) {
+						meshContainmentArray[i].GetComponent<MeshFilter> ().mesh 
+									= drawingUtility[i].AnimateCurrentFrame (counter);
+				}
+		drawingUtility[0].zoomFunction (this.camera);
+
 	}
+	
+
+	private List<float> getRandomFloatArray(){
+		List<float> test = new List<float>();
+		for (int i = 0; i < 10; i++) {
+			test.Add ((Random.value *10) % 10);
+		}
+		return test;
+	}
+
+
+
+
+
 
 	//void CombineMeshes(){
 	//	Debug.Log ("Child count is: "+MeshHolder.transform.childCount);
@@ -75,8 +129,7 @@ public class CollocatedVis : Visualization {
 	//		Debug.Log ("Vert count after: " + MeshHolder.transform.GetComponent<MeshFilter> ().mesh.vertexCount);
 	//	}
 	//}
-	
-	
+
 	
 	////////////////////////////////////////////////TEMP CODE FOR DEBUGGING///////////////////////////////////////
 	void OnPostRender ()
@@ -92,7 +145,7 @@ public class CollocatedVis : Visualization {
 		GL.Begin (GL.LINES);
 		GL.Color (Color.white);		
 	}
-
+	
 	//Draws gridlines so that we can debug more easily, draw in grey then switch back to white
 	public void drawGridLines ()
 	{
@@ -103,12 +156,12 @@ public class CollocatedVis : Visualization {
 			GL.Vertex3 ((float)i, 0f, 0f);
 			GL.Vertex3 ((float)i, givenYMax, 0f);			
 		}
-
+		
 		for (int i = 0; i < (int)Mathf.Ceil(givenYMax); i++) {
 			GL.Vertex3 (0f, (float)i, 0f);
 			GL.Vertex3 (givenXMax, (float)i, 0f);			
 		}
-
+		
 		
 		GL.Color (Color.white);
 		
@@ -128,5 +181,5 @@ public class CollocatedVis : Visualization {
 		lineMaterial.hideFlags = HideFlags.HideAndDontSave;
 		lineMaterial.shader.hideFlags = HideFlags.HideAndDontSave;
 	}
-
+	
 }
