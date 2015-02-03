@@ -27,8 +27,17 @@ public class CollocatedVis : Visualization {
 		counter = 0;
 		//test = new List<float> (new float[] {0,0,1,1,3,2,5,2,6,0,7,0});
 
+
+		//real code - We may need to find some efficiency improvements here, there is a signifcant delay
+		//when opening a large dataset. If that is not possible we can create a loading bar animation.
+
+
+		//Set up the dataObject
 		DataBuilder data = new DataBuilder ();
+		//Get the number of incoming vectors, we will need this number often
 		numbeOfIncomingVectors = data.getDataObject ().incomingData.Count;
+
+		//Create an array of drawing utilitys, one for each game object we will be drawing
 		drawingUtility = new DrawUtil[numbeOfIncomingVectors];
 
 		for (int i = 0; i < numbeOfIncomingVectors; i++) {
@@ -39,7 +48,6 @@ public class CollocatedVis : Visualization {
 
 
 		createMeshMonster ();
-
 		meshContainmentArray = new GameObject[numbeOfIncomingVectors];
 
 		Debug.Log ("the count is" + numbeOfIncomingVectors);
