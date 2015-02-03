@@ -6,6 +6,7 @@ public class DataManager : MonoBehaviour {
 	private static List<float> rawData; // holds the raw data from the parser
 	private static List<Visualization> vizList; //will hold the list of Visualizations to be called when data is updated
 	private bool dataUpdated;
+	private string dataPath;
 
 	// Use this for initialization
 	void Start () {
@@ -19,6 +20,7 @@ public class DataManager : MonoBehaviour {
 			vizList.Add(cameras[i].gameObject.GetComponent<Visualization>());
 		}
 		Debug.Log (vizList.Count () + " Visualizations are registered with the DataManager");
+		dataPath = "";
 	}
 	
 	// Update is called once per frame
@@ -34,5 +36,9 @@ public class DataManager : MonoBehaviour {
 			vizList[i].UpdateData();
 		}
 		dataUpdated = false;
+	}
+
+	public void SetDataPath(string givenPath){
+		dataPath = givenPath;
 	}
 }

@@ -20,7 +20,7 @@ public class CollocatedVis : Visualization {
 	// Use this for initialization
 	void Start () {
 		//Debug code
-
+		gameObject.AddComponent<BoxCollider2D> ();
 
 		givenXMax = 10;
 		givenYMax = 10;
@@ -35,7 +35,8 @@ public class CollocatedVis : Visualization {
 		//Set up the dataObject
 		DataBuilder data = new DataBuilder ();
 		//Get the number of incoming vectors, we will need this number often
-		numbeOfIncomingVectors = data.getDataObject ().incomingData.Count;
+//		numbeOfIncomingVectors = data.getDataObject ().incomingData.Count;
+		numbeOfIncomingVectors = 1;
 
 		//Create an array of drawing utilitys, one for each game object we will be drawing
 		drawingUtility = new DrawUtil[numbeOfIncomingVectors];
@@ -43,11 +44,12 @@ public class CollocatedVis : Visualization {
 		for (int i = 0; i < numbeOfIncomingVectors; i++) {
 
 			drawingUtility[i] = new DrawUtil (0.02f, getRandomFloatArray(), this.camera);
-				}
+		}
 
 
 
 		createMeshMonster ();
+		AddCameraControls ();
 		meshContainmentArray = new GameObject[numbeOfIncomingVectors];
 
 		Debug.Log ("the count is" + numbeOfIncomingVectors);
@@ -75,7 +77,7 @@ public class CollocatedVis : Visualization {
 		//Graphics.DrawMesh(drawingUtility.AnimateCurrentFrame(counter), Vector3.zero, Quaternion.identity, lineMaterial, 0);
 
 		counter++;
-		Debug.Log ("currentCounter" + counter);
+		//Debug.Log ("currentCounter" + counter);
 		for (int i = 0; i < numbeOfIncomingVectors; i++) {
 						meshContainmentArray[i].GetComponent<MeshFilter> ().mesh 
 									= drawingUtility[i].AnimateCurrentFrame (counter);
@@ -181,5 +183,8 @@ public class CollocatedVis : Visualization {
 		lineMaterial.hideFlags = HideFlags.HideAndDontSave;
 		lineMaterial.shader.hideFlags = HideFlags.HideAndDontSave;
 	}
-	
+
+	void OnMouseOver(){
+		Debug.Log ("test");
+	}
 }

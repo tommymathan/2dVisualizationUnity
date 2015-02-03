@@ -30,6 +30,8 @@ public class UIMangerScript : MonoBehaviour {
 	protected void FileSelectedCallback(string path) {
 		m_fileBrowser = null;
 		address = path;
+		GameObject dataManagerObject = GameObject.FindGameObjectWithTag ("DataManagerTag");
+		dataManagerObject.GetComponent<DataManager> ().SetDataPath (path);
 	}
 
 	/*

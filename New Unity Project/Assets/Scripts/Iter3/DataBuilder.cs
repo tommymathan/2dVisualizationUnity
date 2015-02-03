@@ -48,16 +48,22 @@ public class DataBuilder
 								if (float.TryParse (dataElement, out tempFloat)) {
 										//  Debug.Log("Temp float is" + tempFloat);
 										//  Debug.Log("count is" + count);
-										dataObject.incomingData [count].Add (tempFloat);						
+										dataObject.incomingData [count].Add (tempFloat);
+
 								}					
 						}
 			count = columnWise ? 0 : count++;
-
+			//checkForEvenDataElements(ref dataObject.incomingData);
 			
 				}//End of for each
 		}//End of databuilder constructor
 
-
+	public void checkForEvenDataElements(ref List<float> dataSet){
+		//If there is an uneven number of points, use the first point twice.
+		Debug.Log ("dataset count is: "+ dataSet.Count);
+		if (dataSet.Count % 2 == 1)
+			dataSet.Insert (0,dataSet [0]);
+	}
 		//Returns an organized representation of a csv file
 		public DataObject getDataObject ()
 		{
@@ -92,7 +98,7 @@ public class DataBuilder
 		dataObject.labels.AddRange (temp1.Count < temp2.Count ? temp1 : temp2);
 		
 		//if there are more column labels than row labels we are row wise
-		columnWise = (temp1.Count > temp2.Count);
+		//columnWise = (temp1.Count > temp2.Count);
 		
 		//Make lists to contain each of the incoming vectors
 		for (int i = 0; i < (temp1.Count > temp2.Count ? temp1.Count : temp2.Count); i++) {

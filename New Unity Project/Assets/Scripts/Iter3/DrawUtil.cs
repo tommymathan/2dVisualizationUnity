@@ -137,8 +137,6 @@ using System.Collections.Generic;
 			
 			List<Vector3> organizedPoints = new List<Vector3> ();
 			List<Vector2> organizedPointUvs = new List<Vector2> ();
-
-		checkForEvenDataElements (ref dataSet);
 			
 			//put the data in this format {v3, v3, v3, v3};
 			for (int i=0; i < dataSet.Count; i+=2) {
@@ -206,13 +204,6 @@ using System.Collections.Generic;
 			
 			return mesh;
 		}
-
-	public void checkForEvenDataElements(ref List<float> dataSet){
-		//If there is an uneven number of points, use the first point twice.
-		if (dataSet.Count % 2 == 1)
-			dataSet.Insert (0,dataSet [0]);
-	}
-
 
 	public void zoomFunction (Camera input)
 	{
