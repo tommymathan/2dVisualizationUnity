@@ -11,53 +11,73 @@ public class CollocatedVis : Visualization {
 	static Material lineMaterial;
 	Mesh mesh;
 	DrawUtil[] drawingUtility;
-
+	
 	int numbeOfIncomingVectors;
 	int counter;
-
+	
 	//////////////////////////////
 	
 	// Use this for initialization
 	void Start () {
 		//Debug code
-		gameObject.AddComponent<BoxCollider2D> ();
-
+		
+		
 		givenXMax = 10;
 		givenYMax = 10;
 		counter = 0;
 		//test = new List<float> (new float[] {0,0,1,1,3,2,5,2,6,0,7,0});
-
-
-		//real code - We may need to find some efficiency improvements here, there is a signifcant delay
-		//when opening a large dataset. If that is not possible we can create a loading bar animation.
-
-
+		
+		updateData ();
 		//Set up the dataObject
+		
+	}
+	
+	// Update is called once per frame
+	void Update () {
+		//Zoom functionality
+		//////////////////////////
+		//Graphics.DrawMesh(drawingUtility.AnimateCurrentFrame(counter), Vector3.zero, Quaternion.identity, lineMaterial, 0);
+		
+		counter++;
+		//Debug.Log ("currentCounter" + counter);
+		for (int i = 0; i < numbeOfIncomingVectors; i++) {
+			meshContainmentArray[i].GetComponent<MeshFilter> ().mesh 
+				= drawingUtility[i].AnimateCurrentFrame (counter);
+		}
+		drawingUtility[0].zoomFunction (this.camera);
+		
+	}
+	
+	
+	private List<float> getRandomFloatArray(){
+		List<float> test = new List<float>();
+		for (int i = 0; i < 10; i++) {
+			test.Add ((Random.value *10) % 10);
+		}
+		return test;
+	}
+	
+	//real code - We may need to find some efficiency improvements here, there is a signifcant delay
+	//when opening a large dataset. If that is not possible we can create a loading bar animation.
+	public void updateData(){
+		//TODO: check to make sure data exists
 		DataBuilder data = new DataBuilder ();
 		//Get the number of incoming vectors, we will need this number often
-//		numbeOfIncomingVectors = data.getDataObject ().incomingData.Count;
-		numbeOfIncomingVectors = 1;
-
+		numbeOfIncomingVectors = data.getDataObject ().incomingData.Count;
+		
 		//Create an array of drawing utilitys, one for each game object we will be drawing
 		drawingUtility = new DrawUtil[numbeOfIncomingVectors];
-
+		
 		for (int i = 0; i < numbeOfIncomingVectors; i++) {
-
+			
 			drawingUtility[i] = new DrawUtil (0.02f, getRandomFloatArray(), this.camera);
-		}
-
-
-
+		}		
 		createMeshMonster ();
-		AddCameraControls ();
-		meshContainmentArray = new GameObject[numbeOfIncomingVectors];
-
-		Debug.Log ("the count is" + numbeOfIncomingVectors);
-
+		meshContainmentArray = new GameObject[numbeOfIncomingVectors];		
+		
+		
 		//When we do a list of objects we will add the game object to the first element of the array
-		//for now we just use this loop to test
-
-
+		//for now we just use this loop to test		
 		for(int i = 0; i < numbeOfIncomingVectors; i++ ) {
 			meshContainmentArray[i] = new GameObject ();
 			meshContainmentArray[i].AddComponent<MeshFilter> ();
@@ -66,40 +86,16 @@ public class CollocatedVis : Visualization {
 			//meshContainmentArray[i] = (GameObject) Instantiate(vectorTemplate, gameObject.transform.position, Quaternion.identity);
 			meshContainmentArray[i].transform.SetParent (gameObject.transform);
 			meshContainmentArray[i].name = "Vector:" + i;
+			
+		}
 		
-		}
+		
 	}
 	
-	// Update is called once per frame
-	void Update () {
-		//Zoom functionality
-		//////////////////////////
-		//Graphics.DrawMesh(drawingUtility.AnimateCurrentFrame(counter), Vector3.zero, Quaternion.identity, lineMaterial, 0);
-
-		counter++;
-		//Debug.Log ("currentCounter" + counter);
-		for (int i = 0; i < numbeOfIncomingVectors; i++) {
-						meshContainmentArray[i].GetComponent<MeshFilter> ().mesh 
-									= drawingUtility[i].AnimateCurrentFrame (counter);
-				}
-		drawingUtility[0].zoomFunction (this.camera);
-
-	}
 	
-
-	private List<float> getRandomFloatArray(){
-		List<float> test = new List<float>();
-		for (int i = 0; i < 10; i++) {
-			test.Add ((Random.value *10) % 10);
-		}
-		return test;
-	}
-
-
-
-
-
-
+	
+	
+	
 	//void CombineMeshes(){
 	//	Debug.Log ("Child count is: "+MeshHolder.transform.childCount);
 	//	Debug.Log ("Vert count: " + MeshHolder.transform.GetComponent<MeshFilter> ().mesh.vertexCount);
@@ -131,7 +127,7 @@ public class CollocatedVis : Visualization {
 	//		Debug.Log ("Vert count after: " + MeshHolder.transform.GetComponent<MeshFilter> ().mesh.vertexCount);
 	//	}
 	//}
-
+	
 	
 	////////////////////////////////////////////////TEMP CODE FOR DEBUGGING///////////////////////////////////////
 	void OnPostRender ()
@@ -183,8 +179,5 @@ public class CollocatedVis : Visualization {
 		lineMaterial.hideFlags = HideFlags.HideAndDontSave;
 		lineMaterial.shader.hideFlags = HideFlags.HideAndDontSave;
 	}
-
-	void OnMouseOver(){
-		Debug.Log ("test");
-	}
+	
 }

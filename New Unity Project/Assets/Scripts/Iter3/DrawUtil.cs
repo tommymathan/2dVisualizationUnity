@@ -30,7 +30,7 @@ using System.Collections.Generic;
 		private float previousX;
 		private float previousY;
 		private bool animateOnUpdate;
-		private int ANIMATIONSPEED = 50;
+		private int ANIMATIONSPEED = 20;
 		private Camera curVisCamera;
 		
 

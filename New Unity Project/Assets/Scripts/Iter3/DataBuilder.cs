@@ -1,4 +1,3 @@
-
 using System;
 using System.IO;
 using System.Text;
@@ -9,77 +8,88 @@ using UnityEngine;
 
 public struct DataObject
 {
-		public List<String> labels;
-		public List<List<float>> incomingData;
+	public List<String> labels;
+	public List<List<float>> incomingData;
 }
 
 public class DataBuilder
 {	
-		string path = Environment.CurrentDirectory + @"\Assets\DataSets\";
-		char[] delimiters = new char[] { ' ', ',' };
-		DataObject dataObject;
-		bool columnWise = false;
-		string[] fileLines;
-
+	string path = Environment.CurrentDirectory + @"\Assets\DataSets\";
+	char[] delimiters = new char[] { ' ', ',' };
+	DataObject dataObject;
+	bool columnWise = false;
+	string[] fileLines;
 	
-		public DataBuilder ()
-		{
-				//Later will set the file path when the constructor is called
-				path += "forestFires.csv"; //Put your file into the datasets folder to test
-
-				//Bring the file in via a file reader, put lines into an array
-				fileLines = System.IO.File.ReadAllLines (path);
-				//Construct the dataObject
-				makeDataObject ();
-				setUpDataObject ();				
-
-				//temp variables needed for the parsing loop
-				float tempFloat = 0.0f;
-				int count = 0;
-				string[] delimitedLine;
-
-				//Actual parsing occurs here
-				foreach (string dataLine in fileLines) {
-						delimitedLine = dataLine.Split (delimiters);
-						foreach (string dataElement in delimitedLine) {
-								if (columnWise)
-										count++;					
-								 Debug.Log("Attempting to add" + dataElement);
-								if (float.TryParse (dataElement, out tempFloat)) {
-										//  Debug.Log("Temp float is" + tempFloat);
-										//  Debug.Log("count is" + count);
-										dataObject.incomingData [count].Add (tempFloat);
-
-								}					
-						}
+	
+	public DataBuilder (String incPath)
+	{
+		//Later will set the file path when the constructor is called
+		//path += "forestFires.csv"; //Put your file into the datasets folder to test
+		
+		path = incPath;
+		parseDataIntoDataObject ();
+		
+		
+	}//End of databuilder constructor
+	public DataBuilder ()
+	{
+		//Later will set the file path when the constructor is called
+		path += "forestFires.csv"; //Put your file into the datasets folder to test
+		
+		
+		parseDataIntoDataObject ();
+		
+		
+	}//End of databuilder constructor
+	
+	private void parseDataIntoDataObject(){
+		//Bring the file in via a file reader, put lines into an array
+		fileLines = System.IO.File.ReadAllLines (path);
+		//Construct the dataObject
+		makeDataObject ();
+		setUpDataObject ();				
+		
+		//temp variables needed for the parsing loop
+		float tempFloat = 0.0f;
+		int count = 0;
+		string[] delimitedLine;
+		
+		//Actual parsing occurs here
+		foreach (string dataLine in fileLines) {
+			delimitedLine = dataLine.Split (delimiters);
+			foreach (string dataElement in delimitedLine) {
+				
+				//Debug.Log("Attempting to add" + dataElement);
+				if (float.TryParse (dataElement, out tempFloat)) {
+					//  Debug.Log("Temp float is" + tempFloat);
+					//  Debug.Log("count is" + count);
+					dataObject.incomingData [count].Add (tempFloat);	
+					if (columnWise)
+						count++;
+				}					
+			}
 			count = columnWise ? 0 : count++;
-			//checkForEvenDataElements(ref dataObject.incomingData);
 			
-				}//End of for each
-		}//End of databuilder constructor
-
-	public void checkForEvenDataElements(ref List<float> dataSet){
-		//If there is an uneven number of points, use the first point twice.
-		Debug.Log ("dataset count is: "+ dataSet.Count);
-		if (dataSet.Count % 2 == 1)
-			dataSet.Insert (0,dataSet [0]);
+			
+		}//End of for each
 	}
-		//Returns an organized representation of a csv file
-		public DataObject getDataObject ()
-		{
-				return dataObject;
-		}
-
+	
+	//Returns an organized representation of a csv file
+	public DataObject getDataObject ()
+	{
+		return dataObject;
+	}
+	
 	//Set up the dataObject, be careful about your dataset if it has more headings than vectors you will have 
 	//an error. At the moment the function builds the dataObject as if there will be less headings and more 
 	//vectors. If that is not the case you can temporarily reverse the equality signs around in the add range 
 	//and the columnWise setter.
-
+	
 	private void setUpDataObject(){
 		string[] delimitedLine;	
 		List<String> temp1 = new List<String> ();
 		List<String> temp2 = new List<String> ();
-
+		
 		//Check for row labels
 		delimitedLine = fileLines [0].Split (delimiters);
 		foreach (string rowHeading in delimitedLine) {
@@ -98,13 +108,13 @@ public class DataBuilder
 		dataObject.labels.AddRange (temp1.Count < temp2.Count ? temp1 : temp2);
 		
 		//if there are more column labels than row labels we are row wise
-		//columnWise = (temp1.Count > temp2.Count);
+		columnWise = (temp1.Count > temp2.Count);
 		
 		//Make lists to contain each of the incoming vectors
 		for (int i = 0; i < (temp1.Count > temp2.Count ? temp1.Count : temp2.Count); i++) {
 			dataObject.incomingData.Add (new List<float> ());
 		}
-
+		
 	}
 	private void makeDataObject(){
 		dataObject = new DataObject ();
@@ -112,5 +122,3 @@ public class DataBuilder
 		dataObject.labels = new List<string> ();
 	}
 }//end class
-
-

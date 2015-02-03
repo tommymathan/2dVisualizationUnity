@@ -25,10 +25,17 @@ public class DataManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		//TODO: Check for new excel file every five secs?
+		checkNewFile ();
+
 		if (dataUpdated) {
 			NotifyVizualizations();
 		}
 	}
+
+	void checkNewFile()
+	{
+		}
 
 	void NotifyVizualizations(){
 
@@ -40,5 +47,6 @@ public class DataManager : MonoBehaviour {
 
 	public void SetDataPath(string givenPath){
 		dataPath = givenPath;
+		NotifyVizualizations ();
 	}
 }

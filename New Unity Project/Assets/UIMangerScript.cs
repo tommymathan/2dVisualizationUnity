@@ -31,6 +31,7 @@ public class UIMangerScript : MonoBehaviour {
 		m_fileBrowser = null;
 		address = path;
 		GameObject dataManagerObject = GameObject.FindGameObjectWithTag ("DataManagerTag");
+		//TODO: CHange method name to reflect function
 		dataManagerObject.GetComponent<DataManager> ().SetDataPath (path);
 	}
 
