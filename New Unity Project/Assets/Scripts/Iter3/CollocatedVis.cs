@@ -10,10 +10,11 @@ public class CollocatedVis : Visualization {
 	static float givenYMax; // x and y max are used to determine camera perspective size
 	static Material lineMaterial;
 	Mesh mesh;
-	DrawUtil drawingUtility;
+	DrawUtil[] drawingUtility;
 
+	int numbeOfIncomingVectors;
 	int counter;
-	List<float> test;
+
 	//////////////////////////////
 	
 	// Use this for initialization
@@ -24,15 +25,18 @@ public class CollocatedVis : Visualization {
 		givenXMax = 10;
 		givenYMax = 10;
 		counter = 0;
-		test = new List<float> (new float[] {0,0,1,1,3,2,5,2,6,0,7,0});
+		//test = new List<float> (new float[] {0,0,1,1,3,2,5,2,6,0,7,0});
 
 		DataBuilder data = new DataBuilder ();
-		drawingUtility = new DrawUtil (0.02f, test, this.camera);
-		int numbeOfIncomingVectors = data.getDataObject ().incomingData.Count;
+		numbeOfIncomingVectors = data.getDataObject ().incomingData.Count;
+		drawingUtility = new DrawUtil[numbeOfIncomingVectors];
 
-		for (int i = 0; i < 100; i++) {
-			test.Add ((Random.value *10) % 10);
-		}
+		for (int i = 0; i < numbeOfIncomingVectors; i++) {
+
+			drawingUtility[i] = new DrawUtil (0.02f, getRandomFloatArray(), this.camera);
+				}
+
+
 
 		createMeshMonster ();
 
@@ -64,13 +68,22 @@ public class CollocatedVis : Visualization {
 
 		counter++;
 		Debug.Log ("currentCounter" + counter);
-		vectorTemplate.GetComponent<MeshFilter> ().mesh = drawingUtility.AnimateCurrentFrame (counter);
-		drawingUtility.zoomFunction (this.camera);
+		for (int i = 0; i < numbeOfIncomingVectors; i++) {
+						meshContainmentArray[i].GetComponent<MeshFilter> ().mesh 
+									= drawingUtility[i].AnimateCurrentFrame (counter);
+				}
+		drawingUtility[0].zoomFunction (this.camera);
 
 	}
 	
 
-
+	private List<float> getRandomFloatArray(){
+		List<float> test = new List<float>();
+		for (int i = 0; i < 10; i++) {
+			test.Add ((Random.value *10) % 10);
+		}
+		return test;
+	}
 
 
 
