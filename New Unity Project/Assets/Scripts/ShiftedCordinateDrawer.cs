@@ -19,7 +19,7 @@ public class ShiftedCordinateDrawer : MonoBehaviour
 	//////////////////////////////////////Debug Variables/////////////////
 	private List <List <float>> dataSet = new List <List <float>> ();
 	private int currentFrame;
-	public GUIText currentFText;
+	//public GUIText currentFText;
 	static List<float> givenData;
 	
 	//////////////////////////////////////////////////////////////////////	
@@ -50,7 +50,7 @@ public class ShiftedCordinateDrawer : MonoBehaviour
 		col = new List<Color32> ();
 		setColorsForNumberOfVectors ();				
 		currentFrame = 0;
-		currentFText.text = "Current Frame: " + currentFrame.ToString ();
+		//currentFText.text = "Current Frame: " + currentFrame.ToString ();
 		GatherMaxValues ();		
 		//setup camera
 		camOrtho = givenXMax; //fix this (it assumes that the the largest value in the data will be an X value)
@@ -65,7 +65,7 @@ public class ShiftedCordinateDrawer : MonoBehaviour
 	{
 		//Track current frame for debugging purposed REMOVE FOR SHIPPING VERSION
 		currentFrame++;
-		currentFText.text = "Current Frame: " + currentFrame.ToString ();
+		//currentFText.text = "Current Frame: " + currentFrame.ToString ();
 		
 		//Zoom functionality
 		if (Input.GetAxis ("Mouse ScrollWheel") > 0) { // forward
