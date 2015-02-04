@@ -17,6 +17,11 @@ public class UIMangerScript : MonoBehaviour {
 				}
 		}
 
+	public void HelpButtonClicked(){
+		Application.OpenURL("file:///Users/tommy/Desktop/NewsLotsOflInes/2dVisualizationUnity/New%20Unity%20Project/Documentation/index.html");
+
+
+	}
 	public void openButtonClicked()
 	{
 		m_fileBrowser = new FileBrowser(
