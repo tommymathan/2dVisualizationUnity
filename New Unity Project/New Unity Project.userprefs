@@ -1,16 +1,11 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\notificationScript.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Iter3\DrawUtil.cs">
     <Files>
-      <File FileName="Assets\FileBrowser.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Iter3\MouseHandler.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Iter3\Visualization.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Iter3\CollocatedVis.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Iter3\DrawUtil.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Iter3\DataBuilder.cs" Line="1" Column="1" />
-      <File FileName="Assets\notificationScript.cs" Line="49" Column="36" />
-      <File FileName="Assets\UIMangerScript.cs" Line="9" Column="2" />
-      <File FileName="Assets\FileMouseOver.cs" Line="125" Column="5" />
+      <File FileName="Assets\Scripts\Iter3\MouseHandler.cs" Line="12" Column="22" />
+      <File FileName="Assets\Scripts\Iter3\CollocatedVis.cs" Line="53" Column="25" />
+      <File FileName="Assets\Scripts\Iter3\DrawUtil.cs" Line="191" Column="39" />
+      <File FileName="Assets\UIMangerScript.cs" Line="26" Column="6" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

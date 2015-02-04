@@ -10,6 +10,7 @@ public class CollocatedVis : Visualization {
 	static float givenYMax; // x and y max are used to determine camera perspective size
 	static Material lineMaterial;
 	Mesh mesh;
+	List<float> randomHolder;
 	DrawUtil[] drawingUtility;
 	
 	int numbeOfIncomingVectors;
@@ -20,8 +21,8 @@ public class CollocatedVis : Visualization {
 	// Use this for initialization
 	void Start () {
 		//Debug code
-		
-		
+		gameObject.AddComponent<MouseHandler>();
+		gameObject.AddComponent<ScreenLines> ();
 		givenXMax = 10;
 		givenYMax = 10;
 		counter = 0;
@@ -44,8 +45,6 @@ public class CollocatedVis : Visualization {
 			meshContainmentArray[i].GetComponent<MeshFilter> ().mesh 
 				= drawingUtility[i].AnimateCurrentFrame (counter);
 		}
-		drawingUtility[0].zoomFunction (this.camera);
-		
 	}
 	
 	
@@ -130,40 +129,6 @@ public class CollocatedVis : Visualization {
 	
 	
 	////////////////////////////////////////////////TEMP CODE FOR DEBUGGING///////////////////////////////////////
-	void OnPostRender ()
-	{	
-		beginDraw ();
-		drawGridLines ();
-		GL.End ();
-	}
-	void beginDraw ()
-	{
-		CreateLineMat ();
-		lineMaterial.SetPass (0);
-		GL.Begin (GL.LINES);
-		GL.Color (Color.white);		
-	}
-	
-	//Draws gridlines so that we can debug more easily, draw in grey then switch back to white
-	public void drawGridLines ()
-	{
-		
-		GL.Color (Color.grey);
-		
-		for (int i = 0; i < (int)Mathf.Ceil(givenXMax); i++) {
-			GL.Vertex3 ((float)i, 0f, 0f);
-			GL.Vertex3 ((float)i, givenYMax, 0f);			
-		}
-		
-		for (int i = 0; i < (int)Mathf.Ceil(givenYMax); i++) {
-			GL.Vertex3 (0f, (float)i, 0f);
-			GL.Vertex3 (givenXMax, (float)i, 0f);			
-		}
-		
-		
-		GL.Color (Color.white);
-		
-	}
 	static void CreateLineMat ()
 	{
 		if (!lineMaterial) {
