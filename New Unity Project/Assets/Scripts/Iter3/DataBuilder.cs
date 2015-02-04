@@ -25,9 +25,13 @@ public class DataBuilder
 	{
 		//Later will set the file path when the constructor is called
 		//path += "forestFires.csv"; //Put your file into the datasets folder to test
-		
-		path = incPath;
-		parseDataIntoDataObject ();
+		if (incPath == null) {
+						path += "forestFires.csv"; //Put your file into the datasets folder to test
+				} else {
+
+						path = incPath;
+						parseDataIntoDataObject ();
+				}
 		
 		
 	}//End of databuilder constructor

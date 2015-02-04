@@ -10,7 +10,6 @@ public class CollocatedVis : Visualization {
 	static float givenYMax; // x and y max are used to determine camera perspective size
 	static Material lineMaterial;
 	Mesh mesh;
-	List<float> randomHolder;
 	DrawUtil[] drawingUtility;
 	
 	int numbeOfIncomingVectors;
@@ -28,9 +27,15 @@ public class CollocatedVis : Visualization {
 		counter = 0;
 		//test = new List<float> (new float[] {0,0,1,1,3,2,5,2,6,0,7,0});
 		
-		updateData ();
+		UpdateData ();
 		//Set up the dataObject
-		
+
+		//hardcoded camera position/ortho
+		Camera thisCam = gameObject.GetComponent<Camera> ();
+		thisCam.transform.position = new Vector3 (5f, 5f, -15f);
+		thisCam.orthographicSize = 5;
+//		GameObject.FindGameObjectsWithTag ();
+
 	}
 	
 	// Update is called once per frame
@@ -58,7 +63,38 @@ public class CollocatedVis : Visualization {
 	
 	//real code - We may need to find some efficiency improvements here, there is a signifcant delay
 	//when opening a large dataset. If that is not possible we can create a loading bar animation.
-	public void updateData(){
+	public new void UpdateData(string dataPath){
+		//TODO: check to make sure data exists
+		DataBuilder data = new DataBuilder (dataPath);
+		//Get the number of incoming vectors, we will need this number often
+		numbeOfIncomingVectors = data.getDataObject ().incomingData.Count;
+		
+		//Create an array of drawing utilitys, one for each game object we will be drawing
+		drawingUtility = new DrawUtil[numbeOfIncomingVectors];
+		
+		for (int i = 0; i < numbeOfIncomingVectors; i++) {
+			
+			drawingUtility[i] = new DrawUtil (0.02f, getRandomFloatArray(), this.camera);
+		}		
+		createMeshMonster ();
+		meshContainmentArray = new GameObject[numbeOfIncomingVectors];		
+		
+		
+		//When we do a list of objects we will add the game object to the first element of the array
+		//for now we just use this loop to test		
+		for(int i = 0; i < numbeOfIncomingVectors; i++ ) {
+			meshContainmentArray[i] = new GameObject ();
+			meshContainmentArray[i].AddComponent<MeshFilter> ();
+			meshContainmentArray[i].AddComponent<MeshRenderer> ();
+			meshContainmentArray[i].AddComponent<StayPut> ();
+			//meshContainmentArray[i] = (GameObject) Instantiate(vectorTemplate, gameObject.transform.position, Quaternion.identity);
+			meshContainmentArray[i].transform.SetParent (gameObject.transform);
+			meshContainmentArray[i].name = "Vector:" + i;
+			
+		}		
+		
+	}
+	public new void UpdateData(){
 		//TODO: check to make sure data exists
 		DataBuilder data = new DataBuilder ();
 		//Get the number of incoming vectors, we will need this number often
@@ -87,10 +123,7 @@ public class CollocatedVis : Visualization {
 			meshContainmentArray[i].name = "Vector:" + i;
 			
 		}
-		
-		
 	}
-	
 	
 	
 	

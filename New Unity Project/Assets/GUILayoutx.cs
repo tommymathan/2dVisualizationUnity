@@ -27,7 +27,7 @@ public class GUILayoutx {
 			}
 			else if (hover && callback != null && Event.current.type == EventType.MouseDown && Event.current.clickCount == 2) //Changed from MouseUp to MouseDown
 			{
-				Debug.Log("Works !");
+				//Debug.Log("Works !");
 				callback(i);
 				Event.current.Use();
 			}

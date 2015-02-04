@@ -40,13 +40,14 @@ public class DataManager : MonoBehaviour {
 	void NotifyVizualizations(){
 
 		for (int i = 0; i<vizList.Count(); i++) {
-			vizList[i].UpdateData();
+			vizList[i].UpdateData(dataPath);
 		}
 		dataUpdated = false;
 	}
 
 	public void SetDataPath(string givenPath){
 		dataPath = givenPath;
+		Debug.Log ("data path is: "+ givenPath);
 		NotifyVizualizations ();
 	}
 }

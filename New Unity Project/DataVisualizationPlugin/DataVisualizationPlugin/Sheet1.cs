@@ -63,8 +63,7 @@ namespace DataVisualizationPlugin
            //}
             
             //System.IO.File.WriteAllLines(@"C:\Users\Public\TestFolder\WriteLines.txt", exportList);
-            System.IO.File.Delete(@"C:\Users\Public\Documents\WriteLines.txt");
-            System.IO.StreamWriter file = new System.IO.StreamWriter(@"C:\Users\Public\Documents\unity.txt", false);
+            System.IO.StreamWriter file = new System.IO.StreamWriter(@"C:\Users\Public\unity.csv", false);
             
             foreach (string s in exportList)
             {

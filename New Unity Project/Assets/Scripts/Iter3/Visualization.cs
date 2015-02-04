@@ -8,8 +8,13 @@ public abstract class Visualization: MonoBehaviour {
 	private static List<float> givenData;
 	public GameObject vectorTemplate;
 	public GameObject[] meshContainmentArray;
+	public string dataPathVar;
 
 	public void UpdateData(){
+		Debug.Log ("Update called on " + this.gameObject.ToString());
+	}
+	public void UpdateData(string path){
+		dataPathVar = path;
 		Debug.Log ("Update called on " + this.gameObject.ToString());
 	}
 
