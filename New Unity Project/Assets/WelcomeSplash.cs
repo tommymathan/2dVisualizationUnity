@@ -11,6 +11,7 @@ public class WelcomeSplash : MonoBehaviour, IPointerClickHandler {
 
 		splash.animation ["splashOut"].speed = 1;
 		splash.animation.Play ();
+		Destroy (splash, 0.1f);
 	}
 
 }

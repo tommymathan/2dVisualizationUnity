@@ -1,5 +1,10 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System;
+using System.IO;
+using System.Text;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using UnityEngine;
 
 public class UIMangerScript : MonoBehaviour {
 
@@ -17,6 +22,11 @@ public class UIMangerScript : MonoBehaviour {
 				}
 		}
 
+	public void HelpButtonClicked(){
+		Application.OpenURL(Environment.CurrentDirectory +@"\Documentation\index.html");
+
+
+	}
 	public void openButtonClicked()
 	{
 		m_fileBrowser = new FileBrowser(
