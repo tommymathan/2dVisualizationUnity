@@ -158,6 +158,22 @@ public class DrawUtil
 		return DrawContiguousLineSegments (temp);
 
 		}
+	private Mesh shiftedFilter(List<float> dataSet)
+	{
+		
+		float orginX = 0;	//temp code for demo
+		float orginY = 0;	//temp code for demo
+		List<float> temp = new List<float>();
+		for (int i=0; i < dataSet.Count; i+=2) {
+			temp.Add (dataSet [i]+orginX);
+			temp.Add(dataSet [i + 1] +orginY);//temp code for demo
+			
+			orginX = ( orginX +1 ); 		///temp code for demo
+			orginY = ( orginY + 1);	//temp code for demo
+		}
+		return DrawContiguousLineSegments (temp);
+		
+	}
 	
 	public Mesh DrawContiguousLineSegments (List<float> dataSet)
 	{
