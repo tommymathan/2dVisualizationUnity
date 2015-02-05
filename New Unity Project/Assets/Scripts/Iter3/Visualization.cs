@@ -13,19 +13,10 @@ public abstract class Visualization: MonoBehaviour {
 	public void UpdateData(){
 		Debug.Log ("Update called on " + this.gameObject.ToString());
 	}
-	public void UpdateData(string path){
+
+	public virtual void UpdateData(string path){
 		dataPathVar = path;
 		Debug.Log ("Update called on " + this.gameObject.ToString());
-	}
-
-	public void createMeshMonster(){
-		vectorTemplate = new GameObject ();
-		vectorTemplate.AddComponent<MeshFilter> ();
-		vectorTemplate.AddComponent<MeshRenderer> ();
-		vectorTemplate.AddComponent<StayPut> ();
-		vectorTemplate = (GameObject) Instantiate(vectorTemplate, gameObject.transform.position, Quaternion.identity);
-		vectorTemplate.transform.SetParent (gameObject.transform);
-		vectorTemplate.name = "ParentVector";
 	}
 
 	public void AddCameraControls(){
