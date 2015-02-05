@@ -25,8 +25,8 @@ public class DataBuilder
 	{
 		//Later will set the file path when the constructor is called
 		//path += "forestFires.csv"; //Put your file into the datasets folder to test
-		if (incPath == null) {
-						path += "forestFires.csv"; //Put your file into the datasets folder to test
+		if (incPath == null || incPath.Equals("")) {
+						path += "forestFiresFullDataSet.csv"; //Put your file into the datasets folder to test
 				} else {
 
 						path = incPath;
@@ -67,17 +67,24 @@ public class DataBuilder
 				if (float.TryParse (dataElement, out tempFloat)) {
 					//  Debug.Log("Temp float is" + tempFloat);
 					//  Debug.Log("count is" + count);
+					tempFloat = normalizationFunction(tempFloat);
 					dataObject.incomingData [count].Add (tempFloat);	
 					if (columnWise)
 						count++;
 				}					
 			}
-			count = columnWise ? 0 : count++;
+			if (dataObject.incomingData [count].Count > 0){
+			count = columnWise ? 0 : count+1;
+			}
 			
 			
 		}//End of for each
 	}
-	
+
+	private float normalizationFunction(float temp)
+	{
+		return (temp / 724) * 40;
+	}
 	//Returns an organized representation of a csv file
 	public DataObject getDataObject ()
 	{
@@ -109,6 +116,8 @@ public class DataBuilder
 		//Add the labels from the list which had the fewest items added to it,
 		//rarely would we see a dataset that had more labels than vectors
 		// Debug.Log("temp 1 count is" + temp1.Count + "Temp 2 count is" + temp2.Count);
+
+
 		dataObject.labels.AddRange (temp1.Count < temp2.Count ? temp1 : temp2);
 		
 		//if there are more column labels than row labels we are row wise

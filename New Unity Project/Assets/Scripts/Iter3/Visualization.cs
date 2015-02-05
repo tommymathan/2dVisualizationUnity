@@ -14,8 +14,8 @@ public abstract class Visualization: MonoBehaviour {
 		Debug.Log ("Update called on " + this.gameObject.ToString());
 	}
 
-	public virtual void UpdateData(string path){
-		dataPathVar = path;
+	public virtual void UpdateData(DataObject dataFromFile){
+
 		Debug.Log ("Update called on " + this.gameObject.ToString());
 	}
 

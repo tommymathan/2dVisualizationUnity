@@ -1,9 +1,16 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Iter3\CollocatedVis.cs">
     <Files>
-      <File FileName="Assets\Scripts\Iter3\CollocatedVis.cs" Line="22" Column="15" />
+      <File FileName="Assets\Scripts\Iter3\CollocatedVis.cs" Line="64" Column="4" />
       <File FileName="Assets\WelcomeSplash.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Iter3\DataBuilder.cs" Line="94" Column="45" />
+      <File FileName="Assets\Scripts\Iter3\DataManager.cs" Line="61" Column="18" />
+      <File FileName="Assets\UIMangerScript.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Iter3\ShiftedVis.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\ShiftedCordinateDrawer.cs" Line="152" Column="38" />
+      <File FileName="Assets\Scripts\Iter3\DrawUtil.cs" Line="129" Column="7" />
+      <File FileName="Assets\Scripts\Iter3\Visualization.cs" Line="18" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

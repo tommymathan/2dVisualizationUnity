@@ -31,13 +31,34 @@ public class DrawUtil
 	private float previousX;
 	private float previousY;
 	private bool animateOnUpdate;
-	private int ANIMATIONSPEED = 20;
+	private int ANIMATIONSPEED = 100;
 	private Camera curVisCamera;
+
 	
 	
 	public DrawUtil (float w, List<float> d ,Camera visCamera)
 	{
 		animationFrame = 0;
+		lineWidth = w;
+		incomingDataSet = d;
+		animateOnUpdate = true;
+		curVisCamera = visCamera;
+	}
+	
+	public DrawUtil (float w, List<float> d ,Camera visCamera,int animationSpeed)
+	{
+		ANIMATIONSPEED = animationSpeed;
+		animationFrame = 0;
+		lineWidth = w;
+		incomingDataSet = d;
+		animateOnUpdate = true;
+		curVisCamera = visCamera;
+	}
+	
+	public DrawUtil (float w, List<float> d ,Camera visCamera,int animationSpeed,int animationFrameStart)
+	{
+		ANIMATIONSPEED = animationSpeed;
+		animationFrame = animationFrameStart;
 		lineWidth = w;
 		incomingDataSet = d;
 		animateOnUpdate = true;
@@ -55,21 +76,27 @@ public class DrawUtil
 			animateOnUpdate = true;
 		}
 		
+
 		
 		//Partial list to display to user
 		List<float> temp = new List<float> ();
-		
+
+
 		//Track the current frame relative to the time when the animation was called
 		int currentRelativeFrame = updateFrame - animationFrame;
+		float currentPrecentageAnimated = ((float)((currentRelativeFrame % ANIMATIONSPEED )) / ANIMATIONSPEED);
 		
 		
 		//We add the first two vertexes to the array because we cannot animate a single point, we don't need to waste the time
 		temp.Add (incomingDataSet [0]);
 		temp.Add (incomingDataSet [1]);
-		
+
+		float orginX = temp[0];	//temp code for demo
+		float orginY = temp[1];	//temp code for demo	
 		//The cursor will keep track of our current true animation frame, that is the number of key frames that have passed since the 
 		//animation method was called
-		cursor = currentRelativeFrame / ANIMATIONSPEED;
+		cursor = (currentRelativeFrame / ANIMATIONSPEED) *2;
+
 		
 		
 		
@@ -79,8 +106,12 @@ public class DrawUtil
 			
 			//for every two points in the data set we add them as a pair to the temporary dataset for display
 			for (int j = 2; j < cursor+2; j+=2) {
-				temp.Add (incomingDataSet [j]);
-				temp.Add (incomingDataSet [j + 1]);								
+				temp.Add (incomingDataSet [j]+orginX);
+				temp.Add (incomingDataSet [j + 1]+orginY);		
+				
+				orginX = incomingDataSet [j] + orginX; 		///temp code for demo
+				orginY = incomingDataSet [j + 1] + orginY;	//temp code for demo
+
 			}
 			//We track the previous point so that we know where to animate from
 			previousX = temp [temp.Count - 2];
@@ -88,47 +119,50 @@ public class DrawUtil
 			
 			
 			//If we are on an even frame we need to animate the second half the segment
-			if (cursor % 2 == 0) {
-				temp.Add ((((incomingDataSet [cursor + 2] - previousX) * 
-				            ((float)((updateFrame % ANIMATIONSPEED - 1) / 2) / ANIMATIONSPEED)) +
-				           ((incomingDataSet [cursor + 2] - previousX) * 0.5f))
-				          + previousX);
-				
-				
-				temp.Add ((((incomingDataSet [cursor + 3] - previousY) * 
-				            ((float)((updateFrame % ANIMATIONSPEED - 1) / 2) / ANIMATIONSPEED)) +
-				           ((incomingDataSet [cursor + 3] - previousY) * 0.5f)
-				           ) + previousY);
-			}
-			//If we are on an odd frame we need to animate the first half of the segment
-			if (cursor % 2 == 1) {
-				temp.Add ((incomingDataSet [cursor + 3] - previousX) * 
-				          ((float)((updateFrame % ANIMATIONSPEED - 1) / 2) / ANIMATIONSPEED)
-				          + previousX);
-				temp.Add ((incomingDataSet [cursor + 4] - previousY) * 
-				          ((float)((updateFrame % ANIMATIONSPEED - 1) / 2) / ANIMATIONSPEED)
-				          + previousY);
-			}	
-			
-			
-			//Do we need to make a new instance here?
-			if (temp.Count % 2 == 1)
-				temp.Insert (0,temp[0]);
-			
+			//The general idea here is to graph the previous x + % current x and
+			//previous y + % current y
+
+			//Debug.Log("The current Precentage animated is" + currentPrecentageAnimated);
+			temp.Add (((incomingDataSet [cursor + 2]) * currentPrecentageAnimated)
+				          + previousX);	
+			//Debug.Log("The current data being added is" + ((incomingDataSet [cursor + 2]) * currentPrecentageAnimated)
+			 //         + previousX);
+			temp.Add (((incomingDataSet [cursor + 3]) * currentPrecentageAnimated )
+				  + previousY);
+			//Debug.Log("The current data being added is" + ((incomingDataSet [cursor + 3]) * currentPrecentageAnimated)
+			 //         + previousY);
+		
 			
 			return 	DrawContiguousLineSegments (temp);
 		} else {
 			animateOnUpdate = false;
-			return DrawContiguousLineSegments (incomingDataSet);
+			return collocatedFilter (incomingDataSet);
 		}
 		
 		
-		
 	}
+
+	private Mesh collocatedFilter(List<float> dataSet)
+	{
+		
+		float orginX = 0;	//temp code for demo
+		float orginY = 0;	//temp code for demo
+		List<float> temp = new List<float>();
+		for (int i=0; i < dataSet.Count; i+=2) {
+			temp.Add (dataSet [i]+orginX);
+			temp.Add(dataSet [i + 1] +orginY);//temp code for demo
+			
+			orginX = (dataSet [i] + orginX) ; 		///temp code for demo
+			orginY = (dataSet [i + 1] + orginY );	//temp code for demo
+		}
+		return DrawContiguousLineSegments (temp);
+
+		}
 	
 	public Mesh DrawContiguousLineSegments (List<float> dataSet)
 	{
 		
+
 		object[] verts = new object[2];
 		Vector3 currentVector = new Vector3 (0, 0, 0); //used to gather a direction of the line to properly set the edges of the generated quad
 		Vector3 up = new Vector3 (0, 0, -10); //used for cross product
@@ -141,7 +175,8 @@ public class DrawUtil
 		
 		//put the data in this format {v3, v3, v3, v3};
 		for (int i=0; i < dataSet.Count; i+=2) {
-			organizedData.Add (new Vector3 (dataSet [i], dataSet [i + 1], zDist));
+			organizedData.Add (new Vector3 (dataSet [i], dataSet [i + 1], zDist));//temp code for demo
+
 			//Debug.Log ("Pair added " + givenData[i] +  givenData[i+1]);
 		}
 		
@@ -203,6 +238,8 @@ public class DrawUtil
 		
 		return mesh;
 	}
+
+
 	
 	public void ManageColliders(List<float> passedList){
 		//put the data in this format {v3, v3, v3, v3};
