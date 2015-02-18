@@ -65,7 +65,6 @@
      <Compile Include="Assets\Scripts\Iter3\ScreenLines.cs" />
      <Compile Include="Assets\Scripts\Iter3\ShiftedVis.cs" />
      <Compile Include="Assets\Scripts\Iter3\Visualization.cs" />
-     <Compile Include="Assets\Scripts\Iter3\oldUtility.cs" />
      <Compile Include="Assets\Scripts\OpenGL.cs" />
      <Compile Include="Assets\Scripts\SafeDataStandard.cs" />
      <Compile Include="Assets\Scripts\ShiftedCordinateDrawer.cs" />
