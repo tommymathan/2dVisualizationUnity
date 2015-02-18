@@ -6,7 +6,7 @@ public class MouseHandler : MonoBehaviour {
 	private float mouseSensitivity;
 	private Vector3 lastPosition;
 	private GameObject mouseObj;
-	private CircleCollider2D mouseCol;
+	private BoxCollider mouseCol;
 	private float mouseColliderSize;
 	
 	// Use this for initialization
@@ -16,11 +16,19 @@ public class MouseHandler : MonoBehaviour {
 		mouseSensitivity = 0.01f;
 		lastPosition = new Vector3 (0.0f, 0.0f, 0.0f);
 		mouseObj = new GameObject();
-		mouseObj.AddComponent<CircleCollider2D> ();
-		mouseCol = mouseObj.GetComponent<CircleCollider2D> ();
+
+		mouseObj.AddComponent<Rigidbody>();
+		Rigidbody rb = mouseObj.GetComponent<Rigidbody>();
+		rb.useGravity = false;
+
+		mouseObj.AddComponent<BoxCollider> ();
+		mouseCol = mouseObj.GetComponent<BoxCollider> ();
 		mouseObj.name = "Mouse Loc";
-		mouseCol.radius = mouseColliderSize;
+		mouseCol.size = new Vector3(1f,1f,50f);
 		mouseCol.isTrigger = true;
+
+		mouseObj.AddComponent<MouseCollision>();
+
 	}
 	
 	// Update is called once per frame
@@ -59,5 +67,9 @@ public class MouseHandler : MonoBehaviour {
 			}
 		}
 		
+	}
+
+	void OnTriggerEnter(Collider other) {
+		Debug.Log ("test from mouse");
 	}
 }

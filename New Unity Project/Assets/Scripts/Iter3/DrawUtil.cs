@@ -19,7 +19,6 @@ public class DrawUtil
 	private MeshFilter meshFilter; // this will refer to the MF for any spawned children
 	private Mesh mesh; //the actual mesh in space
 	private int zDist; //backdist for camera(has no affect on FOV in ortho mode
-	private GameObject colliderObject = new GameObject();
 	
 	//Incoming variables
 	private float lineWidth;
@@ -34,7 +33,9 @@ public class DrawUtil
 	private int ANIMATIONSPEED = 100;
 	private Camera curVisCamera;
 
-	
+	//collider variables use the drawutil to find verts
+	private List<float> colliderDataSet;
+	private bool collidersLoaded;
 	
 	public DrawUtil (float w, List<float> d ,Camera visCamera)
 	{
@@ -43,6 +44,7 @@ public class DrawUtil
 		incomingDataSet = d;
 		animateOnUpdate = true;
 		curVisCamera = visCamera;
+		collidersLoaded = false;
 	}
 	
 	public DrawUtil (float w, List<float> d ,Camera visCamera,int animationSpeed)
@@ -53,6 +55,7 @@ public class DrawUtil
 		incomingDataSet = d;
 		animateOnUpdate = true;
 		curVisCamera = visCamera;
+		collidersLoaded=false;
 	}
 	
 	public DrawUtil (float w, List<float> d ,Camera visCamera,int animationSpeed,int animationFrameStart)
@@ -63,12 +66,18 @@ public class DrawUtil
 		incomingDataSet = d;
 		animateOnUpdate = true;
 		curVisCamera = visCamera;
+		collidersLoaded = false;
 	}
 	
 	
 	
-	public Mesh AnimateCurrentFrame (int updateFrame)
+	public Mesh AnimateCurrentFrame (int updateFrame, GameObject go)
 	{
+		if (currentVisObject == null) {
+			currentVisObject = go;
+			Debug.Log ("Null vis object, rebuilding...");
+		}
+
 		//if this is the first time the loop is executing we need to set the starting frame so that we know
 		//how far we've come in this animation
 		if (!animateOnUpdate){
@@ -251,25 +260,43 @@ public class DrawUtil
 		mesh.vertices = newVerts;
 		mesh.uv = newUv;
 		mesh.triangles = newTriangles;
-		
+
+		if (!collidersLoaded) {
+			colliderDataSet = dataSet;
+			//ManageColliders(colliderDataSet);
+			collidersLoaded = true;
+		}
+			//Debug.Log (mesh.vertexCount);
 		return mesh;
 	}
 
+	public static void ManageVectorColliders(GameObject theObject){
+		Mesh theMesh = theObject.GetComponent<MeshFilter> ().mesh;
+		theObject.AddComponent<MeshCollider> ();
+		MeshCollider thisCollider = theObject.GetComponent<MeshCollider> ();
+		thisCollider.isTrigger = true;
+		thisCollider.sharedMesh = null; //for some reason you have to make this null before you assign it /*shrug*/
+		thisCollider.sharedMesh = theMesh;
+		//Debug.Log (theObject.name);
+		//Debug.Log (theMesh.vertexCount);
 
+	}
 	
 	public void ManageColliders(List<float> passedList){
-		//put the data in this format {v3, v3, v3, v3};
-		List<Vector3> organizedData = new List<Vector3> ();
-		for (int i=0; i < passedList.Count; i+=2) {
-			organizedData.Add (new Vector3 (passedList[i], passedList [i + 1], zDist));
-			//Debug.Log ("Pair added " + givenData[i] +  givenData[i+1]);
-		}
-	
-		foreach (Vector3 v3 in organizedData) {
-			GameObject collider = (GameObject)GameObject.Instantiate(colliderObject,v3,Quaternion.identity);
-			collider.AddComponent<BoxCollider2D>();
-			BoxCollider2D thisCollider = collider.GetComponent<BoxCollider2D>();
-			thisCollider.isTrigger=true;
+		for(int i = 0; i < passedList.Count; i+=2){
+			//Debug.Log(givenList[i]+ " " +givenList[i+1]);
+			GameObject vert = new GameObject();
+			vert.name = ""+passedList[i]+","+passedList[i+1];
+			vert.transform.position = new Vector3(passedList[i], passedList[i+1], -15);
+			vert.AddComponent<BoxCollider>();
+			
+			//vert.AddComponent<Rigidbody>();
+			//Rigidbody rb = vert.GetComponent<Rigidbody>();
+			//rb.useGravity = false;
+			
+			BoxCollider bc = vert.GetComponent<BoxCollider>();
+			bc.isTrigger = true;
+			vert.transform.parent = currentVisObject.transform;
 		}
 	}
 }

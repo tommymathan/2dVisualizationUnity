@@ -86,6 +86,7 @@ public class DataBuilder
 		return (temp / 724) * 40;
 	}
 	//Returns an organized representation of a csv file
+
 	public DataObject getDataObject ()
 	{
 		return dataObject;

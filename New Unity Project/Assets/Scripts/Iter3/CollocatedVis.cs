@@ -11,6 +11,7 @@ public class CollocatedVis : Visualization
 		static float givenYMax; // x and y max are used to determine camera perspective size
 		static Material lineMaterial;
 		bool animateOnLoad;
+		bool collidersLoaded;
 		Mesh mesh;
 		DrawUtil[] drawingUtility;
 		int numberIncomingVectors;
@@ -39,8 +40,8 @@ public class CollocatedVis : Visualization
 				Camera thisCam = gameObject.GetComponent<Camera> ();
 				thisCam.transform.position = new Vector3 (5f, 5f, -15f);
 				thisCam.orthographicSize = 5;
+				collidersLoaded = false;
 //		GameObject.FindGameObjectsWithTag ();
-
 		}
 	
 		// Update is called once per frame
@@ -49,21 +50,34 @@ public class CollocatedVis : Visualization
 				//Zoom functionality
 				//////////////////////////
 				//Graphics.DrawMesh(drawingUtility.AnimateCurrentFrame(counter), Vector3.zero, Quaternion.identity, lineMaterial, 0);
-		
-				animationCounter++;
-				//Debug.Log ("There are this many meshcontainmentarrays" + meshContainmentArray.Count());
-		
-				for (int i = 0; i < numberIncomingVectors; i++) {
-						meshContainmentArray [i].GetComponent<MeshFilter> ().mesh 
-				= drawingUtility [i].AnimateCurrentFrame (animationCounter);
-
-
-			//meshContainmentArray [i].GetComponent<MeshRenderer>().material.SetColor("_Color", Color.red);
+			if (animateOnLoad) {
+						animationCounter++;
+						//Debug.Log ("There are this many meshcontainmentarrays" + meshContainmentArray.Count());
+				
+						
+						//meshContainmentArray [i].GetComponent<MeshRenderer>().material.SetColor("_Color", Color.red);
+				} else {
+					animationCounter = 10000;
+				}
+		if (animationCounter < 10) {
+						for (int i = 0; i < numberIncomingVectors; i++) {
+								meshContainmentArray [i].GetComponent<MeshFilter> ().mesh 
+								= drawingUtility [i].AnimateCurrentFrame (100000, meshContainmentArray [i]);
+						}
 				}
 
+		 if ((Time.time > 6 )&& (!collidersLoaded)) {
+			Debug.Log ("updating vector colliders");
+			GameObject[] vectorList = GameObject.FindGameObjectsWithTag("vector");
+
+			for(int i = 0; i<vectorList.Length; i++){
+				DrawUtil.ManageVectorColliders(vectorList[i]);
+			}
+			collidersLoaded = true;
 		}
+	}
 	
-		private List<float> getRandomFloatArray ()
+	private List<float> getRandomFloatArray ()
 		{
 				List<float> test = new List<float> ();
 				for (int i = 0; i < 1000; i++) {
@@ -78,13 +92,15 @@ public class CollocatedVis : Visualization
 		{
 				//TODO: check to make sure data exists
 				//Debug.Log ("I am finally called!");
-				DataObject data = dataFromFile;
+				DataObject data = new DataObject ();
+				data = dataFromFile;
 
 				//Get the number of incoming vectors, we will need this number often
 				numberIncomingVectors = data.incomingData.Count -1;
 				
 				meshContainmentArray = new GameObject[numberIncomingVectors];
 				//Create an array of drawing utilitys, one for each game object we will be drawing
+
 				drawingUtility = new DrawUtil[numberIncomingVectors];
 				//Debug.Log ("number of incoming vectors is: " + numberIncomingVectors);
 
@@ -95,13 +111,21 @@ public class CollocatedVis : Visualization
 				
 				for (int i = numberIncomingVectors/2; i < numberIncomingVectors; i++) {
 			
-				drawingUtility [i] = new DrawUtil (0.02f, data.incomingData [i-(numberIncomingVectors/2)], this.camera,1);
+					drawingUtility [i] = new DrawUtil (0.02f, data.incomingData [i-(numberIncomingVectors/2)], this.camera,1);
 				}
 
 
 				meshContainmentArray = new GameObject[numberIncomingVectors];		
 				
-
+				//templist used for colliders
+				//List<float> tempList = new List<float>();
+				//Debug.Log (data.incomingData.Count);
+				//
+				//for(int i = 0; i<data.incomingData.Count; i++){
+				//	Debug.Log(data.incomingData[i].ElementAt(0));
+				//	//tempList.Add(data.incomingData[i].ElementAt(0));
+				//}
+		
 		
 				//When we do a list of objects we will add the game object to the first element of the array
 				//for now we just use this loop to test		
@@ -111,11 +135,24 @@ public class CollocatedVis : Visualization
 						meshContainmentArray [i].AddComponent<MeshRenderer> ();
 						meshContainmentArray [i].AddComponent<StayPut> ();
 						meshContainmentArray [i].transform.SetParent (gameObject.transform);
+						meshContainmentArray[i].tag = "vector";
 						meshContainmentArray [i].name = "Vector:" + i;
-			
-				}
 
-				if (animateOnLoad) {
+					//if(i==0){
+					//	DrawUtil.ManageColliders(tempList, meshContainmentArray[i]);
+					//	Mesh theMesh = meshContainmentArray[i].GetComponent<MeshFilter>().mesh;
+					//	Debug.Log (theMesh.ToString() + " " + theMesh.vertexCount);
+					//	meshContainmentArray[i].GetComponent<MeshCollider>().sharedMesh = null;
+					//	meshContainmentArray[i].GetComponent<MeshCollider>().sharedMesh = theMesh;
+					//}
+				}
+		
+		//right now this just parents the list to the first vector
+		//this may need some changing, there is no update on sharedmesh
+				
+
+		
+		if (animateOnLoad) {
 						animationCounter = 0;
 				}
 		}
