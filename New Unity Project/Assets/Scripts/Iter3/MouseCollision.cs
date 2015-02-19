@@ -14,10 +14,11 @@ public class MouseCollision : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider other) {
-		//Debug.Log ("mouse hit: " +other.ToString());
+		Debug.Log ("mouse hit: " +other.ToString());
+		//other.GetComponentInParent
 	}
 
 	void OnTriggerExit(Collider other){
-		//Debug.Log ("mouse left: " +other.ToString());
+		Debug.Log ("mouse left: " +other.ToString());
 	}
 }

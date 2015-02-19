@@ -17,7 +17,7 @@ public class CollocatedVis : Visualization
 		int numberIncomingVectors;
 		int animationCounter;
 		Color[] colors;
-	
+	int counter = 0;
 		//////////////////////////////
 	
 		// Use this for initialization
@@ -59,22 +59,24 @@ public class CollocatedVis : Visualization
 				} else {
 					animationCounter = 10000;
 				}
-		if (animationCounter < 10) {
+		if (Input.GetKeyDown ("space")) {
 						for (int i = 0; i < numberIncomingVectors; i++) {
+				// DestroyImmediate( meshContainmentArray [i].GetComponent<MeshFilter> ().sharedMesh);
 								meshContainmentArray [i].GetComponent<MeshFilter> ().mesh 
 								= drawingUtility [i].AnimateCurrentFrame (100000, meshContainmentArray [i]);
 						}
+				
+						counter++;
+						if (counter > 3) {
+								Debug.Log ("updating vector colliders");
+								GameObject[] vectorList = GameObject.FindGameObjectsWithTag ("vector");
+
+								for (int i = 0; i<vectorList.Length; i++) {
+										DrawUtil.ManageVectorColliders (vectorList [i]);
+								}
+								collidersLoaded = true;
+						}
 				}
-
-		 if ((Time.time > 6 )&& (!collidersLoaded)) {
-			Debug.Log ("updating vector colliders");
-			GameObject[] vectorList = GameObject.FindGameObjectsWithTag("vector");
-
-			for(int i = 0; i<vectorList.Length; i++){
-				DrawUtil.ManageVectorColliders(vectorList[i]);
-			}
-			collidersLoaded = true;
-		}
 	}
 	
 	private List<float> getRandomFloatArray ()
@@ -108,11 +110,7 @@ public class CollocatedVis : Visualization
 			
 					drawingUtility [i] = new DrawUtil (0.04f, data.incomingData [i], this.camera,550);
 				}
-				
-				for (int i = numberIncomingVectors/2; i < numberIncomingVectors; i++) {
-			
-					drawingUtility [i] = new DrawUtil (0.02f, data.incomingData [i-(numberIncomingVectors/2)], this.camera,1);
-				}
+		Debug.Log ("drawing util done");
 
 
 				meshContainmentArray = new GameObject[numberIncomingVectors];		

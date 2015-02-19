@@ -77,78 +77,68 @@ public class DrawUtil
 			currentVisObject = go;
 			Debug.Log ("Null vis object, rebuilding...");
 		}
-
 		//if this is the first time the loop is executing we need to set the starting frame so that we know
 		//how far we've come in this animation
 		if (!animateOnUpdate){
-			//animationFrame = updateFrame; 
+			//animationFrame = updateFrame;
 			animateOnUpdate = true;
 		}
-		
-
-		
 		//Partial list to display to user
 		List<float> temp = new List<float> ();
-
-
 		//Track the current frame relative to the time when the animation was called
 		int currentRelativeFrame = updateFrame - animationFrame;
 		float currentPrecentageAnimated = ((float)((currentRelativeFrame % ANIMATIONSPEED )) / ANIMATIONSPEED);
-		
-		
 		//We add the first two vertexes to the array because we cannot animate a single point, we don't need to waste the time
 		temp.Add (incomingDataSet [0]);
 		temp.Add (incomingDataSet [1]);
-
-		float orginX = temp[0];	//temp code for demo
-		float orginY = temp[1];	//temp code for demo	
-		//The cursor will keep track of our current true animation frame, that is the number of key frames that have passed since the 
+		//The cursor will keep track of our current true animation frame, that is the number of key frames that have passed since the
 		//animation method was called
 		cursor = (currentRelativeFrame / ANIMATIONSPEED) *2;
-
-		
-		
-		
-		
 		//We are done once the cursor is within 4 elements of the size of the incoming data
 		if (cursor + 4 < incomingDataSet.Count) {
-			
 			//for every two points in the data set we add them as a pair to the temporary dataset for display
 			for (int j = 2; j < cursor+2; j+=2) {
-				temp.Add (incomingDataSet [j]+orginX);
-				temp.Add (incomingDataSet [j + 1]+orginY);		
-				
-				orginX = incomingDataSet [j] + orginX; 		///temp code for demo
-				orginY = incomingDataSet [j + 1] + orginY;	//temp code for demo
-
+				temp.Add (incomingDataSet [j]);
+				temp.Add (incomingDataSet [j + 1]);
 			}
 			//We track the previous point so that we know where to animate from
 			previousX = temp [temp.Count - 2];
 			previousY = temp [temp.Count - 1];
-			
-			
 			//If we are on an even frame we need to animate the second half the segment
 			//The general idea here is to graph the previous x + % current x and
 			//previous y + % current y
-
 			//Debug.Log("The current Precentage animated is" + currentPrecentageAnimated);
 			temp.Add (((incomingDataSet [cursor + 2]) * currentPrecentageAnimated)
-				          + previousX);	
+			          + previousX);
 			//Debug.Log("The current data being added is" + ((incomingDataSet [cursor + 2]) * currentPrecentageAnimated)
-			 //         + previousX);
+			// + previousX);
 			temp.Add (((incomingDataSet [cursor + 3]) * currentPrecentageAnimated )
-				  + previousY);
+			          + previousY);
 			//Debug.Log("The current data being added is" + ((incomingDataSet [cursor + 3]) * currentPrecentageAnimated)
-			 //         + previousY);
-		
-			
-			return 	DrawContiguousLineSegments (temp);
+			// + previousY);
+			return DrawContiguousLineSegments (temp);
 		} else {
 			animateOnUpdate = false;
 			return collocatedFilter (incomingDataSet);
 		}
-		
-		
+	}
+	private void collocatedPointShifter(){
+				float orginX = incomingDataSet [0]; //temp code for demo
+				float orginY = incomingDataSet [1]; //temp code for demo
+				for (int j = 2; j < cursor+2; j+=2) {
+						incomingDataSet [j] = incomingDataSet [j] + orginX;
+						incomingDataSet [j + 1] = incomingDataSet [j + 1] + orginY;
+						orginX = incomingDataSet [j] + orginX; ///temp code for demo
+						orginY = incomingDataSet [j + 1] + orginY; //temp code for demo
+				}
+		}
+
+
+	//If there is an uneven number of incoming data points then we pair the first point with itself
+	private void checkIncomingData()
+	{
+		if (!(incomingDataSet.Count % 2 == 0))
+			incomingDataSet.Insert (0, incomingDataSet [0]);
 	}
 
 	private Mesh collocatedFilter(List<float> dataSet)
@@ -183,6 +173,38 @@ public class DrawUtil
 		return DrawContiguousLineSegments (temp);
 		
 	}
+
+	/**
+	 * Method that determines how the radial paired visualization is drawn.
+	 * Each vector takes the first set of points as the origin and the rest of
+	 * the points for that vector are drawn from that origin point.
+	 * 
+	 * dataset - the data set as a list of floats
+	 */
+	private Mesh radialFilter(List<float> dataSet)
+	{
+		//Current origin point
+		float orginX = dataSet[0];	
+		float orginY = dataSet [1];
+
+		//temporary list to that stores the manipulated dataset to be drawn
+		List<float> temp = new List<float>();
+
+		//Start at 2 because the first two are the origin points
+		for (int i = 2; i < dataSet.Count; i+=2) {
+
+			//Add origin first
+			temp.Add(orginX);
+			temp.Add (orginY);
+
+			//add end point to the vector
+			temp.Add (dataSet[i]);
+			temp.Add (dataSet[i+1]);
+
+		}
+		return DrawContiguousLineSegments (temp);
+
+	}
 	
 	public Mesh DrawContiguousLineSegments (List<float> dataSet)
 	{
@@ -200,7 +222,7 @@ public class DrawUtil
 		
 		//put the data in this format {v3, v3, v3, v3};
 		for (int i=0; i < dataSet.Count; i+=2) {
-			organizedData.Add (new Vector3 (dataSet [i], dataSet [i + 1], zDist));//temp code for demo
+			organizedData.Add (new Vector3 (dataSet [i], dataSet [i + 1], zDist));
 
 			//Debug.Log ("Pair added " + givenData[i] +  givenData[i+1]);
 		}
@@ -269,6 +291,7 @@ public class DrawUtil
 			//Debug.Log (mesh.vertexCount);
 		return mesh;
 	}
+
 
 	public static void ManageVectorColliders(GameObject theObject){
 		Mesh theMesh = theObject.GetComponent<MeshFilter> ().mesh;
