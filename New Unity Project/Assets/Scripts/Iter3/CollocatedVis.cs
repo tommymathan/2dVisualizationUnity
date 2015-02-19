@@ -40,7 +40,7 @@ public class CollocatedVis : Visualization
 				Camera thisCam = gameObject.GetComponent<Camera> ();
 				thisCam.transform.position = new Vector3 (5f, 5f, -15f);
 				thisCam.orthographicSize = 5;
-				collidersLoaded = false;
+				collidersLoaded = true;
 //		GameObject.FindGameObjectsWithTag ();
 		}
 	
@@ -52,13 +52,12 @@ public class CollocatedVis : Visualization
 				//Graphics.DrawMesh(drawingUtility.AnimateCurrentFrame(counter), Vector3.zero, Quaternion.identity, lineMaterial, 0);
 			if (animateOnLoad) {
 						animationCounter++;
-						//Debug.Log ("There are this many meshcontainmentarrays" + meshContainmentArray.Count());
-				
-						
+						//Debug.Log ("There are this many meshcontainmentarrays" + meshContainmentArray.Count());						
 						//meshContainmentArray [i].GetComponent<MeshRenderer>().material.SetColor("_Color", Color.red);
 				} else {
 					animationCounter = 10000;
 				}
+<<<<<<< HEAD
 		if (Input.GetKeyDown ("space")) {
 						for (int i = 0; i < numberIncomingVectors; i++) {
 				// DestroyImmediate( meshContainmentArray [i].GetComponent<MeshFilter> ().sharedMesh);
@@ -70,6 +69,21 @@ public class CollocatedVis : Visualization
 						if (counter > 3) {
 								Debug.Log ("updating vector colliders");
 								GameObject[] vectorList = GameObject.FindGameObjectsWithTag ("vector");
+=======
+		if (animationCounter % 100 == 0 || animationCounter == 1) {
+						for (int i = 0; i < numberIncomingVectors; i++) {
+		//	DestroyImmediate( meshContainmentArray [i].GetComponent<MeshFilter> ().sharedMesh);
+
+					meshContainmentArray [i].GetComponent<MeshFilter> ().mesh
+					= drawingUtility [i].AnimateCurrentFrame (100, meshContainmentArray [i]);
+
+			}
+				}
+
+		 if ((animationCounter % 150 ==0 )&& (!collidersLoaded)) {
+			Debug.Log ("updating vector colliders");
+			GameObject[] vectorList = GameObject.FindGameObjectsWithTag("vector");
+>>>>>>> ddb998a3f54b682e568a3b1522496f5945c23e77
 
 								for (int i = 0; i<vectorList.Length; i++) {
 										DrawUtil.ManageVectorColliders (vectorList [i]);
@@ -108,9 +122,14 @@ public class CollocatedVis : Visualization
 
 				for (int i = 0; i < numberIncomingVectors; i++) {
 			
+<<<<<<< HEAD
 					drawingUtility [i] = new DrawUtil (0.04f, data.incomingData [i], this.camera,550);
 				}
 		Debug.Log ("drawing util done");
+=======
+					drawingUtility [i] = new DrawUtil (0.03f, data.incomingData [i], this.camera,1);
+				}
+>>>>>>> ddb998a3f54b682e568a3b1522496f5945c23e77
 
 
 				meshContainmentArray = new GameObject[numberIncomingVectors];		
@@ -153,7 +172,8 @@ public class CollocatedVis : Visualization
 		if (animateOnLoad) {
 						animationCounter = 0;
 				}
-		}
+		collidersLoaded = false;
+	}
 
 	
 		////////////////////////////////////////////////TEMP CODE FOR DEBUGGING///////////////////////////////////////
