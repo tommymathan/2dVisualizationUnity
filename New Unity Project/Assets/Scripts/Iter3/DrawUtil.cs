@@ -17,7 +17,7 @@ public class DrawUtil
 	public GameObject currentVisObject;//used to store meshfilter and rendering data
 	private Renderer meshRenderer; // this will refer to the MR for any spawned children
 	private MeshFilter meshFilter; // this will refer to the MF for any spawned children
-	private Mesh mesh; //the actual mesh in space
+
 	private int zDist; //backdist for camera(has no affect on FOV in ortho mode
 	
 	//Incoming variables
@@ -45,6 +45,7 @@ public class DrawUtil
 		animateOnUpdate = true;
 		curVisCamera = visCamera;
 		collidersLoaded = false;
+		checkIncomingData ();
 	}
 	
 	public DrawUtil (float w, List<float> d ,Camera visCamera,int animationSpeed)
@@ -56,6 +57,9 @@ public class DrawUtil
 		animateOnUpdate = true;
 		curVisCamera = visCamera;
 		collidersLoaded=false;
+		//Temp code for now used to transform data to collocated
+		collocatedPointShifter ();
+		checkIncomingData ();
 	}
 	
 	public DrawUtil (float w, List<float> d ,Camera visCamera,int animationSpeed,int animationFrameStart)
@@ -67,6 +71,7 @@ public class DrawUtil
 		animateOnUpdate = true;
 		curVisCamera = visCamera;
 		collidersLoaded = false;
+		checkIncomingData ();
 	}
 	
 	
@@ -84,49 +89,29 @@ public class DrawUtil
 			//animationFrame = updateFrame; 
 			animateOnUpdate = true;
 		}
-		
-
-		
 		//Partial list to display to user
 		List<float> temp = new List<float> ();
-
-
 		//Track the current frame relative to the time when the animation was called
 		int currentRelativeFrame = updateFrame - animationFrame;
 		float currentPrecentageAnimated = ((float)((currentRelativeFrame % ANIMATIONSPEED )) / ANIMATIONSPEED);
-		
-		
 		//We add the first two vertexes to the array because we cannot animate a single point, we don't need to waste the time
 		temp.Add (incomingDataSet [0]);
 		temp.Add (incomingDataSet [1]);
-
-		float orginX = temp[0];	//temp code for demo
-		float orginY = temp[1];	//temp code for demo	
 		//The cursor will keep track of our current true animation frame, that is the number of key frames that have passed since the 
 		//animation method was called
 		cursor = (currentRelativeFrame / ANIMATIONSPEED) *2;
 
-		
-		
-		
-		
 		//We are done once the cursor is within 4 elements of the size of the incoming data
 		if (cursor + 4 < incomingDataSet.Count) {
 			
 			//for every two points in the data set we add them as a pair to the temporary dataset for display
 			for (int j = 2; j < cursor+2; j+=2) {
-				temp.Add (incomingDataSet [j]+orginX);
-				temp.Add (incomingDataSet [j + 1]+orginY);		
-				
-				orginX = incomingDataSet [j] + orginX; 		///temp code for demo
-				orginY = incomingDataSet [j + 1] + orginY;	//temp code for demo
-
+				temp.Add (incomingDataSet [j]);
+				temp.Add (incomingDataSet [j + 1]);		
 			}
 			//We track the previous point so that we know where to animate from
 			previousX = temp [temp.Count - 2];
-			previousY = temp [temp.Count - 1];
-			
-			
+			previousY = temp [temp.Count - 1];			
 			//If we are on an even frame we need to animate the second half the segment
 			//The general idea here is to graph the previous x + % current x and
 			//previous y + % current y
@@ -139,8 +124,7 @@ public class DrawUtil
 			temp.Add (((incomingDataSet [cursor + 3]) * currentPrecentageAnimated )
 				  + previousY);
 			//Debug.Log("The current data being added is" + ((incomingDataSet [cursor + 3]) * currentPrecentageAnimated)
-			 //         + previousY);
-		
+			 //         + previousY);	
 			
 			return 	DrawContiguousLineSegments (temp);
 		} else {
@@ -150,7 +134,21 @@ public class DrawUtil
 		
 		
 	}
+	private void collocatedPointShifter(){
+		float orginX = incomingDataSet[0];	//temp code for demo
+		float orginY = incomingDataSet[1];	//temp code for demo	
 
+		for (int j = 2; j < cursor+2; j+=2) {
+			incomingDataSet[j] = incomingDataSet [j]+orginX;
+			incomingDataSet[j+1] = incomingDataSet [j + 1]+ orginY;		
+			
+			orginX = incomingDataSet [j] + orginX; 		///temp code for demo
+			orginY = incomingDataSet [j + 1] + orginY;	//temp code for demo
+			
+		}
+
+
+	}
 	private Mesh collocatedFilter(List<float> dataSet)
 	{
 		
@@ -167,6 +165,14 @@ public class DrawUtil
 		return DrawContiguousLineSegments (temp);
 
 		}
+
+	//If there is an uneven number of incoming data points then we pair the first point with itself
+	private void checkIncomingData()
+	{
+		if (!(incomingDataSet.Count % 2 == 0))
+						incomingDataSet.Insert (0, incomingDataSet [0]);
+		}
+
 	private Mesh shiftedFilter(List<float> dataSet)
 	{
 		
@@ -186,7 +192,7 @@ public class DrawUtil
 	
 	public Mesh DrawContiguousLineSegments (List<float> dataSet)
 	{
-		
+		Mesh mesh; //temp mesh
 
 		object[] verts = new object[2];
 		Vector3 currentVector = new Vector3 (0, 0, 0); //used to gather a direction of the line to properly set the edges of the generated quad
@@ -200,7 +206,7 @@ public class DrawUtil
 		
 		//put the data in this format {v3, v3, v3, v3};
 		for (int i=0; i < dataSet.Count; i+=2) {
-			organizedData.Add (new Vector3 (dataSet [i], dataSet [i + 1], zDist));//temp code for demo
+			organizedData.Add (new Vector3 (dataSet [i], dataSet [i + 1], zDist));
 
 			//Debug.Log ("Pair added " + givenData[i] +  givenData[i+1]);
 		}
