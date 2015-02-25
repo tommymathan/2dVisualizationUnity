@@ -28,6 +28,7 @@ public class MouseHandler : MonoBehaviour {
 		mouseCol.isTrigger = true;
 
 		mouseObj.AddComponent<MouseCollision>();
+		gameObject.tag =  "mouse";
 
 	}
 	
@@ -57,13 +58,16 @@ public class MouseHandler : MonoBehaviour {
 	public void ZoomFunction(){
 		if (Input.GetAxis ("Mouse ScrollWheel") > 0) { // forward
 			myCam.orthographicSize++;
+			mouseSensitivity = myCam.orthographicSize*0.004f;
 		}
 		if (Input.GetAxis ("Mouse ScrollWheel") < 0) { // back
 			if((myCam.orthographicSize <= 1.0) && (myCam.orthographicSize>0.1)){ //dont allow the ortho size to hit 0 because it freaks the f out
 				myCam.orthographicSize-=0.1f;
+				mouseSensitivity = myCam.orthographicSize*0.004f;
 			}
 			else if(myCam.orthographicSize>0.1){
 				myCam.orthographicSize--;
+				mouseSensitivity = myCam.orthographicSize*0.004f;
 			}
 		}
 		

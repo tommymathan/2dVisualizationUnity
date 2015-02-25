@@ -21,7 +21,7 @@ public class DrawUtil
 	private int zDist; //backdist for camera(has no affect on FOV in ortho mode
 	
 	//Incoming variables
-	private float lineWidth;
+	public float lineWidth;
 	private List<float> incomingDataSet;
 	
 	//Animation variables
@@ -330,6 +330,10 @@ public class DrawUtil
 			bc.isTrigger = true;
 			vert.transform.parent = currentVisObject.transform;
 		}
+	}
+
+	public void UpdateLineWidth(float f){
+		lineWidth = f;
 	}
 }
 

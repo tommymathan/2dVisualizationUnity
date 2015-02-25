@@ -7,8 +7,7 @@ public class CollocatedVis : Visualization
 	
 	
 		//Debug code
-		static float givenXMax;
-		static float givenYMax; // x and y max are used to determine camera perspective size
+		public float lineWidth;
 		static Material lineMaterial;
 		bool animateOnLoad;
 		bool collidersLoaded;
@@ -28,8 +27,7 @@ public class CollocatedVis : Visualization
 				gameObject.AddComponent<MouseHandler> ();
 				gameObject.AddComponent<ScreenLines> ();
 				animateOnLoad = true;
-				givenXMax = 10;
-				givenYMax = 10;
+
 				animationCounter = 0;
 				numberIncomingVectors = 0;
 				//test = new List<float> (new float[] {0,0,1,1,3,2,5,2,6,0,7,0});
@@ -44,6 +42,7 @@ public class CollocatedVis : Visualization
 				collidersLoaded = true;
 				//GameObject.FindGameObjectsWithTag ();
 				visColor = Color.magenta;
+				lineWidth = 2f;
 		}
 	
 		// Update is called once per frame
@@ -61,13 +60,18 @@ public class CollocatedVis : Visualization
 				}
 		if (Input.GetKeyDown ("space")) {
 						for (int i = 0; i < numberIncomingVectors; i++) {
+								drawingUtility[i].lineWidth = lineWidth;
 								// DestroyImmediate( meshContainmentArray [i].GetComponent<MeshFilter> ().sharedMesh);
 								meshContainmentArray [i].GetComponent<MeshFilter> ().mesh 
 								= drawingUtility [i].AnimateCurrentFrame (100000, meshContainmentArray [i]);
+								if(meshContainmentArray[i].GetComponent<MeshCollider>() != null){
+									meshContainmentArray[i].GetComponent<MeshCollider>().sharedMesh = meshContainmentArray [i].GetComponent<MeshFilter> ().mesh;
+								}
+								Debug.Log ("redrawing a line with width" + drawingUtility[i].lineWidth);
 						}
 				
 						counter++;
-						if (counter > 0) {
+						if (counter > 0 && counter <2) {
 								Debug.Log ("updating vector colliders");
 								GameObject[] vectorList = GameObject.FindGameObjectsWithTag ("vector");
 
@@ -113,12 +117,9 @@ public class CollocatedVis : Visualization
 				//Debug.Log ("number of incoming vectors is: " + numberIncomingVectors);
 
 				for (int i = 0; i < numberIncomingVectors; i++) {
-			
-					drawingUtility [i] = new DrawUtil (0.03f, data.incomingData [i], this.camera,1);
+					drawingUtility [i] = new DrawUtil (lineWidth, data.incomingData [i], this.camera,1);
 				}
 
-
-	
 				meshContainmentArray = new GameObject[numberIncomingVectors];		
 				
 				//templist used for colliders
@@ -185,5 +186,9 @@ public class CollocatedVis : Visualization
 				lineMaterial.hideFlags = HideFlags.HideAndDontSave;
 				lineMaterial.shader.hideFlags = HideFlags.HideAndDontSave;
 		}
-	
+
+		public void UpdateLineWidth(float f){
+			lineWidth = f;
+			Debug.Log ("Updating lineWidth..." + this.gameObject.ToString() + f);
+		}
 }
