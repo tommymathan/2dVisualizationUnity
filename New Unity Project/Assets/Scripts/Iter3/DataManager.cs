@@ -8,6 +8,7 @@ public class DataManager : MonoBehaviour {
 	private bool dataUpdated;
 	private string dataPath;
 	private DataObject dataSet;
+	private DataObject dataSelected;
 	private DataBuilder dataParser;
 
 	// Use this for initialization
@@ -16,6 +17,7 @@ public class DataManager : MonoBehaviour {
 		dataParser = new DataBuilder ();
 		dataSet = new DataObject ();
 		dataSet = dataParser.getDataObject();
+
 
 		//register all visualizations with this data manager
 		List <GameObject> cameras = new List<GameObject>();
@@ -45,6 +47,28 @@ public class DataManager : MonoBehaviour {
 		dataParser = new DataBuilder (dataPath);
 		dataSet = new DataObject ();
 		dataSet = dataParser.getDataObject();
+		//TODO: Method to request vectors to graph from user using GUI 
+		//Method returns array of ints describing selected vectors
+		int[] temp = new int[dataSet.labels.Count];
+//		for (int k =0; k < temp.Length; k++){
+//			if (k%3==0)
+//			temp [k] = 1;
+//
+//		}
+
+
+		for (int i =0; i < dataSet.incomingData.Count-1; i++) {
+			for(int j= (dataSet.incomingData[i].Count-1); j >=0 ; j--){
+
+				if(temp[j]== 1) 
+				{
+					dataSet.incomingData[i].RemoveAt(j);
+				}
+
+			}
+		}
+
+		//Assert that dataSet has more than 4 vectors left after removal
 		}
 
 	void NotifyVizualizations(){

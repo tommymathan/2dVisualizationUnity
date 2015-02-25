@@ -92,6 +92,12 @@ public class CollocatedVis : Visualization
 		//when opening a large dataset. If that is not possible we can create a loading bar animation.
 		public override void UpdateData (DataObject dataFromFile)
 		{
+
+
+		GameObject[] vectorList = GameObject.FindGameObjectsWithTag ("vector");		
+		for (int i = 0; i<vectorList.Length; i++) {
+			Destroy(vectorList [i]);
+		}
 				//TODO: check to make sure data exists
 				//Debug.Log ("I am finally called!");
 				DataObject data = new DataObject ();
@@ -112,6 +118,7 @@ public class CollocatedVis : Visualization
 				}
 
 
+	
 				meshContainmentArray = new GameObject[numberIncomingVectors];		
 				
 				//templist used for colliders
@@ -122,7 +129,8 @@ public class CollocatedVis : Visualization
 				//	Debug.Log(data.incomingData[i].ElementAt(0));
 				//	//tempList.Add(data.incomingData[i].ElementAt(0));
 				//}
-		
+
+
 		
 				//When we do a list of objects we will add the game object to the first element of the array
 				//for now we just use this loop to test		
