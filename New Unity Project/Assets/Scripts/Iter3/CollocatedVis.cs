@@ -17,7 +17,8 @@ public class CollocatedVis : Visualization
 		int numberIncomingVectors;
 		int animationCounter;
 		Color[] colors;
-	int counter = 0;
+		int counter = 0;
+		Color visColor;
 		//////////////////////////////
 	
 		// Use this for initialization
@@ -41,7 +42,8 @@ public class CollocatedVis : Visualization
 				thisCam.transform.position = new Vector3 (5f, 5f, -15f);
 				thisCam.orthographicSize = 5;
 				collidersLoaded = true;
-//		GameObject.FindGameObjectsWithTag ();
+				//GameObject.FindGameObjectsWithTag ();
+				visColor = Color.magenta;
 		}
 	
 		// Update is called once per frame
@@ -57,40 +59,24 @@ public class CollocatedVis : Visualization
 				} else {
 					animationCounter = 10000;
 				}
-<<<<<<< HEAD
 		if (Input.GetKeyDown ("space")) {
 						for (int i = 0; i < numberIncomingVectors; i++) {
-				// DestroyImmediate( meshContainmentArray [i].GetComponent<MeshFilter> ().sharedMesh);
+								// DestroyImmediate( meshContainmentArray [i].GetComponent<MeshFilter> ().sharedMesh);
 								meshContainmentArray [i].GetComponent<MeshFilter> ().mesh 
 								= drawingUtility [i].AnimateCurrentFrame (100000, meshContainmentArray [i]);
 						}
 				
 						counter++;
-						if (counter > 3) {
+						if (counter > 0) {
 								Debug.Log ("updating vector colliders");
 								GameObject[] vectorList = GameObject.FindGameObjectsWithTag ("vector");
-=======
-		if (animationCounter % 100 == 0 || animationCounter == 1) {
-						for (int i = 0; i < numberIncomingVectors; i++) {
-		//	DestroyImmediate( meshContainmentArray [i].GetComponent<MeshFilter> ().sharedMesh);
-
-					meshContainmentArray [i].GetComponent<MeshFilter> ().mesh
-					= drawingUtility [i].AnimateCurrentFrame (100, meshContainmentArray [i]);
-
-			}
-				}
-
-		 if ((animationCounter % 150 ==0 )&& (!collidersLoaded)) {
-			Debug.Log ("updating vector colliders");
-			GameObject[] vectorList = GameObject.FindGameObjectsWithTag("vector");
->>>>>>> ddb998a3f54b682e568a3b1522496f5945c23e77
 
 								for (int i = 0; i<vectorList.Length; i++) {
 										DrawUtil.ManageVectorColliders (vectorList [i]);
 								}
 								collidersLoaded = true;
 						}
-				}
+		}
 	}
 	
 	private List<float> getRandomFloatArray ()
@@ -122,14 +108,8 @@ public class CollocatedVis : Visualization
 
 				for (int i = 0; i < numberIncomingVectors; i++) {
 			
-<<<<<<< HEAD
-					drawingUtility [i] = new DrawUtil (0.04f, data.incomingData [i], this.camera,550);
-				}
-		Debug.Log ("drawing util done");
-=======
 					drawingUtility [i] = new DrawUtil (0.03f, data.incomingData [i], this.camera,1);
 				}
->>>>>>> ddb998a3f54b682e568a3b1522496f5945c23e77
 
 
 				meshContainmentArray = new GameObject[numberIncomingVectors];		
@@ -147,13 +127,18 @@ public class CollocatedVis : Visualization
 				//When we do a list of objects we will add the game object to the first element of the array
 				//for now we just use this loop to test		
 				for (int i = 0; i < numberIncomingVectors; i++) {
+						Shader unlit = Shader.Find("Self-Illumin/Diffuse");
 						meshContainmentArray [i] = new GameObject ();
 						meshContainmentArray [i].AddComponent<MeshFilter> ();
+						meshContainmentArray[i].GetComponent<MeshFilter>().mesh.RecalculateNormals();
 						meshContainmentArray [i].AddComponent<MeshRenderer> ();
 						meshContainmentArray [i].AddComponent<StayPut> ();
 						meshContainmentArray [i].transform.SetParent (gameObject.transform);
 						meshContainmentArray[i].tag = "vector";
 						meshContainmentArray [i].name = "Vector:" + i;
+						meshContainmentArray[i].renderer.material.shader = unlit;
+						meshContainmentArray[i].GetComponent<MeshRenderer>().material.color = visColor;
+						
 
 					//if(i==0){
 					//	DrawUtil.ManageColliders(tempList, meshContainmentArray[i]);

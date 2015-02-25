@@ -14,8 +14,8 @@ public class RadialVis :  Visualization {
 	void Start () {
 	
 		//Initilize mouse and background lines
-		gameObject.AddComponent<MouseHandler> ();
-		gameObject.AddComponent<ScreenLines> ();
+		//gameObject.AddComponent<MouseHandler> ();
+		//gameObject.AddComponent<ScreenLines> ();
 
 		//Initialize 
 		numberIncomingVectors = 0;

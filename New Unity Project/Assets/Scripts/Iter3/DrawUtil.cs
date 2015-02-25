@@ -96,34 +96,21 @@ public class DrawUtil
 		//We add the first two vertexes to the array because we cannot animate a single point, we don't need to waste the time
 		temp.Add (incomingDataSet [0]);
 		temp.Add (incomingDataSet [1]);
-<<<<<<< HEAD
+
 		//The cursor will keep track of our current true animation frame, that is the number of key frames that have passed since the
 		//animation method was called
 		cursor = (currentRelativeFrame / ANIMATIONSPEED) *2;
-=======
-		//The cursor will keep track of our current true animation frame, that is the number of key frames that have passed since the 
-		//animation method was called
-		cursor = (currentRelativeFrame / ANIMATIONSPEED) *2;
 
->>>>>>> ddb998a3f54b682e568a3b1522496f5945c23e77
 		//We are done once the cursor is within 4 elements of the size of the incoming data
 		if (cursor + 4 < incomingDataSet.Count) {
 			//for every two points in the data set we add them as a pair to the temporary dataset for display
 			for (int j = 2; j < cursor+2; j+=2) {
-				temp.Add (incomingDataSet [j]);
-<<<<<<< HEAD
+
 				temp.Add (incomingDataSet [j + 1]);
 			}
 			//We track the previous point so that we know where to animate from
 			previousX = temp [temp.Count - 2];
 			previousY = temp [temp.Count - 1];
-=======
-				temp.Add (incomingDataSet [j + 1]);		
-			}
-			//We track the previous point so that we know where to animate from
-			previousX = temp [temp.Count - 2];
-			previousY = temp [temp.Count - 1];			
->>>>>>> ddb998a3f54b682e568a3b1522496f5945c23e77
 			//If we are on an even frame we need to animate the second half the segment
 			//The general idea here is to graph the previous x + % current x and
 			//previous y + % current y
@@ -135,14 +122,10 @@ public class DrawUtil
 			temp.Add (((incomingDataSet [cursor + 3]) * currentPrecentageAnimated )
 			          + previousY);
 			//Debug.Log("The current data being added is" + ((incomingDataSet [cursor + 3]) * currentPrecentageAnimated)
-<<<<<<< HEAD
+
 			// + previousY);
 			return DrawContiguousLineSegments (temp);
-=======
-			 //         + previousY);	
-			
-			return 	DrawContiguousLineSegments (temp);
->>>>>>> ddb998a3f54b682e568a3b1522496f5945c23e77
+
 		} else {
 			animateOnUpdate = false;
 			return collocatedFilter (incomingDataSet);
@@ -159,28 +142,6 @@ public class DrawUtil
 				}
 		}
 
-
-	//If there is an uneven number of incoming data points then we pair the first point with itself
-	private void checkIncomingData()
-	{
-		if (!(incomingDataSet.Count % 2 == 0))
-			incomingDataSet.Insert (0, incomingDataSet [0]);
-	}
-	private void collocatedPointShifter(){
-		float orginX = incomingDataSet[0];	//temp code for demo
-		float orginY = incomingDataSet[1];	//temp code for demo	
-
-		for (int j = 2; j < cursor+2; j+=2) {
-			incomingDataSet[j] = incomingDataSet [j]+orginX;
-			incomingDataSet[j+1] = incomingDataSet [j + 1]+ orginY;		
-			
-			orginX = incomingDataSet [j] + orginX; 		///temp code for demo
-			orginY = incomingDataSet [j + 1] + orginY;	//temp code for demo
-			
-		}
-
-
-	}
 	private Mesh collocatedFilter(List<float> dataSet)
 	{
 		
