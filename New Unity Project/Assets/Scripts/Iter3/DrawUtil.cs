@@ -17,12 +17,18 @@ public class DrawUtil
 	public GameObject currentVisObject;//used to store meshfilter and rendering data
 	private Renderer meshRenderer; // this will refer to the MR for any spawned children
 	private MeshFilter meshFilter; // this will refer to the MF for any spawned children
-
+	
+	private List<float> shiftedDataSet;
+	
+	
 	private int zDist; //backdist for camera(has no affect on FOV in ortho mode
 	
 	//Incoming variables
 	public float lineWidth;
 	private List<float> incomingDataSet;
+	private Camera curVisCamera;
+	private int ANIMATIONSPEED = 100;
+	private int currentVisualizationMethod;
 	
 	//Animation variables
 	private int animationFrame;
@@ -30,14 +36,14 @@ public class DrawUtil
 	private float previousX;
 	private float previousY;
 	private bool animateOnUpdate;
-	private int ANIMATIONSPEED = 100;
-	private Camera curVisCamera;
-
+	
+	
+	
 	//collider variables use the drawutil to find verts
 	private List<float> colliderDataSet;
 	private bool collidersLoaded;
 	
-	public DrawUtil (float w, List<float> d ,Camera visCamera)
+	public DrawUtil (float w, List<float> d ,Camera visCamera,int visSetting)
 	{
 		animationFrame = 0;
 		lineWidth = w;
@@ -45,10 +51,11 @@ public class DrawUtil
 		animateOnUpdate = true;
 		curVisCamera = visCamera;
 		collidersLoaded = false;
+		currentVisualizationMethod = visSetting;
 		checkIncomingData ();
 	}
 	
-	public DrawUtil (float w, List<float> d ,Camera visCamera,int animationSpeed)
+	public DrawUtil (float w, List<float> d ,Camera visCamera,int animationSpeed,int visSetting)
 	{
 		ANIMATIONSPEED = animationSpeed;
 		animationFrame = 0;
@@ -57,12 +64,12 @@ public class DrawUtil
 		animateOnUpdate = true;
 		curVisCamera = visCamera;
 		collidersLoaded=false;
-		//Temp code for now used to transform data to collocated
-		collocatedPointShifter ();
+		currentVisualizationMethod = visSetting;		
 		checkIncomingData ();
+		collocatedPointShifter ();
 	}
 	
-	public DrawUtil (float w, List<float> d ,Camera visCamera,int animationSpeed,int animationFrameStart)
+	public DrawUtil (float w, List<float> d ,Camera visCamera,int animationSpeed,int animationFrameStart,int visSetting)
 	{
 		ANIMATIONSPEED = animationSpeed;
 		animationFrame = animationFrameStart;
@@ -71,6 +78,7 @@ public class DrawUtil
 		animateOnUpdate = true;
 		curVisCamera = visCamera;
 		collidersLoaded = false;
+		currentVisualizationMethod = visSetting;
 		checkIncomingData ();
 	}
 	
@@ -94,95 +102,154 @@ public class DrawUtil
 		int currentRelativeFrame = updateFrame - animationFrame;
 		float currentPrecentageAnimated = ((float)((currentRelativeFrame % ANIMATIONSPEED )) / ANIMATIONSPEED);
 		//We add the first two vertexes to the array because we cannot animate a single point, we don't need to waste the time
-		temp.Add (incomingDataSet [0]);
-		temp.Add (incomingDataSet [1]);
-
+		temp.Add (shiftedDataSet [0]);
+		temp.Add (shiftedDataSet [1]);
+		
 		//The cursor will keep track of our current true animation frame, that is the number of key frames that have passed since the
 		//animation method was called
 		cursor = (currentRelativeFrame / ANIMATIONSPEED) *2;
-
+		
 		//We are done once the cursor is within 4 elements of the size of the incoming data
-		if (cursor + 4 < incomingDataSet.Count) {
+		if (cursor + 2 < shiftedDataSet.Count) {
 			//for every two points in the data set we add them as a pair to the temporary dataset for display
 			for (int j = 2; j < cursor+2; j+=2) {
-
-				temp.Add (incomingDataSet [j + 1]);
+				temp.Add (shiftedDataSet [j]);
+				temp.Add (shiftedDataSet [j + 1]);
 			}
 			//We track the previous point so that we know where to animate from
 			previousX = temp [temp.Count - 2];
 			previousY = temp [temp.Count - 1];
-			//If we are on an even frame we need to animate the second half the segment
+			Debug.Log("previous xy:" + previousX + " " + previousY);
 			//The general idea here is to graph the previous x + % current x and
 			//previous y + % current y
-			//Debug.Log("The current Precentage animated is" + currentPrecentageAnimated);
-			temp.Add (((incomingDataSet [cursor + 2]) * currentPrecentageAnimated)
+			
+			temp.Add ((((shiftedDataSet [cursor + 2]) - previousX) * currentPrecentageAnimated)
 			          + previousX);
-			//Debug.Log("The current data being added is" + ((incomingDataSet [cursor + 2]) * currentPrecentageAnimated)
-			// + previousX);
-			temp.Add (((incomingDataSet [cursor + 3]) * currentPrecentageAnimated )
+			
+			Debug.Log("The current data being added is" + (((shiftedDataSet  [cursor + 2]) * currentPrecentageAnimated)
+			          + previousX));
+			
+			temp.Add ((((shiftedDataSet [cursor + 3])-previousY) * currentPrecentageAnimated )
 			          + previousY);
-			//Debug.Log("The current data being added is" + ((incomingDataSet [cursor + 3]) * currentPrecentageAnimated)
-
-			// + previousY);
+			Debug.Log("The current data being added is" + (((shiftedDataSet [cursor + 3]) * currentPrecentageAnimated)
+			          
+			          + previousY));
 			return DrawContiguousLineSegments (temp);
-
+			
 		} else {
 			animateOnUpdate = false;
-			return collocatedFilter (incomingDataSet);
+			return filteredCoordinates (incomingDataSet);
+		}
+	}
+
+	private void generalPointShifter(){
+
+		switch (currentVisualizationMethod) {
+		case 0:
+			collocatedPointShifter ();
+			break;
+		case 1:
+			//
+			break;
+		case 2:
+			//
+			break;
+		case 3:
+			//
+			break;
+		case 4:
+			//
+			break;
+		default:
+			collocatedPointShifter ();
+			break;
+			
 		}
 	}
 	private void collocatedPointShifter(){
-				float orginX = incomingDataSet [0]; //temp code for demo
-				float orginY = incomingDataSet [1]; //temp code for demo
-				for (int j = 2; j < cursor+2; j+=2) {
-						incomingDataSet [j] = incomingDataSet [j] + orginX;
-						incomingDataSet [j + 1] = incomingDataSet [j + 1] + orginY;
-						orginX = incomingDataSet [j] + orginX; ///temp code for demo
-						orginY = incomingDataSet [j + 1] + orginY; //temp code for demo
-				}
+		Debug.Log ("collocated point shifter called");
+		shiftedDataSet = new List<float> ();
+		float orginX = incomingDataSet [0]; //temp code for demo
+		float orginY = incomingDataSet [1]; //temp code for demo
+		shiftedDataSet.Add (incomingDataSet [0]);
+		shiftedDataSet.Add (incomingDataSet [1]);
+		for (int j = 2; j < incomingDataSet.Count; j+=2) {
+			
+			shiftedDataSet.Add( incomingDataSet [j] + orginX);
+			shiftedDataSet.Add( incomingDataSet [j + 1] + orginY);
+			
+			orginX = shiftedDataSet [j]; 
+			orginY = shiftedDataSet [j + 1]; 
 		}
+	}
+	
+	
+	
+	private Mesh filteredCoordinates(List<float> dataSet)
+	{
+		switch (currentVisualizationMethod) {
+		case 0:
+			return collocatedFilter (dataSet);
 
-	private Mesh collocatedFilter(List<float> dataSet)
+		case 1:
+			return shiftedFilter (dataSet);
+
+		case 2:
+			return radialFilter (dataSet);
+
+		case 3:
+			return collocatedFilter (dataSet);
+
+		case 4:
+			return collocatedFilter (dataSet);
+
+		default:
+			return collocatedFilter (dataSet);
+
+		}
+		
+	}
+	public Mesh collocatedFilter(List<float> dataSet)
 	{
 		
-		float orginX = 0;	//temp code for demo
-		float orginY = 0;	//temp code for demo
+		float orginX = 0;	
+		float orginY = 0;	
 		List<float> temp = new List<float>();
 		for (int i=0; i < dataSet.Count; i+=2) {
 			temp.Add (dataSet [i]+orginX);
-			temp.Add(dataSet [i + 1] +orginY);//temp code for demo
+			temp.Add(dataSet [i + 1] +orginY);
 			
-			orginX = (dataSet [i] + orginX) ; 		///temp code for demo
-			orginY = (dataSet [i + 1] + orginY );	//temp code for demo
+			orginX = (dataSet [i] + orginX) ; 		
+			orginY = (dataSet [i + 1] + orginY );	
 		}
 		return DrawContiguousLineSegments (temp);
-
-		}
-
+		
+	}
+	
 	//If there is an uneven number of incoming data points then we pair the first point with itself
 	private void checkIncomingData()
 	{
 		if (!(incomingDataSet.Count % 2 == 0))
-						incomingDataSet.Insert (0, incomingDataSet [0]);
-		}
-
+			incomingDataSet.Insert (0, incomingDataSet [0]);
+	}
+	
 	private Mesh shiftedFilter(List<float> dataSet)
 	{
 		
-		float orginX = 0;	//temp code for demo
-		float orginY = 0;	//temp code for demo
+		float orginX = 0;	
+		float orginY = 0;	
 		List<float> temp = new List<float>();
 		for (int i=0; i < dataSet.Count; i+=2) {
 			temp.Add (dataSet [i]+orginX);
-			temp.Add(dataSet [i + 1] +orginY);//temp code for demo
+			temp.Add(dataSet [i + 1] +orginY);
 			
-			orginX = ( orginX +1 ); 		///temp code for demo
-			orginY = ( orginY + 1);	//temp code for demo
+			orginX = ( orginX +1 ); 		
+			orginY = ( orginY + 1);	
 		}
 		return DrawContiguousLineSegments (temp);
 		
 	}
-
+	
 	/**
 	 * Method that determines how the radial paired visualization is drawn.
 	 * Each vector takes the first set of points as the origin and the rest of
@@ -195,30 +262,30 @@ public class DrawUtil
 		//Current origin point
 		float orginX = dataSet[0];	
 		float orginY = dataSet [1];
-
+		
 		//temporary list to that stores the manipulated dataset to be drawn
 		List<float> temp = new List<float>();
-
+		
 		//Start at 2 because the first two are the origin points
 		for (int i = 2; i < dataSet.Count; i+=2) {
-
+			
 			//Add origin first
 			temp.Add(orginX);
 			temp.Add (orginY);
-
+			
 			//add end point to the vector
 			temp.Add (dataSet[i]);
 			temp.Add (dataSet[i+1]);
-
+			
 		}
 		return DrawContiguousLineSegments (temp);
-
+		
 	}
 	
 	public Mesh DrawContiguousLineSegments (List<float> dataSet)
 	{
 		Mesh mesh; //temp mesh
-
+		
 		object[] verts = new object[2];
 		Vector3 currentVector = new Vector3 (0, 0, 0); //used to gather a direction of the line to properly set the edges of the generated quad
 		Vector3 up = new Vector3 (0, 0, -10); //used for cross product
@@ -232,8 +299,8 @@ public class DrawUtil
 		//put the data in this format {v3, v3, v3, v3};
 		for (int i=0; i < dataSet.Count; i+=2) {
 			organizedData.Add (new Vector3 (dataSet [i], dataSet [i + 1], zDist));
-
-			//Debug.Log ("Pair added " + givenData[i] +  givenData[i+1]);
+			
+			Debug.Log ("Pair added " + dataSet[i] +" / " + dataSet[i+1]);
 		}
 		
 		//now that the list of points is in order of occurrance, gather vectors for each line segment and create quads along those segments
@@ -291,17 +358,17 @@ public class DrawUtil
 		mesh.vertices = newVerts;
 		mesh.uv = newUv;
 		mesh.triangles = newTriangles;
-
+		
 		if (!collidersLoaded) {
 			colliderDataSet = dataSet;
 			//ManageColliders(colliderDataSet);
 			collidersLoaded = true;
 		}
-			//Debug.Log (mesh.vertexCount);
+		//Debug.Log (mesh.vertexCount);
 		return mesh;
 	}
-
-
+	
+	
 	public static void ManageVectorColliders(GameObject theObject){
 		Mesh theMesh = theObject.GetComponent<MeshFilter> ().mesh;
 		theObject.AddComponent<MeshCollider> ();
@@ -311,7 +378,7 @@ public class DrawUtil
 		thisCollider.sharedMesh = theMesh;
 		//Debug.Log (theObject.name);
 		//Debug.Log (theMesh.vertexCount);
-
+		
 	}
 	
 	public void ManageColliders(List<float> passedList){

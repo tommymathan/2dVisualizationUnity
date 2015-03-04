@@ -19,6 +19,9 @@ public class DataBuilder
 	DataObject dataObject;
 	bool columnWise = false;
 	string[] fileLines;
+	float[] arrayOfMaxes;
+	static int NORMALIZATIONSCALAR = 5;
+	bool absoluteNormals =  true;
 	
 	
 	public DataBuilder (String incPath)
@@ -26,12 +29,12 @@ public class DataBuilder
 		//Later will set the file path when the constructor is called
 		//path += "forestFires.csv"; //Put your file into the datasets folder to test
 		if (incPath == null || incPath.Equals("")) {
-						path += "forestFiresFullDataSet.csv"; //Put your file into the datasets folder to test
-				} else {
-
-						path = incPath;
-						parseDataIntoDataObject ();
-				}
+			path += "forestFiresFullDataSet.csv"; //Put your file into the datasets folder to test
+		} else {
+			
+			path = incPath;
+			parseDataIntoDataObject ();
+		}
 		
 		
 	}//End of databuilder constructor
@@ -57,36 +60,63 @@ public class DataBuilder
 		float tempFloat = 0.0f;
 		int count = 0;
 		string[] delimitedLine;
+		int lineCursor = 0;
 		
 		//Actual parsing occurs here
 		foreach (string dataLine in fileLines) {
 			delimitedLine = dataLine.Split (delimiters);
-			foreach (string dataElement in delimitedLine) {
-				
+			foreach (string dataElement in delimitedLine) {			
+				//TODO:We can find the maxes in this loop, saving us quite a bit of time in the normailziation function
 				//Debug.Log("Attempting to add" + dataElement);
 				if (float.TryParse (dataElement, out tempFloat)) {
 					//  Debug.Log("Temp float is" + tempFloat);
 					//  Debug.Log("count is" + count);
-					tempFloat = normalizationFunction(tempFloat);
 					dataObject.incomingData [count].Add (tempFloat);	
 					if (columnWise)
 						count++;
-				}					
+				}
+				lineCursor++;
 			}
+			lineCursor = 0;
 			if (dataObject.incomingData [count].Count > 0){
-			count = columnWise ? 0 : count+1;
+				count = columnWise ? 0 : count+1;
 			}
 			
 			
 		}//End of for each
+		normalizationFunction ();
 	}
-
-	private float normalizationFunction(float temp)
+	
+	private void normalizationFunction()
 	{
-		return (temp / 724) * 40;
+		float maxValue = 0f;
+		arrayOfMaxes = new float[dataObject.incomingData [0].Count];
+		
+		
+		for (int i =0; i < dataObject.incomingData.Count; i++) {
+			for (int j=0; j < dataObject.incomingData[i].Count; j++)
+			{
+				if( arrayOfMaxes [j] < dataObject.incomingData [i] [j])
+					arrayOfMaxes [j] = dataObject.incomingData[i][j] ;
+			}
+		}
+		
+		foreach (float k in arrayOfMaxes) {
+			if (k > maxValue)
+				maxValue = k;
+		}
+		for (int i =0; i < dataObject.incomingData.Count; i++) {
+			for (int j=0; j < dataObject.incomingData[i].Count; j++) {
+				if(absoluteNormals)
+					dataObject.incomingData [i] [j] = (dataObject.incomingData [i] [j] / arrayOfMaxes[j]) * NORMALIZATIONSCALAR;
+				else
+					dataObject.incomingData [i] [j] = (dataObject.incomingData [i] [j] / maxValue) * NORMALIZATIONSCALAR;
+			}
+		}
+		//	return (temp / arrayOfMaxes[lineCursor]) * 20;
 	}
 	//Returns an organized representation of a csv file
-
+	
 	public DataObject getDataObject ()
 	{
 		return dataObject;
@@ -117,8 +147,8 @@ public class DataBuilder
 		//Add the labels from the list which had the fewest items added to it,
 		//rarely would we see a dataset that had more labels than vectors
 		// Debug.Log("temp 1 count is" + temp1.Count + "Temp 2 count is" + temp2.Count);
-
-
+		
+		
 		dataObject.labels.AddRange (temp1.Count < temp2.Count ? temp1 : temp2);
 		
 		//if there are more column labels than row labels we are row wise

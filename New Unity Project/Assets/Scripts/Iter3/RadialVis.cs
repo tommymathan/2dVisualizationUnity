@@ -1,68 +1,101 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
-public class RadialVis :  Visualization {
-
-	//Declared variables
+public class RadialVis : Visualization
+{
+	
+	
+	//Debug code
+	
+	static Material lineMaterial;
 	bool animateOnLoad;
 	bool collidersLoaded;
+	Mesh mesh;
+	DrawUtil[] drawingUtility;
 	int numberIncomingVectors;
 	int animationCounter;
-	DrawUtil[] drawingUtility;
-
+	Color[] colors;
+	Color visColor;
+	GameObject globalSettingsObject;
+	bool dataUpdated; //tells the cam when to redraw stuff based on an update in global settings
+	//////////////////////////////
 	// Use this for initialization
-	void Start () {
-	
-		//Initilize mouse and background lines
-		//gameObject.AddComponent<MouseHandler> ();
+	void Start ()
+	{
+		//Debug code
+		gameObject.AddComponent<MouseHandler> ();
 		//gameObject.AddComponent<ScreenLines> ();
-
-		//Initialize 
-		numberIncomingVectors = 0;
-		animationCounter = 0;
 		animateOnLoad = true;
-		collidersLoaded = false;
-
-		//Set current camera, position it and set it to orthographic mode
-		Camera cam = gameObject.GetComponent<Camera>();
-		cam.transform.position = new Vector3 (5f, 5f, -15f);
-		cam.orthographicSize = 5;
+		animationCounter = 0;
+		numberIncomingVectors = 0;
+		//test = new List<float> (new float[] {0,0,1,1,3,2,5,2,6,0,7,0});
+		
+		//UpdateData ();
+		//Set up the dataObject
+		
+		//hardcoded camera position/ortho
+		Camera thisCam = gameObject.GetComponent<Camera> ();
+		thisCam.transform.position = new Vector3 (5f, 5f, -15f);
+		thisCam.orthographicSize = 5;
+		collidersLoaded = true;
+		//GameObject.FindGameObjectsWithTag ();
+		visColor = Color.magenta;
+		globalSettingsObject = GameObject.FindGameObjectWithTag("GlobalSettingsObject");
+		dataUpdated = false;
 	}
 	
 	// Update is called once per frame
-	void Update () {
-		//Zoom functionality
-//		if (animateOnLoad) {
-//			animationCounter++;
-//		} else {
-//			animationCounter = 10000;
-//		}
-//		if (animationCounter < 10) {
-//			//for the number of vectors draw them
-//			for (int i = 0; i < numberIncomingVectors; i++) {
-//				//Send data to be drawn <<< data sent to drawing Uitility class
-//				//Method animateCurrentFrame is to decide which visualization is to be drawn
-//				meshContainmentArray [i].GetComponent<MeshFilter> ().mesh 
-//					= drawingUtility [i].AnimateCurrentFrame (100000, meshContainmentArray [i]);
-//			}
-//		}
-//
-//		//Set colliders
-//		if ((Time.time > 6 )&& (!collidersLoaded)) {
-//			Debug.Log ("updating vector colliders");
-//			GameObject[] vectorList = GameObject.FindGameObjectsWithTag("vector");
-//			
-//			for(int i = 0; i<vectorList.Length; i++){
-//				DrawUtil.ManageVectorColliders(vectorList[i]);
-//			}
-//			collidersLoaded = true;
-//		}
+	void Update ()
+	{
+		
+		if (animateOnLoad) {
+			animationCounter++;
+			//Debug.Log ("There are this many meshcontainmentarrays" + meshContainmentArray.Count());	
+		} else {
+			animationCounter = 10000;
+		}
+		
+		if (dataUpdated) {
+			for (int i = 0; i < numberIncomingVectors; i++) {
+				meshContainmentArray [i].GetComponent<MeshFilter> ().mesh 
+					= drawingUtility [i].AnimateCurrentFrame (1000, meshContainmentArray [i]);
+			}
+			
+			if (collidersLoaded == false) {
+				Debug.Log ("updating vector colliders");
+				GameObject[] vectorList = GameObject.FindGameObjectsWithTag ("vector");
+				for (int i = 0; i<vectorList.Length; i++) {
+					if(vectorList[i].GetComponent<MeshCollider>() == null){
+						DrawUtil.ManageVectorColliders (vectorList [i]);
+					}
+				}
+				collidersLoaded = true;
+			}
+			dataUpdated = false;
+		}
+		
+		if(Input.GetKeyDown(KeyCode.LeftAlt)){
+			GameObject.FindGameObjectWithTag("DataManagerTag").GetComponent<DataManager>().NotifyVizualizations();
+		}
 	}
-
+	
+	
+	
 	//real code - We may need to find some efficiency improvements here, there is a signifcant delay
 	//when opening a large dataset. If that is not possible we can create a loading bar animation.
 	public override void UpdateData (DataObject dataFromFile)
 	{
+		
+		//Destroy every vector in this vis when updating data;
+		for(int i = 0; i<meshContainmentArray.Count(); i++){
+			DestroyImmediate(meshContainmentArray[i]);
+		}
+		
+		//if(drawingUtility!=null){
+		//	Debug.Log (drawingUtility.Count());
+		//}
+		
 		//TODO: check to make sure data exists
 		//Debug.Log ("I am finally called!");
 		DataObject data = new DataObject ();
@@ -79,29 +112,40 @@ public class RadialVis :  Visualization {
 		
 		for (int i = 0; i < numberIncomingVectors; i++) {
 			
-			drawingUtility [i] = new DrawUtil (0.04f, data.incomingData [i], this.camera,550);
-		}
-		
-		for (int i = numberIncomingVectors/2; i < numberIncomingVectors; i++) {
-			
-			drawingUtility [i] = new DrawUtil (0.02f, data.incomingData [i-(numberIncomingVectors/2)], this.camera,1);
+			drawingUtility [i] = new DrawUtil (0.03f, data.incomingData [i], this.camera,1,0);
 		}
 		
 		
 		meshContainmentArray = new GameObject[numberIncomingVectors];		
 		
+		//templist used for colliders
+		//List<float> tempList = new List<float>();
+		//Debug.Log (data.incomingData.Count);
+		//
+		//for(int i = 0; i<data.incomingData.Count; i++){
+		//	Debug.Log(data.incomingData[i].ElementAt(0));
+		//	//tempList.Add(data.incomingData[i].ElementAt(0));
+		//}
+		
 		
 		//When we do a list of objects we will add the game object to the first element of the array
 		//for now we just use this loop to test		
 		for (int i = 0; i < numberIncomingVectors; i++) {
+			Shader unlit = Shader.Find("Self-Illumin/Diffuse");
 			meshContainmentArray [i] = new GameObject ();
 			meshContainmentArray [i].AddComponent<MeshFilter> ();
+			meshContainmentArray[i].GetComponent<MeshFilter>().mesh.RecalculateNormals();
 			meshContainmentArray [i].AddComponent<MeshRenderer> ();
 			meshContainmentArray [i].AddComponent<StayPut> ();
 			meshContainmentArray [i].transform.SetParent (gameObject.transform);
 			meshContainmentArray[i].tag = "vector";
 			meshContainmentArray [i].name = "Vector:" + i;
+			meshContainmentArray[i].renderer.material.shader = unlit;
+			meshContainmentArray[i].GetComponent<MeshRenderer>().material.color = visColor;
+			meshContainmentArray[i].layer = 8; //8 is collocated visuals layer
 			
+			drawingUtility[i].lineWidth = globalSettingsObject.GetComponent<GlobalSettings>().gLOLWidths;
+			dataUpdated = true;
 			//if(i==0){
 			//	DrawUtil.ManageColliders(tempList, meshContainmentArray[i]);
 			//	Mesh theMesh = meshContainmentArray[i].GetComponent<MeshFilter>().mesh;
@@ -119,7 +163,25 @@ public class RadialVis :  Visualization {
 		if (animateOnLoad) {
 			animationCounter = 0;
 		}
+		collidersLoaded = false;
 	}
-
+	
+	
+	////////////////////////////////////////////////TEMP CODE FOR DEBUGGING///////////////////////////////////////
+	static void CreateLineMat ()
+	{
+		if (!lineMaterial) {
+			lineMaterial = new Material ("Shader \"Lines/Colored Blended\" {" +
+			                             "SubShader { Pass { " +
+			                             "    Blend SrcAlpha OneMinusSrcAlpha " +
+			                             "    ZWrite Off Cull Off Fog { Mode Off } " +
+			                             "    BindChannels {" +
+			                             "      Bind \"vertex\", vertex Bind \"color\", color }" +
+			                             "} } }");
+		}
+		
+		lineMaterial.hideFlags = HideFlags.HideAndDontSave;
+		lineMaterial.shader.hideFlags = HideFlags.HideAndDontSave;
+	}
 	
 }

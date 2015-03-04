@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 
 public class DataManager : MonoBehaviour {
-	private static List<float> rawData; // holds the raw data from the parser
+
 	public static List<Visualization> vizList; //will hold the list of Visualizations to be called when data is updated
+
+	private static List<float> rawData; // holds the raw data from the parser
 	private bool dataUpdated;
 	private string dataPath;
 	private DataObject dataSet;
@@ -45,15 +47,33 @@ public class DataManager : MonoBehaviour {
 		dataParser = new DataBuilder (dataPath);
 		dataSet = new DataObject ();
 		dataSet = dataParser.getDataObject();
+		//TODO: Method to request vectors to graph from user using GUI 
+		//Method returns array of ints describing selected vectors
+		int[] temp = new int[dataSet.labels.Count];
+		//		for (int k =0; k < temp.Length; k++){
+		//			if (k%3==0)
+		//			temp [k] = 1;
+		//
+		//		}
+		
+		
+		for (int i =0; i < dataSet.incomingData.Count-1; i++) {
+			for(int j= (dataSet.incomingData[i].Count-1); j >=0 ; j--){				
+				if(temp[j]== 1) 
+				{
+					dataSet.incomingData[i].RemoveAt(j);
+				}				
+			}
 		}
+		
+		//Assert that dataSet has more than 4 vectors left after removal
+	}
 
 	public void NotifyVizualizations(){
 		dataUpdated = false;
 		for (int i = 0; i<vizList.Count(); i++) {
 			vizList[i].UpdateData(dataSet);
 		}
-		
-
 	}
 
 	public void SetDataPath(string givenPath){
