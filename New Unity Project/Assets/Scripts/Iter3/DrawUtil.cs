@@ -331,9 +331,5 @@ public class DrawUtil
 			vert.transform.parent = currentVisObject.transform;
 		}
 	}
-
-	public void UpdateLineWidth(float f){
-		lineWidth = f;
-	}
 }
 

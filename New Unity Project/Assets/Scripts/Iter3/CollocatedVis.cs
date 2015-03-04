@@ -7,7 +7,8 @@ public class CollocatedVis : Visualization
 	
 	
 		//Debug code
-		public float lineWidth;
+		static float givenXMax;
+		static float givenYMax; // x and y max are used to determine camera perspective size
 		static Material lineMaterial;
 		bool animateOnLoad;
 		bool collidersLoaded;
@@ -18,16 +19,18 @@ public class CollocatedVis : Visualization
 		Color[] colors;
 		int counter = 0;
 		Color visColor;
+		GameObject globalSettingsObject;
+		bool dataUpdated; //tells the cam when to redraw stuff based on an update in global settings
 		//////////////////////////////
-	
 		// Use this for initialization
 		void Start ()
 		{
 				//Debug code
 				gameObject.AddComponent<MouseHandler> ();
-				gameObject.AddComponent<ScreenLines> ();
+				//gameObject.AddComponent<ScreenLines> ();
 				animateOnLoad = true;
-
+				givenXMax = 10;
+				givenYMax = 10;
 				animationCounter = 0;
 				numberIncomingVectors = 0;
 				//test = new List<float> (new float[] {0,0,1,1,3,2,5,2,6,0,7,0});
@@ -42,14 +45,13 @@ public class CollocatedVis : Visualization
 				collidersLoaded = true;
 				//GameObject.FindGameObjectsWithTag ();
 				visColor = Color.magenta;
-				lineWidth = 2f;
-		}
+				globalSettingsObject = GameObject.FindGameObjectWithTag("GlobalSettingsObject");
+				dataUpdated = false;
+	}
 	
 		// Update is called once per frame
 		void Update ()
 		{
-				//Zoom functionality
-				//////////////////////////
 				//Graphics.DrawMesh(drawingUtility.AnimateCurrentFrame(counter), Vector3.zero, Quaternion.identity, lineMaterial, 0);
 			if (animateOnLoad) {
 						animationCounter++;
@@ -58,30 +60,30 @@ public class CollocatedVis : Visualization
 				} else {
 					animationCounter = 10000;
 				}
-		if (Input.GetKeyDown ("space")) {
-						for (int i = 0; i < numberIncomingVectors; i++) {
-								drawingUtility[i].lineWidth = lineWidth;
-								// DestroyImmediate( meshContainmentArray [i].GetComponent<MeshFilter> ().sharedMesh);
-								meshContainmentArray [i].GetComponent<MeshFilter> ().mesh 
-								= drawingUtility [i].AnimateCurrentFrame (100000, meshContainmentArray [i]);
-								if(meshContainmentArray[i].GetComponent<MeshCollider>() != null){
-									meshContainmentArray[i].GetComponent<MeshCollider>().sharedMesh = meshContainmentArray [i].GetComponent<MeshFilter> ().mesh;
-								}
-								Debug.Log ("redrawing a line with width" + drawingUtility[i].lineWidth);
-						}
-				
-						counter++;
-						if (counter > 0 && counter <2) {
-								Debug.Log ("updating vector colliders");
-								GameObject[] vectorList = GameObject.FindGameObjectsWithTag ("vector");
 
-								for (int i = 0; i<vectorList.Length; i++) {
-										DrawUtil.ManageVectorColliders (vectorList [i]);
-								}
-								collidersLoaded = true;
+			if (dataUpdated) {
+				for (int i = 0; i < numberIncomingVectors; i++) {
+						meshContainmentArray [i].GetComponent<MeshFilter> ().mesh 
+						= drawingUtility [i].AnimateCurrentFrame (10000, meshContainmentArray [i]);
+			}
+					
+				if (collidersLoaded == false) {
+					Debug.Log ("updating vector colliders");
+					GameObject[] vectorList = GameObject.FindGameObjectsWithTag ("vector");
+						for (int i = 0; i<vectorList.Length; i++) {
+								if(vectorList[i].GetComponent<MeshCollider>() == null){
+								DrawUtil.ManageVectorColliders (vectorList [i]);
 						}
+					}
+					collidersLoaded = true;
+				}
+				dataUpdated = false;
+			}
+
+			if(Input.GetKeyDown(KeyCode.LeftAlt)){
+			GameObject.FindGameObjectWithTag("DataManagerTag").GetComponent<DataManager>().NotifyVizualizations();
+			}
 		}
-	}
 	
 	private List<float> getRandomFloatArray ()
 		{
@@ -97,11 +99,15 @@ public class CollocatedVis : Visualization
 		public override void UpdateData (DataObject dataFromFile)
 		{
 
-
-		GameObject[] vectorList = GameObject.FindGameObjectsWithTag ("vector");		
-		for (int i = 0; i<vectorList.Length; i++) {
-			Destroy(vectorList [i]);
-		}
+				//Destroy every vector in this vis when updating data;
+				for(int i = 0; i<meshContainmentArray.Count(); i++){
+					DestroyImmediate(meshContainmentArray[i]);
+				}
+				
+				//if(drawingUtility!=null){
+				//	Debug.Log (drawingUtility.Count());
+				//}
+				
 				//TODO: check to make sure data exists
 				//Debug.Log ("I am finally called!");
 				DataObject data = new DataObject ();
@@ -117,8 +123,10 @@ public class CollocatedVis : Visualization
 				//Debug.Log ("number of incoming vectors is: " + numberIncomingVectors);
 
 				for (int i = 0; i < numberIncomingVectors; i++) {
-					drawingUtility [i] = new DrawUtil (lineWidth, data.incomingData [i], this.camera,1);
+			
+					drawingUtility [i] = new DrawUtil (0.03f, data.incomingData [i], this.camera,1);
 				}
+
 
 				meshContainmentArray = new GameObject[numberIncomingVectors];		
 				
@@ -130,8 +138,7 @@ public class CollocatedVis : Visualization
 				//	Debug.Log(data.incomingData[i].ElementAt(0));
 				//	//tempList.Add(data.incomingData[i].ElementAt(0));
 				//}
-
-
+		
 		
 				//When we do a list of objects we will add the game object to the first element of the array
 				//for now we just use this loop to test		
@@ -147,9 +154,11 @@ public class CollocatedVis : Visualization
 						meshContainmentArray [i].name = "Vector:" + i;
 						meshContainmentArray[i].renderer.material.shader = unlit;
 						meshContainmentArray[i].GetComponent<MeshRenderer>().material.color = visColor;
-						
-
-					//if(i==0){
+						meshContainmentArray[i].layer = 8; //8 is collocated visuals layer
+				 
+						drawingUtility[i].lineWidth = globalSettingsObject.GetComponent<GlobalSettings>().gLOLWidths;
+						dataUpdated = true;
+			//if(i==0){
 					//	DrawUtil.ManageColliders(tempList, meshContainmentArray[i]);
 					//	Mesh theMesh = meshContainmentArray[i].GetComponent<MeshFilter>().mesh;
 					//	Debug.Log (theMesh.ToString() + " " + theMesh.vertexCount);
@@ -186,9 +195,5 @@ public class CollocatedVis : Visualization
 				lineMaterial.hideFlags = HideFlags.HideAndDontSave;
 				lineMaterial.shader.hideFlags = HideFlags.HideAndDontSave;
 		}
-
-		public void UpdateLineWidth(float f){
-			lineWidth = f;
-			Debug.Log ("Updating lineWidth..." + this.gameObject.ToString() + f);
-		}
+	
 }
