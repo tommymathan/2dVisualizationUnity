@@ -17,6 +17,7 @@ public class GlobalSettings : MonoBehaviour {
 	public GameObject shiftedPairedButton;
 	public GameObject inlineDimensionsButton;
 	public List<GameObject> camButtonList;
+
 	// Use this for initialization
 	void Start () {
 		dataManager = GameObject.FindGameObjectWithTag("DataManagerTag").GetComponent<DataManager>();
@@ -38,51 +39,6 @@ public class GlobalSettings : MonoBehaviour {
 		if(Input.GetKeyDown(KeyCode.F2)){
 			DisplayQuadCams();
 		}
-
-		/*
-		if(Input.GetMouseButtonUp(0)){
-			if(onCameraSelectionScreen){//if the user is trying to select a visualization method
-				if(Input.mousePosition.x <= Screen.width/2){
-					//Debug.Log("On the Left");
-					if(Input.mousePosition.y <= Screen.height/2){
-						//Debug.Log("On the Bottom Left");
-						for(int i = 0; i< camList.Length; i++){
-							if(camList[i].name.Equals("CAM_ShiftedPaired")){
-								ActivateCam(camList[i].GetComponent<Camera>());
-							}
-						}
-					}
-					else{
-						//Debug.Log("On the Top Left");
-						for(int i = 0; i< camList.Length; i++){
-							if(camList[i].name.Equals("CAM_Collocated")){
-								ActivateCam(camList[i].GetComponent<Camera>());
-							}
-						}
-					}
-				}
-				else{
-					//Debug.Log("On the Right");
-					if(Input.mousePosition.y <= Screen.height/2){
-						//Debug.Log("On the Bottom Right");
-						for(int i = 0; i< camList.Length; i++){
-							if(camList[i].name.Equals("CAM_InlineDimensions")){
-								ActivateCam(camList[i].GetComponent<Camera>());
-							}
-						}
-					}
-					else{
-						//Debug.Log("On the Top Right");
-						for(int i = 0; i< camList.Length; i++){
-							if(camList[i].name.Equals("CAM_RadialPaired")){
-								ActivateCam(camList[i].GetComponent<Camera>());
-							}
-						}
-					}
-				}
-			}
-		}
-		*/
 	}
 
 	public void setgLoLWidths(float val){
@@ -103,7 +59,7 @@ public class GlobalSettings : MonoBehaviour {
 	}
 
 	public void SetCamAsFullFocus(Camera cam){
-
+		onCameraSelectionScreen = false;
 		for(int i = 0; i<camButtonList.Count; i++){
 			Button button = camButtonList[i].GetComponent<Button>();
 			button.interactable = false;
@@ -157,6 +113,4 @@ public class GlobalSettings : MonoBehaviour {
 
 
 	}
-
-
 }

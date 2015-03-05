@@ -24,7 +24,7 @@ public class ShiftedVis : Visualization
 	void Start ()
 	{
 		//Debug code
-		gameObject.AddComponent<MouseHandler> ();
+		//gameObject.AddComponent<MouseHandler> ();
 		//gameObject.AddComponent<ScreenLines> ();
 		animateOnLoad = true;
 		animationCounter = 0;

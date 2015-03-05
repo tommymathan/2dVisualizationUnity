@@ -24,6 +24,8 @@ public class MouseHandler : MonoBehaviour {
 		mouseObj.AddComponent<BoxCollider> ();
 		mouseCol = mouseObj.GetComponent<BoxCollider> ();
 		mouseObj.name = "Mouse Loc";
+		mouseObj.tag = "Mouse";
+
 		mouseCol.size = new Vector3(0.1f,0.1f,50f);
 		mouseCol.isTrigger = true;
 
