@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class GlobalSettings : MonoBehaviour {
 
@@ -11,13 +12,21 @@ public class GlobalSettings : MonoBehaviour {
 	public DataManager dataManager;
 	public bool onCameraSelectionScreen; // flag to tell if the user is currently looking at multiple visualization cameras
 	public GameObject[] camList;
+	public GameObject collocatedButton;
+	public GameObject radialPairedButton;
+	public GameObject shiftedPairedButton;
+	public GameObject inlineDimensionsButton;
+	public List<GameObject> camButtonList;
 	// Use this for initialization
 	void Start () {
 		dataManager = GameObject.FindGameObjectWithTag("DataManagerTag").GetComponent<DataManager>();
 		camList = GameObject.FindGameObjectsWithTag("MainCamera");
+		camButtonList = new List<GameObject>(GameObject.FindGameObjectsWithTag ("CamButtons"));
 		onCameraSelectionScreen = false;
 		Debug.LogError("Visualization Selection Disabled, Press F1 to enable~chris");
 		gLOLWidths = 0.04f;
+
+		SetupCamButtons ();
 	}
 	
 	// Update is called once per frame
@@ -30,6 +39,7 @@ public class GlobalSettings : MonoBehaviour {
 			DisplayQuadCams();
 		}
 
+		/*
 		if(Input.GetMouseButtonUp(0)){
 			if(onCameraSelectionScreen){//if the user is trying to select a visualization method
 				if(Input.mousePosition.x <= Screen.width/2){
@@ -72,6 +82,7 @@ public class GlobalSettings : MonoBehaviour {
 				}
 			}
 		}
+		*/
 	}
 
 	public void setgLoLWidths(float val){
@@ -92,6 +103,13 @@ public class GlobalSettings : MonoBehaviour {
 	}
 
 	public void SetCamAsFullFocus(Camera cam){
+
+		for(int i = 0; i<camButtonList.Count; i++){
+			Button button = camButtonList[i].GetComponent<Button>();
+			button.interactable = false;
+			camButtonList[i].SetActive(false);
+		}
+
 		cam.rect = new Rect(0,0,1,1);
 		onCameraSelectionScreen = false;
 		Debug.LogError("Visualization Selection Disabled, Press F2 to return to vizSelect Screen~chris");
@@ -100,6 +118,13 @@ public class GlobalSettings : MonoBehaviour {
 	public void DisplayQuadCams(){
 		Debug.LogError("Visualization Selection Enabled by user~chris");
 		onCameraSelectionScreen = true;
+
+		for(int i = 0; i<camButtonList.Count; i++){
+			camButtonList[i].SetActive(true);
+			Button button = camButtonList[i].GetComponent<Button>();
+			button.interactable = true;
+		}
+
 		for(int i = 0; i< camList.Length; i++){
 			camList[i].GetComponent<Camera>().enabled = true;
 			if(camList[i].name.Equals("CAM_Collocated")){
@@ -116,4 +141,22 @@ public class GlobalSettings : MonoBehaviour {
 			}
 		}
 	}
+
+	public void SetupCamButtons(){
+		collocatedButton.GetComponent<RectTransform> ().sizeDelta = new Vector2 (Screen.width / 2, Screen.height / 2);
+		collocatedButton.GetComponent<RectTransform> ().anchoredPosition = new Vector2 (-Screen.width / 4, Screen.height / 4);
+
+		radialPairedButton.GetComponent<RectTransform> ().sizeDelta = new Vector2 (Screen.width / 2, Screen.height / 2);
+		radialPairedButton.GetComponent<RectTransform> ().anchoredPosition = new Vector2 ((Screen.width / 4), Screen.height / 4);
+
+		shiftedPairedButton.GetComponent<RectTransform> ().sizeDelta = new Vector2 (Screen.width / 2, Screen.height / 2);
+		shiftedPairedButton.GetComponent<RectTransform> ().anchoredPosition = new Vector2 (-(Screen.width / 4), -(Screen.height / 4));
+
+		inlineDimensionsButton.GetComponent<RectTransform> ().sizeDelta = new Vector2 (Screen.width / 2, Screen.height / 2);
+		inlineDimensionsButton.GetComponent<RectTransform> ().anchoredPosition = new Vector2 ((Screen.width / 4), -Screen.height / 4);
+
+
+	}
+
+
 }

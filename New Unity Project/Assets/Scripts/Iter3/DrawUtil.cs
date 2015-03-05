@@ -189,13 +189,13 @@ public class DrawUtil
 	{
 		switch (currentVisualizationMethod) {
 		case 0:
-			return collocatedFilter (dataSet);
+			return collocatedFilter (incomingDataSet);
 
 		case 1:
-			return shiftedFilter (dataSet);
+			return shiftedFilter (incomingDataSet);
 
 		case 2:
-			return radialFilter (dataSet);
+			return radialFilter (incomingDataSet);
 
 		case 3:
 			return collocatedFilter (dataSet);

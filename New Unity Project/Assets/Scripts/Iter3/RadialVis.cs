@@ -112,7 +112,7 @@ public class RadialVis : Visualization
 		
 		for (int i = 0; i < numberIncomingVectors; i++) {
 			
-			drawingUtility [i] = new DrawUtil (0.03f, data.incomingData [i], this.camera,1,0);
+			drawingUtility [i] = new DrawUtil (0.03f, data.incomingData [i], this.camera,1,2);
 		}
 		
 		
@@ -142,7 +142,7 @@ public class RadialVis : Visualization
 			meshContainmentArray [i].name = "Vector:" + i;
 			meshContainmentArray[i].renderer.material.shader = unlit;
 			meshContainmentArray[i].GetComponent<MeshRenderer>().material.color = visColor;
-			meshContainmentArray[i].layer = 8; //8 is collocated visuals layer
+			meshContainmentArray[i].layer = 9; //8 is collocated visuals layer
 			
 			drawingUtility[i].lineWidth = globalSettingsObject.GetComponent<GlobalSettings>().gLOLWidths;
 			dataUpdated = true;
