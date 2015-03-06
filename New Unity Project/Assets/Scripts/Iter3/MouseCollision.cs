@@ -40,9 +40,8 @@ public class MouseCollision : MonoBehaviour {
 				}
 			}
 		}
-		if(Input.GetKeyDown(KeyCode.C)){
-			RandomizeSelectionColors();
-		}
+		LineSelectedChangeColor();
+		ChangeBackgroundColor ();
 	}
 
 	void OnTriggerEnter(Collider other) {
@@ -63,6 +62,22 @@ public class MouseCollision : MonoBehaviour {
 		previousColor.g -= greenShift;
 		ChangeColor(other.gameObject, previousColor);
 		//Debug.Log(selection.Count);
+	}
+
+	void LineSelectedChangeColor(){
+		foreach (GameObject go in selection) {
+			GlobalSettings gs = GameObject.FindGameObjectWithTag ("GlobalSettingsObject").GetComponent<GlobalSettings> ();
+			Material passedMaterial = go.GetComponent<MeshRenderer> ().material;
+			passedMaterial.color = new Color (gs.gLineR, gs.gLineG, gs.gLineB);
+			//Debug.Log ("Red: " + gs.gLineR + "\nGreen" + gs.gLineG + "\nBlue" + gs.gLineB);
+			
+		}
+	}
+	
+	void ChangeBackgroundColor()
+	{
+		GlobalSettings gs = GameObject.FindGameObjectWithTag ("GlobalSettingsObject").GetComponent<GlobalSettings> ();
+		gs.CameraBackgroundColor ();
 	}
 
 	void ChangeColor(GameObject passedObject, Color color){

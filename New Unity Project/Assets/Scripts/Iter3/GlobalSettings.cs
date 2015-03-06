@@ -17,6 +17,10 @@ public class GlobalSettings : MonoBehaviour {
 	public GameObject shiftedPairedButton;
 	public GameObject inlineDimensionsButton;
 	public List<GameObject> camButtonList;
+	//Background Color
+	public float camR;
+	public float camG;
+	public float camB;
 
 	// Use this for initialization
 	void Start () {
@@ -28,6 +32,9 @@ public class GlobalSettings : MonoBehaviour {
 		gLOLWidths = 0.04f;
 
 		SetupCamButtons ();
+		camR = 0.83912f;
+		camG = 0.83912f;
+		camB = 0.83912f;
 	}
 	
 	// Update is called once per frame
@@ -41,9 +48,104 @@ public class GlobalSettings : MonoBehaviour {
 		}
 	}
 
-	public void setgLoLWidths(float val){
-		gLOLWidths = val;
+	public void setgLoLWidths(string val){
+		double temp = float.Parse (val);
+		Debug.Log (val);
+		gLOLWidths = (float)temp;
+		
 		dataManager.NotifyVizualizations(); //this is probably slow because it is i/o calling -> can we update vis without io?
+	}
+	
+	//Change line color
+	public void lineColorR(float val)
+	{
+		gLineR = val;
+	}
+	public void lineColorG(float val)
+	{
+		gLineG = val;
+	}
+	
+	public void lineColorB(float val)
+	{
+		gLineB = val;
+	}
+	
+	//Preset Colors
+	public void lineRedColor()
+	{
+		gLineR = 1;
+		gLineG = 0;
+		gLineB = 0;
+	}
+	
+	public void lineGreenColor()
+	{
+		gLineR = 0;
+		gLineG = 1;
+		gLineB = 0;
+	}
+	
+	public void lineBlueColor()
+	{
+		gLineR = 0;
+		gLineG = 0;
+		gLineB = 1;
+	}
+	
+	public void linePinkColor()
+	{
+		gLineR = 1;
+		gLineG = 0;
+		gLineB = 1;
+	}
+	public void lineYellowColor()
+	{
+		gLineR = 1;
+		gLineG = 0.92f;
+		gLineB = 0.016f;
+	}
+	public void lineOrangeColor()
+	{
+		gLineR = 1;
+		gLineG = 0.647f;
+		gLineB = 0;
+	}
+	
+	public void camBackR(float val)
+	{
+		camR = val;
+	}
+	
+	public void camBackG(float val)
+	{
+		camG = val;
+	}
+	
+	public void camBackB(float val)
+	{
+		camB = val;
+	}
+	
+	
+	public void CameraBackgroundColor()
+	{
+		Color c = new Color (camR, camG, camB);
+		
+		for (int i = 0; i < camList.Length; i++) {
+			if(camList[i].name.Equals("CAM_Collocated")){
+				camList[i].GetComponent<Camera>().backgroundColor = c;
+			}
+			else if(camList[i].name.Equals("CAM_RadialPaired")){
+				camList[i].GetComponent<Camera>().backgroundColor = c;
+			}
+			else if(camList[i].name.Equals("CAM_ShiftedPaired")){
+				camList[i].GetComponent<Camera>().backgroundColor = c;
+			}
+			else if(camList[i].name.Equals("CAM_InlineDimensions")){
+				camList[i].GetComponent<Camera>().backgroundColor = c;
+			}
+		}
 	}
 
 	public void ActivateCam(Camera cam){
@@ -69,6 +171,8 @@ public class GlobalSettings : MonoBehaviour {
 		cam.rect = new Rect(0,0,1,1);
 		onCameraSelectionScreen = false;
 		Debug.LogError("Visualization Selection Disabled, Press F2 to return to vizSelect Screen~chris");
+
+
 	}
 
 	public void DisplayQuadCams(){
