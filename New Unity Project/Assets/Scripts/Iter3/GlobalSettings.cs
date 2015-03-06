@@ -4,11 +4,28 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 
 public class GlobalSettings : MonoBehaviour {
-
+	//Single line colors
 	public float gLineR;
 	public float gLineB;
 	public float gLineG;
+
+	//Global line widths
 	public float gLOLWidths;
+
+	//Global line colors
+	public float globalLineR;
+	public float globalLineG;
+	public float globalLineB;
+
+	//Anitmation Speed
+	public float animationSpeed = 1;
+
+	//Normalization
+	public int normalizationVal = 5;
+
+	//Scale factor
+	public float ScaleFactor = 1;
+
 	public DataManager dataManager;
 	public bool onCameraSelectionScreen; // flag to tell if the user is currently looking at multiple visualization cameras
 	public GameObject[] camList;
@@ -46,6 +63,8 @@ public class GlobalSettings : MonoBehaviour {
 		if(Input.GetKeyDown(KeyCode.F2)){
 			DisplayQuadCams();
 		}
+
+		CameraBackgroundColor ();
 	}
 
 	public void setgLoLWidths(string val){
@@ -126,8 +145,41 @@ public class GlobalSettings : MonoBehaviour {
 	{
 		camB = val;
 	}
-	
-	
+
+	//Methods for global line color
+	public void globalLineColorR(float val)
+	{
+		globalLineR = val;
+	}
+
+	public void globalLineColorG(float val)
+	{
+		globalLineG = val;
+	}
+
+	public void globalLineColorB(float val)
+	{
+		globalLineB = val;
+	}
+
+	public void AnimationSpeed(string val)
+	{
+		double temp = float.Parse (val);
+		animationSpeed = (float)temp;
+	}
+
+	public void normalizationFactor(string val)
+	{
+		normalizationVal = int.Parse (val);
+	}
+
+	public void scaleFactor(string val)
+	{
+		double temp = float.Parse (val);
+		ScaleFactor = (float)temp;
+	}
+
+	//Change camera back ground colors
 	public void CameraBackgroundColor()
 	{
 		Color c = new Color (camR, camG, camB);
@@ -146,6 +198,11 @@ public class GlobalSettings : MonoBehaviour {
 				camList[i].GetComponent<Camera>().backgroundColor = c;
 			}
 		}
+	}
+
+	public void displayAllVisualizations()
+	{
+		DisplayQuadCams();
 	}
 
 	public void ActivateCam(Camera cam){

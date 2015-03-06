@@ -41,7 +41,6 @@ public class MouseCollision : MonoBehaviour {
 			}
 		}
 		LineSelectedChangeColor();
-		ChangeBackgroundColor ();
 	}
 
 	void OnTriggerEnter(Collider other) {
@@ -72,12 +71,6 @@ public class MouseCollision : MonoBehaviour {
 			//Debug.Log ("Red: " + gs.gLineR + "\nGreen" + gs.gLineG + "\nBlue" + gs.gLineB);
 			
 		}
-	}
-	
-	void ChangeBackgroundColor()
-	{
-		GlobalSettings gs = GameObject.FindGameObjectWithTag ("GlobalSettingsObject").GetComponent<GlobalSettings> ();
-		gs.CameraBackgroundColor ();
 	}
 
 	void ChangeColor(GameObject passedObject, Color color){

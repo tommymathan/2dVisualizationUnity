@@ -39,10 +39,10 @@
 	<Reference Include="System.Core" />
 	<Reference Include="System.Xml.Linq" />
 	<Reference Include="UnityEngine">
-	  <HintPath>C:/Users/Public/Documents/Unity/Editor/Data/Managed/UnityEngine.dll</HintPath>
+	  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEngine.dll</HintPath>
 	</Reference>
 	<Reference Include="UnityEditor">
-	  <HintPath>C:/Users/Public/Documents/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
+	  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
 	</Reference>
   </ItemGroup>
   <ItemGroup>
@@ -54,7 +54,6 @@
      <Compile Include="Assets\Scripts\DataParserScript.cs" />
      <Compile Include="Assets\Scripts\DebugGraphScript.cs" />
      <Compile Include="Assets\Scripts\DebugUI.cs" />
-     <Compile Include="Assets\Scripts\Iter3\CamButtonScript.cs" />
      <Compile Include="Assets\Scripts\Iter3\CollocatedVis.cs" />
      <Compile Include="Assets\Scripts\Iter3\DataBuilder.cs" />
      <Compile Include="Assets\Scripts\Iter3\DataManager.cs" />
@@ -82,7 +81,7 @@
      <Compile Include="Assets\notificationScript.cs" />
      <Compile Include="Assets\textValueButton.cs" />
  <Reference Include="UnityEngine.UI">
- <HintPath>C:/Users/Public/Documents/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/4.6.1/UnityEngine.UI.dll</HintPath>
+ <HintPath>C:/Program Files (x86)/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/4.6.1/UnityEngine.UI.dll</HintPath>
  </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -53,6 +53,13 @@ public class FileBrowser {
 		}
 	}
 	protected Texture2D m_directoryImage;
+
+	public GUISkin browserSkin;
+
+	public void setBrowserSkin(GUISkin skin)
+	{
+		browserSkin = skin;
+	}
 	
 	// Optional image for files
 	public Texture2D FileImage {
@@ -206,6 +213,9 @@ public class FileBrowser {
 	}
 	
 	protected void BuildContent() {
+		GUIStyle mystyle = new GUIStyle ();
+		mystyle.normal.textColor = Color.white;
+
 		m_directoriesWithImages = new GUIContent[m_directories.Length];
 		for (int i = 0; i < m_directoriesWithImages.Length; ++i) {
 			m_directoriesWithImages[i] = new GUIContent(m_directories[i], DirectoryImage);
@@ -225,6 +235,8 @@ public class FileBrowser {
 	}
 	
 	public void OnGUI() {
+		GUI.skin = browserSkin;
+
 		GUILayout.BeginArea(
 			m_screenRect,
 			m_name,
@@ -274,6 +286,7 @@ public class FileBrowser {
 			m_filesWithImages,
 			FileDoubleClickCallback
 			);
+
 		GUI.enabled = true;
 		if (m_selectedFile > -1) {
 			m_selectedDirectory = m_selectedNonMatchingDirectory = -1;

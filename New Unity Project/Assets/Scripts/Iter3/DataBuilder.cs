@@ -20,7 +20,7 @@ public class DataBuilder
 	bool columnWise = false;
 	string[] fileLines;
 	float[] arrayOfMaxes;
-	static int NORMALIZATIONSCALAR = 5;
+	 int NORMALIZATIONSCALAR = 5;
 	bool absoluteNormals =  true;
 	
 	
@@ -89,6 +89,12 @@ public class DataBuilder
 	
 	private void normalizationFunction()
 	{
+		//Get normalization value from GUI
+		GlobalSettings gs = GameObject.FindGameObjectWithTag ("GlobalSettingsObject").GetComponent<GlobalSettings> ();
+		NORMALIZATIONSCALAR = gs.normalizationVal;
+
+		Debug.Log("Normalization Val: " + NORMALIZATIONSCALAR);
+
 		float maxValue = 0f;
 		arrayOfMaxes = new float[dataObject.incomingData [0].Count];
 		
