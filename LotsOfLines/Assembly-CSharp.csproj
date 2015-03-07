@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+	<ProductVersion>10.0.20506</ProductVersion>
+	<SchemaVersion>2.0</SchemaVersion>
+	<ProjectGuid>{169A1E42-AA4A-4919-BDAE-0045872FB7F1}</ProjectGuid>
+	<OutputType>Library</OutputType>
+	<AppDesignerFolder>Properties</AppDesignerFolder>
+	<RootNamespace></RootNamespace>
+	<AssemblyName>Assembly-CSharp</AssemblyName>
+	<TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+	<FileAlignment>512</FileAlignment>
+	<BaseDirectory>Assets</BaseDirectory>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+	<DebugSymbols>true</DebugSymbols>
+	<DebugType>full</DebugType>
+	<Optimize>false</Optimize>
+	<OutputPath>Temp\bin\Debug\</OutputPath>
+	<DefineConstants>DEBUG;TRACE;UNITY_5_0_0;UNITY_5_0;UNITY_5;ENABLE_LICENSE_RENAME;ENABLE_NEW_BUGREPORTER;ENABLE_2D_PHYSICS;ENABLE_4_6_FEATURES;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_DUCK_TYPING;ENABLE_FRAME_DEBUGGER;ENABLE_GENERICS;ENABLE_HOME_SCREEN;ENABLE_IMAGEEFFECTS;ENABLE_LIGHT_PROBES_LEGACY;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_NEW_HIERARCHY;ENABLE_PHYSICS;ENABLE_PHYSICS_PHYSX3;ENABLE_PLUGIN_INSPECTOR;ENABLE_SHADOWS;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_UNITYEVENTS;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_AUDIOMIXER_SUSPEND;ENABLE_NONPRO;INCLUDE_DYNAMIC_GI;INCLUDE_GI;INCLUDE_IL2CPP;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;UNITY_STANDALONE_WIN;UNITY_STANDALONE;ENABLE_SUBSTANCE;ENABLE_TEXTUREID_MAP;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_MONO;ENABLE_PROFILER;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN</DefineConstants>
+	<ErrorReport>prompt</ErrorReport>
+	<WarningLevel>4</WarningLevel>
+	<NoWarn>0169</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+	<DebugType>pdbonly</DebugType>
+	<Optimize>true</Optimize>
+	<OutputPath>Temp\bin\Release\</OutputPath>
+	<DefineConstants>TRACE</DefineConstants>
+	<ErrorReport>prompt</ErrorReport>
+	<WarningLevel>4</WarningLevel>
+	<NoWarn>0169</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+	<Reference Include="System" />
+    <Reference Include="System.XML" />
+	<Reference Include="System.Core" />
+	<Reference Include="System.Xml.Linq" />
+	<Reference Include="UnityEngine">
+	  <HintPath>C:/Program Files/Unity5/Editor/Data/Managed/UnityEngine.dll</HintPath>
+	</Reference>
+	<Reference Include="UnityEditor">
+	  <HintPath>C:/Program Files/Unity5/Editor/Data/Managed/UnityEditor.dll</HintPath>
+	</Reference>
+  </ItemGroup>
+  <ItemGroup>
+     <Compile Include="Assets\CreateScrollList.cs" />
+     <Compile Include="Assets\FileBrowser.cs" />
+     <Compile Include="Assets\FileMouseOver.cs" />
+     <Compile Include="Assets\GUILayoutx.cs" />
+     <Compile Include="Assets\Scripts\BasicPoint.cs" />
+     <Compile Include="Assets\Scripts\DataParserScript.cs" />
+     <Compile Include="Assets\Scripts\DebugGraphScript.cs" />
+     <Compile Include="Assets\Scripts\DebugUI.cs" />
+     <Compile Include="Assets\Scripts\Iter3\CollocatedVis.cs" />
+     <Compile Include="Assets\Scripts\Iter3\DataBuilder.cs" />
+     <Compile Include="Assets\Scripts\Iter3\DataManager.cs" />
+     <Compile Include="Assets\Scripts\Iter3\DrawUtil.cs" />
+     <Compile Include="Assets\Scripts\Iter3\GlobalSettings.cs" />
+     <Compile Include="Assets\Scripts\Iter3\InlineVis.cs" />
+     <Compile Include="Assets\Scripts\Iter3\MouseCollision.cs" />
+     <Compile Include="Assets\Scripts\Iter3\MouseHandler.cs" />
+     <Compile Include="Assets\Scripts\Iter3\Parser.cs" />
+     <Compile Include="Assets\Scripts\Iter3\RadialVis.cs" />
+     <Compile Include="Assets\Scripts\Iter3\ScreenLines.cs" />
+     <Compile Include="Assets\Scripts\Iter3\ShiftedVis.cs" />
+     <Compile Include="Assets\Scripts\Iter3\Visualization.cs" />
+     <Compile Include="Assets\Scripts\OpenGL.cs" />
+     <Compile Include="Assets\Scripts\SafeDataStandard.cs" />
+     <Compile Include="Assets\Scripts\ShiftedCordinateDrawer.cs" />
+     <Compile Include="Assets\Scripts\StayPut.cs" />
+     <Compile Include="Assets\Scripts\TableTextValue.cs" />
+     <Compile Include="Assets\Scripts\TextNode.cs" />
+     <Compile Include="Assets\Scripts\UtilityTools.cs" />
+     <Compile Include="Assets\Scripts\VisZero.cs" />
+     <Compile Include="Assets\Scripts\Visualization\ParentVisualization.cs" />
+     <Compile Include="Assets\UIMangerScript.cs" />
+     <Compile Include="Assets\WelcomeSplash.cs" />
+     <Compile Include="Assets\notificationScript.cs" />
+     <Compile Include="Assets\textValueButton.cs" />
+ <Reference Include="UnityEngine.UI">
+ <HintPath>C:/Program Files/Unity5/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
+ </Reference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+	   Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  
+</Project>
