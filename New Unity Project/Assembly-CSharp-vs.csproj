@@ -58,6 +58,7 @@
      <Compile Include="Assets\Scripts\Iter3\DataBuilder.cs" />
      <Compile Include="Assets\Scripts\Iter3\DataManager.cs" />
      <Compile Include="Assets\Scripts\Iter3\DrawUtil.cs" />
+     <Compile Include="Assets\Scripts\Iter3\GathColorForUIElement.cs" />
      <Compile Include="Assets\Scripts\Iter3\GlobalSettings.cs" />
      <Compile Include="Assets\Scripts\Iter3\InlineVis.cs" />
      <Compile Include="Assets\Scripts\Iter3\MouseCollision.cs" />

@@ -28,6 +28,10 @@ public class MouseCollision : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		if(Input.GetMouseButton(0)){
+
+		}
+
 		if(Input.GetMouseButtonDown(0)){
 			if(hoverList.Count==0){//if you clicked on nothing, assume that the user doesn't want to have a selection highlighted anymore
 				selection.Clear();
@@ -51,7 +55,6 @@ public class MouseCollision : MonoBehaviour {
 			}
 		}
 		LineSelectedChangeColor();
-
 		HoverAnimation();
 	}
 
