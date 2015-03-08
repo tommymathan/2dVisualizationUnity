@@ -18,7 +18,7 @@ public class FileMouseOver : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 	public float animationTimer;
 	float time;
 	float timeClick;
-
+	GlobalSettings gs;
 
 	
 	/*
@@ -26,7 +26,7 @@ public class FileMouseOver : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 	 */
 	public void OnPointerEnter(PointerEventData data)
 	{
-
+		gs.mouseOverUI = true;
 		isMouseOver = true;
 	}
 
@@ -35,6 +35,7 @@ public class FileMouseOver : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 	 */
 	public void OnPointerExit(PointerEventData data)
 	{
+		gs.mouseOverUI = false;
 		isMouseOver = false;
 	}
 
@@ -59,6 +60,10 @@ public class FileMouseOver : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 	/*
 	 * Updates this script every frame
 	 */
+	void Start(){
+		gs = GameObject.FindGameObjectWithTag("GlobalSettingsObject").GetComponent<GlobalSettings>();
+	}
+
 	void Update()
 	{
 		//Get other objects in this script scripts

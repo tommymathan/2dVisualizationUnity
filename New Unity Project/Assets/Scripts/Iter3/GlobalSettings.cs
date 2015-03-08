@@ -16,7 +16,12 @@ public class GlobalSettings : MonoBehaviour {
 	public float globalLineR;
 	public float globalLineG;
 	public float globalLineB;
+	public bool globalLineUpdateFlag;
 
+	//Global UI Tint
+	public float uiR;
+	public float uiG;
+	public float uiB;
 	
 	//Global line type 
 	public int lineType;
@@ -50,6 +55,7 @@ public class GlobalSettings : MonoBehaviour {
 	//Mouse things
 	public Vector3 mousePos;
 	public GameObject mouseTextObject;
+	public bool mouseOverUI;
 
 	// Use this for initialization
 	void Start () {
@@ -63,15 +69,22 @@ public class GlobalSettings : MonoBehaviour {
 
 		Debug.LogError("Visualization Selection Disabled, Press F1 to enable~chris");
 		gLOLWidths = 0.04f;
+		globalLineUpdateFlag = false;
 
 		SetupCamButtons ();
 		camR = 0.83912f;
 		camG = 0.83912f;
 		camB = 0.83912f;
+
+		uiR = 1f;
+		uiG = 1f;
+		uiB = 1f;
+
+		mouseOverUI=false;
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
 		if(Input.GetKeyDown(KeyCode.F1)){
 			onCameraSelectionScreen = true;
 		}
@@ -83,7 +96,7 @@ public class GlobalSettings : MonoBehaviour {
 
 		CameraBackgroundColor ();
 		UpdateMouseText();
-
+		globalLineUpdateFlag = false;
 	}
 
 	public void UpdateMouseText(){
