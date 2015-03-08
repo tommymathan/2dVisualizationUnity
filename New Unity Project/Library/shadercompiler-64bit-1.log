@@ -1,23 +1,31 @@
 Base path: C:/Program Files/Unity5/Editor/Data
-Pipe name: \\.\pipe\UnityShaderCompiler-64bit-1-3708
+Pipe name: \\.\pipe\UnityShaderCompiler-64bit-1-6584
 Cmd: getPlatforms
 Cmd: compileSnippet
-  api=4 type=0 insize=9591 outsize=10342 kw=UNITY_COLORSPACE_GAMMA ok=1
+  api=4 type=0 insize=3755 outsize=2737 kw=DIRECTIONAL ok=1
 Cmd: compileSnippet
-  api=4 type=1 insize=9591 outsize=2623 kw=UNITY_COLORSPACE_GAMMA ok=1
+  api=4 type=1 insize=3755 outsize=1152 kw=DIRECTIONAL ok=1
 Cmd: compileSnippet
-  api=4 type=0 insize=1051 outsize=1250 kw= ok=1
+  api=4 type=0 insize=818 outsize=762 kw= ok=1
 Cmd: compileSnippet
-  api=4 type=1 insize=1051 outsize=949 kw= ok=1
+  api=4 type=1 insize=818 outsize=494 kw= ok=1
 Cmd: compileSnippet
-  api=4 type=0 insize=1089 outsize=1298 kw= ok=1
+  api=4 type=0 insize=990 outsize=1071 kw= ok=1
 Cmd: compileSnippet
-  api=4 type=1 insize=1089 outsize=990 kw= ok=1
+  api=4 type=1 insize=990 outsize=697 kw= ok=1
 Cmd: compileSnippet
-  api=4 type=0 insize=541 outsize=3517 kw=SHADOWS_DEPTH ok=1
+  api=4 type=0 insize=959 outsize=1071 kw= ok=1
 Cmd: compileSnippet
-  api=4 type=1 insize=541 outsize=437 kw=SHADOWS_DEPTH ok=1
+  api=4 type=1 insize=959 outsize=600 kw= ok=1
 Cmd: compileSnippet
-  api=4 type=0 insize=7075 outsize=3736 kw=DIRECTIONAL SHADOWS_OFF LIGHTMAP_OFF DIRLIGHTMAP_OFF DYNAMICLIGHTMAP_OFF ok=1
+  api=4 type=0 insize=751 outsize=3517 kw=SHADOWS_DEPTH ok=1
 Cmd: compileSnippet
-  api=4 type=1 insize=7075 outsize=1502 kw=DIRECTIONAL SHADOWS_OFF LIGHTMAP_OFF DIRLIGHTMAP_OFF DYNAMICLIGHTMAP_OFF ok=1
+  api=4 type=1 insize=751 outsize=364 kw=SHADOWS_DEPTH ok=1
+Cmd: compileSnippet
+  api=4 type=0 insize=982 outsize=3963 kw=DIRECTIONAL SHADOWS_OFF LIGHTMAP_OFF DIRLIGHTMAP_OFF DYNAMICLIGHTMAP_OFF ok=1
+Cmd: compileSnippet
+  api=4 type=1 insize=982 outsize=10488 kw=DIRECTIONAL SHADOWS_OFF LIGHTMAP_OFF DIRLIGHTMAP_OFF DYNAMICLIGHTMAP_OFF ok=1
+Cmd: compileSnippet
+  api=4 type=0 insize=938 outsize=4020 kw=DIRECTIONAL SHADOWS_OFF ok=1
+Cmd: compileSnippet
+  api=4 type=1 insize=938 outsize=5442 kw=DIRECTIONAL SHADOWS_OFF ok=1

@@ -300,7 +300,7 @@ public class DrawUtil
 		for (int i=0; i < dataSet.Count; i+=2) {
 			organizedData.Add (new Vector3 (dataSet [i], dataSet [i + 1], zDist));
 			
-			Debug.Log ("Pair added " + dataSet[i] +" / " + dataSet[i+1]);
+			//Debug.Log ("Pair added " + dataSet[i] +" / " + dataSet[i+1]);
 		}
 		
 		//now that the list of points is in order of occurrance, gather vectors for each line segment and create quads along those segments
@@ -373,7 +373,7 @@ public class DrawUtil
 		Mesh theMesh = theObject.GetComponent<MeshFilter> ().mesh;
 		theObject.AddComponent<MeshCollider> ();
 		MeshCollider thisCollider = theObject.GetComponent<MeshCollider> ();
-		thisCollider.isTrigger = true;
+		//thisCollider.isTrigger = true;
 		thisCollider.sharedMesh = null; //for some reason you have to make this null before you assign it /*shrug*/
 		thisCollider.sharedMesh = theMesh;
 		//Debug.Log (theObject.name);

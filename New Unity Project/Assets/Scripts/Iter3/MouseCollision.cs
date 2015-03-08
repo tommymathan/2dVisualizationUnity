@@ -1,19 +1,27 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 public class MouseCollision : MonoBehaviour {
 
 	public List<GameObject> selection;
 	public List<GameObject> hoverList;
-	float redShift = 0.4f;
-	float blueShift = 0.4f;
-	float greenShift = 0.4f;
+	public GlobalSettings gs;
+	public Color previousColor;
+	public bool colorDirection;
+	public float nextActionTime;
+	public float period;
 
 	// Use this for initialization
 	void Start () {
+		previousColor = Color.red;
 		selection = new List<GameObject>();
 		hoverList = new List<GameObject>();
+		gs = GameObject.FindGameObjectWithTag ("GlobalSettingsObject").GetComponent<GlobalSettings> ();
+		colorDirection = false;
+		nextActionTime = 0f;
+		period = 0.01f;
 	}
 	
 	// Update is called once per frame
@@ -41,31 +49,65 @@ public class MouseCollision : MonoBehaviour {
 			}
 		}
 		LineSelectedChangeColor();
+
+		HoverAnimation();
 	}
 
 	void OnTriggerEnter(Collider other) {
-		Debug.Log ("mouse hit: " +other.ToString());
-		hoverList.Add(other.gameObject);
-		Color previousColor = other.gameObject.GetComponent<MeshRenderer>().material.color;
-		previousColor.r += redShift;
-		previousColor.b += blueShift;
-		previousColor.g += greenShift;
-		ChangeColor(other.gameObject, previousColor);
+		//find which index this vector is and select it from every vis type
+		int index = 0;
+		for(; index<other.transform.parent.childCount; index++){
+			if(other.transform.parent.GetChild(index).name.Equals(other.name)){
+				break;
+			}
+		}
+		foreach(GameObject go in gs.camList){
+			if(go.transform.childCount>1){
+				hoverList.Add(go.transform.GetChild(index).gameObject);
+			}
+		}
+		hoverList = hoverList.Distinct().ToList();
+
 	}
 
 	void OnTriggerExit(Collider other){
-		hoverList.Remove(other.gameObject);
-		Color previousColor = other.gameObject.GetComponent<MeshRenderer>().material.color;
-		previousColor.r -= redShift;
-		previousColor.b -= blueShift;
-		previousColor.g -= greenShift;
-		ChangeColor(other.gameObject, previousColor);
-		//Debug.Log(selection.Count);
+		//find which index this vector is and remove it from every vis type
+		int index = 0;
+		for(; index<other.transform.parent.childCount; index++){
+			if(other.transform.parent.GetChild(index).name.Equals(other.name)){
+				break;
+			}
+		}
+		foreach(GameObject go in gs.camList){
+			if(go.transform.childCount>1){
+				hoverList.Remove(go.transform.GetChild(index).gameObject);
+			}
+		}
+	}
+
+	void HoverAnimation(){
+		//roll the r value based on time
+		if(previousColor.b >=1f){
+			colorDirection =false;
+		}else if(previousColor.b <=0.4f){
+			colorDirection=true;
+		}
+		if(Time.time>nextActionTime){
+			nextActionTime+= period;
+			if(colorDirection){
+				previousColor.b +=0.02f;
+			}
+			else{
+				previousColor.b -=0.04f;
+			}
+		}
+		foreach(GameObject go in hoverList){
+			go.GetComponent<MeshRenderer>().material.color = previousColor;
+		}
 	}
 
 	void LineSelectedChangeColor(){
 		foreach (GameObject go in selection) {
-			GlobalSettings gs = GameObject.FindGameObjectWithTag ("GlobalSettingsObject").GetComponent<GlobalSettings> ();
 			Material passedMaterial = go.GetComponent<MeshRenderer> ().material;
 			passedMaterial.color = new Color (gs.gLineR, gs.gLineG, gs.gLineB);
 			//Debug.Log ("Red: " + gs.gLineR + "\nGreen" + gs.gLineG + "\nBlue" + gs.gLineB);
@@ -78,14 +120,4 @@ public class MouseCollision : MonoBehaviour {
 		passedMaterial.color = color;
 	}
 
-	void RandomizeSelectionColors(){
-		foreach(GameObject go in selection){
-			ChangeColor(go, new Color(Random.Range(0.1f, 0.8f),Random.Range(0.1f, 0.8f),Random.Range(0.1f, 0.8f)));
-			Color previousColor = go.GetComponent<MeshRenderer>().material.color;
-			previousColor.r += redShift;
-			previousColor.b += blueShift;
-			previousColor.g += greenShift;
-			go.GetComponent<MeshRenderer>().material.color = previousColor;
-		}
-	}
 }

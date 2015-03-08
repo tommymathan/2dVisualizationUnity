@@ -38,6 +38,7 @@ public class GlobalSettings : MonoBehaviour {
 	public List<GameObject> camButtonList;
 	public float doubleClickTimer;
 	public float doubleClickRate;
+
 	//Background Color
 	public float camR;
 	public float camG;
@@ -214,6 +215,13 @@ public class GlobalSettings : MonoBehaviour {
 	}
 
 	public void ActivateCam(Camera cam){
+		//if the user clicks in here after dragging from another window you have to re-enable this cam immediately or the currently selected cam will be the old one
+		foreach(GameObject otherCam in camList){
+			otherCam.GetComponent<MouseHandler>().enabled = false;
+		}
+
+		cam.gameObject.GetComponent<MouseHandler>().enabled = true;
+
 		if((Time.time-doubleClickTimer)<=doubleClickRate){
 			for(int i = 0; i< camList.Length; i++){
 				DeactivateCam(camList[i].GetComponent<Camera>());
@@ -222,6 +230,7 @@ public class GlobalSettings : MonoBehaviour {
 			SetCamAsFullFocus(cam);
 		}
 		doubleClickTimer = Time.time;
+
 	}
 
 	public void DeactivateCam(Camera cam){
@@ -282,7 +291,15 @@ public class GlobalSettings : MonoBehaviour {
 
 		inlineDimensionsButton.GetComponent<RectTransform> ().sizeDelta = new Vector2 (Screen.width / 2, Screen.height / 2);
 		inlineDimensionsButton.GetComponent<RectTransform> ().anchoredPosition = new Vector2 ((Screen.width / 4), -Screen.height / 4);
+	}
 
-
+	public void EnableCamManip(GameObject go){
+		if(!Input.GetMouseButton(0)){//if the user is holding down the mouse button, then don't activate the hovered cam because they are probably dragging a vis cam out of its current ounds and don't want to be interrupted in that process
+			foreach(GameObject otherCam in camList){
+				otherCam.GetComponent<MouseHandler>().enabled = false;
+			}
+			
+			go.GetComponent<MouseHandler>().enabled = true;
+		}
 	}
 }

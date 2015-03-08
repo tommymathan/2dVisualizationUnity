@@ -1,8 +1,14 @@
 fileFormatVersion: 2
 guid: a1c94cd7802190346864fbec51d3e888
+timeCreated: 1425773920
+licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - gs: {instanceID: 0}
+  - hoverMaterial: {fileID: 2100000, guid: cb5cdcafecdef5e439dec6e5659a21e4, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
+  assetBundleName: 
+  assetBundleVariant: 
