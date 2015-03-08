@@ -12,16 +12,18 @@ public class MouseCollision : MonoBehaviour {
 	public bool colorDirection;
 	public float nextActionTime;
 	public float period;
+	public Dictionary<GameObject, Color> colorRetainer;
 
 	// Use this for initialization
 	void Start () {
-		previousColor = Color.red;
+		previousColor = Color.white;
 		selection = new List<GameObject>();
 		hoverList = new List<GameObject>();
 		gs = GameObject.FindGameObjectWithTag ("GlobalSettingsObject").GetComponent<GlobalSettings> ();
 		colorDirection = false;
 		nextActionTime = 0f;
-		period = 0.01f;
+		period = 0.05f;
+		colorRetainer = new Dictionary<GameObject, Color>();
 	}
 	
 	// Update is called once per frame
@@ -61,9 +63,13 @@ public class MouseCollision : MonoBehaviour {
 				break;
 			}
 		}
+		//add this item to the hoverlist, if it is the first time that this item has been hovered then add it to the dictionary so we can remember it's original color
 		foreach(GameObject go in gs.camList){
 			if(go.transform.childCount>1){
 				hoverList.Add(go.transform.GetChild(index).gameObject);
+				if(!colorRetainer.ContainsKey(other.gameObject)){
+					colorRetainer.Add(go.transform.GetChild(index).gameObject, go.transform.GetChild(index).GetComponent<Renderer>().material.color);
+				}
 			}
 		}
 		hoverList = hoverList.Distinct().ToList();
@@ -80,25 +86,31 @@ public class MouseCollision : MonoBehaviour {
 		}
 		foreach(GameObject go in gs.camList){
 			if(go.transform.childCount>1){
+				go.transform.GetChild(index).gameObject.GetComponent<Renderer>().material.color = colorRetainer[other.gameObject];
 				hoverList.Remove(go.transform.GetChild(index).gameObject);
 			}
 		}
+		//other.gameObject.GetComponent<Renderer>().material.color = colorRetainer[other.gameObject];
 	}
 
 	void HoverAnimation(){
 		//roll the r value based on time
-		if(previousColor.b >=1f){
+		if(previousColor.r >=1f){
 			colorDirection =false;
-		}else if(previousColor.b <=0.4f){
+		}else if(previousColor.r <=0.4f){
 			colorDirection=true;
 		}
 		if(Time.time>nextActionTime){
 			nextActionTime+= period;
 			if(colorDirection){
-				previousColor.b +=0.02f;
+				previousColor.r +=0.02f;
+				//previousColor.g +=0.02f;
+				//previousColor.b +=0.02f;
 			}
 			else{
-				previousColor.b -=0.04f;
+				previousColor.r -=0.04f;
+				//previousColor.g -=0.04f;
+				//previousColor.b -=0.04f;
 			}
 		}
 		foreach(GameObject go in hoverList){
@@ -107,11 +119,12 @@ public class MouseCollision : MonoBehaviour {
 	}
 
 	void LineSelectedChangeColor(){
+		Color workingColor = new Color (gs.gLineR, gs.gLineG, gs.gLineB);;
 		foreach (GameObject go in selection) {
 			Material passedMaterial = go.GetComponent<MeshRenderer> ().material;
-			passedMaterial.color = new Color (gs.gLineR, gs.gLineG, gs.gLineB);
+			passedMaterial.color = workingColor;
 			//Debug.Log ("Red: " + gs.gLineR + "\nGreen" + gs.gLineG + "\nBlue" + gs.gLineB);
-			
+			colorRetainer[go] = workingColor;
 		}
 	}
 
