@@ -16,6 +16,7 @@ public class GlobalSettings : MonoBehaviour {
 	public float globalLineR;
 	public float globalLineG;
 	public float globalLineB;
+
 	public bool globalLineUpdateFlag;
 
 	//Global UI Tint
@@ -79,12 +80,15 @@ public class GlobalSettings : MonoBehaviour {
 		uiR = 1f;
 		uiG = 1f;
 		uiB = 1f;
+		globalLineR = 1.0f;
+		globalLineG = 1.0f;
+		globalLineB = 1.0f;
 
 		mouseOverUI=false;
 	}
 	
 	// Update is called once per frame
-	void FixedUpdate () {
+	void Update () {
 		if(Input.GetKeyDown(KeyCode.F1)){
 			onCameraSelectionScreen = true;
 		}
@@ -96,7 +100,7 @@ public class GlobalSettings : MonoBehaviour {
 
 		CameraBackgroundColor ();
 		UpdateMouseText();
-		globalLineUpdateFlag = false;
+
 	}
 
 	public void UpdateMouseText(){

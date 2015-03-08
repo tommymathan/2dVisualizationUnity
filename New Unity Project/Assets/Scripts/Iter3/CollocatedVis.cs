@@ -17,7 +17,6 @@ public class CollocatedVis : Visualization
 		int	numberValsPerVector;
 		int animationCounter;
 		Color[] colors;
-		Color visColor;
 		GameObject globalSettingsObject;
 		bool dataUpdated; //tells the cam when to redraw stuff based on an update in global settings
 		bool animationInProgress;
@@ -44,7 +43,6 @@ public class CollocatedVis : Visualization
 				thisCam.orthographicSize = 5;
 				collidersLoaded = true;
 				//GameObject.FindGameObjectsWithTag ();
-				visColor = Color.magenta;
 				globalSettingsObject = GameObject.FindGameObjectWithTag("GlobalSettingsObject");
 				dataUpdated = false;
 
@@ -177,7 +175,8 @@ public class CollocatedVis : Visualization
 						meshContainmentArray[i].tag = "vector";
 						meshContainmentArray [i].name = i.ToString();
 						meshContainmentArray[i].GetComponent<Renderer>().material.shader = unlit;
-						meshContainmentArray[i].GetComponent<MeshRenderer>().material.color = visColor;
+						GlobalSettings gs = globalSettingsObject.GetComponent<GlobalSettings>();
+						meshContainmentArray[i].GetComponent<MeshRenderer>().material.color = new Color(gs.globalLineR,gs.globalLineG,gs.globalLineB);
 						meshContainmentArray[i].layer = 8; //8 is collocated visuals layer
 				 
 						drawingUtility[i].lineWidth = globalSettingsObject.GetComponent<GlobalSettings>().gLOLWidths;

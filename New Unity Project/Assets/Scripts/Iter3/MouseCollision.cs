@@ -17,6 +17,9 @@ public class MouseCollision : MonoBehaviour {
 	public float period;
 	public Dictionary<GameObject, Color> colorRetainer;
 	public Vector2 lastMousePos; //used to detect if the user was dragging or not
+	public Vector3 mouseDownPos;
+	public Vector3 mouseColliderC;//used to revert back to old mouse collider settings
+	public Vector3 mouseColliderS;//used to revert back to old mouse collider settings
 
 	// Use this for initialization
 	void Start () {
@@ -31,16 +34,24 @@ public class MouseCollision : MonoBehaviour {
 		nextActionTimeForSelection = 0f;
 		period = 0.05f;
 		colorRetainer = new Dictionary<GameObject, Color>();
+		mouseColliderC = gameObject.GetComponent<BoxCollider>().center;
+		mouseColliderS = gameObject.GetComponent<BoxCollider>().size;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		if(Input.GetMouseButton(0)){
-
+			DragFunc();
 		}
+
+		if(Input.GetMouseButtonUp(0)){
+			RevertMouseCollider();
+		}
+
 		if(!gs.mouseOverUI){//if the mouse isn't over any UI element...
 			if(Input.GetMouseButtonDown(0)){
-
+				mouseDownPos = gameObject.transform.parent.GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition);
+				gs.globalLineUpdateFlag = false;
 				if((lastMousePos.x==Input.mousePosition.x)&&(lastMousePos.y==Input.mousePosition.y)&&(hoverList.Count==0)){//if you clicked on nothing, assume that the user doesn't want to have a selection highlighted anymore, only do this if they weren't drag-clicking
 					RevertColors();
 					selection.Clear();
@@ -135,14 +146,14 @@ public class MouseCollision : MonoBehaviour {
 		if(Time.time>nextActionTimeForSelection){
 			nextActionTimeForSelection+= period;
 			if(selectionColorDirection){
-				//baseColor.r +=0.02f;
+				baseColor.r +=0.02f;
 				baseColor.g +=0.02f;
-				//baseColor.b +=0.02f;
+				baseColor.b +=0.02f;
 			}
 			else{
-				//baseColor.r -=0.04f;
+				baseColor.r -=0.04f;
 				baseColor.g -=0.04f;
-				//baseColor.b -=0.04f;
+				baseColor.b -=0.04f;
 			}
 		}
 
@@ -196,7 +207,21 @@ public class MouseCollision : MonoBehaviour {
 			//Debug.Log ("Red: " + gs.gLineR + "\nGreen" + gs.gLineG + "\nBlue" + gs.gLineB);
 			colorRetainer[go] = workingColor;
 		}
+		//gs.globalLineUpdateFlag = false;
 		selection.Clear ();
+
+	}
+
+	void DragFunc(){
+		lastMousePos = gameObject.transform.parent.GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition);
+		Debug.Log("Mouse went down at:" + mouseDownPos + "| Mouse is now at: " + lastMousePos);
+		gameObject.GetComponent<BoxCollider>().size = new Vector3(Mathf.Abs(lastMousePos.x-mouseDownPos.x), Mathf.Abs(lastMousePos.y-mouseDownPos.y), 50f);
+		gameObject.GetComponent<BoxCollider>().center = new Vector3((mouseDownPos.x-lastMousePos.x)/2, (mouseDownPos.y-lastMousePos.y)/2, 0f);
+	}
+
+	void RevertMouseCollider(){
+		gameObject.GetComponent<BoxCollider>().center = mouseColliderC;
+		gameObject.GetComponent<BoxCollider>().size = mouseColliderS;
 	}
 
 	void ChangeColor(GameObject passedObject, Color color){

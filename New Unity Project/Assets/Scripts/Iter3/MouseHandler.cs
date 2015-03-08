@@ -49,11 +49,11 @@ public class MouseHandler : MonoBehaviour {
 	
 	public void PanFunction(){
 		
-		if (Input.GetMouseButtonDown (0)) {
+		if (Input.GetMouseButtonDown (1)) {
 			lastPosition = Input.mousePosition;
 		}
 		
-		if (Input.GetMouseButton (0)) {
+		if (Input.GetMouseButton (1)) {
 			Vector3 delta = Input.mousePosition - lastPosition;
 			transform.Translate(-delta.x*mouseSensitivity, -delta.y * mouseSensitivity, 0f);
 			lastPosition = Input.mousePosition;

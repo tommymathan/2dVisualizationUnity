@@ -127,7 +127,7 @@ public class ShiftedVis : Visualization
 		//When we do a list of objects we will add the game object to the first element of the array
 		//for now we just use this loop to test		
 		for (int i = 0; i < numberIncomingVectors; i++) {
-			Shader unlit = Shader.Find("Self-Illumin/Diffuse");
+			Shader unlit = Shader.Find("Unlit/Color");
 			meshContainmentArray [i] = new GameObject ();
 			meshContainmentArray [i].AddComponent<MeshFilter> ();
 			meshContainmentArray[i].GetComponent<MeshFilter>().mesh.RecalculateNormals();
@@ -135,9 +135,10 @@ public class ShiftedVis : Visualization
 			meshContainmentArray [i].AddComponent<StayPut> ();
 			meshContainmentArray [i].transform.SetParent (gameObject.transform);
 			meshContainmentArray[i].tag = "vector";
-			meshContainmentArray [i].name = "Vector:" + i;
+			meshContainmentArray [i].name = i.ToString();
 			meshContainmentArray[i].GetComponent<Renderer>().material.shader = unlit;
-			meshContainmentArray[i].GetComponent<MeshRenderer>().material.color = visColor;
+			GlobalSettings gs = globalSettingsObject.GetComponent<GlobalSettings>();
+			meshContainmentArray[i].GetComponent<MeshRenderer>().material.color = new Color(gs.globalLineR,gs.globalLineG,gs.globalLineB);
 			meshContainmentArray[i].layer = 10; //8 is collocated visuals layer
 			
 			drawingUtility[i].lineWidth = globalSettingsObject.GetComponent<GlobalSettings>().gLOLWidths;
