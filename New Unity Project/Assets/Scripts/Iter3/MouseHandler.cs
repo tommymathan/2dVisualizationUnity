@@ -8,6 +8,7 @@ public class MouseHandler : MonoBehaviour {
 	private GameObject mouseObj;
 	private BoxCollider mouseCol;
 	private float mouseColliderSize;
+	public GlobalSettings gs;
 	
 	// Use this for initialization
 	void Start () {
@@ -32,11 +33,12 @@ public class MouseHandler : MonoBehaviour {
 		mouseCol.isTrigger = true;
 
 		mouseObj.AddComponent<MouseCollision>();
-
+		gs = GameObject.FindGameObjectWithTag ("GlobalSettingsObject").GetComponent<GlobalSettings> ();
 	}
 	
 	// Update is called once per frame
 	void Update () {
+		gs.mousePos = mouseObj.transform.position;
 		PanFunction();
 		ZoomFunction();
 		//Debug.Log (mouseObj.transform.position);

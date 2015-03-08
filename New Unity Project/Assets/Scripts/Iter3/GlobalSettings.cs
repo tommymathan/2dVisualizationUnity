@@ -25,7 +25,6 @@ public class GlobalSettings : MonoBehaviour {
 
 	//Scale factor
 	public float ScaleFactor = 1;
-
 	public DataManager dataManager;
 
 	//cam variables
@@ -43,6 +42,10 @@ public class GlobalSettings : MonoBehaviour {
 	public float camR;
 	public float camG;
 	public float camB;
+
+	//Mouse things
+	public Vector3 mousePos;
+	public GameObject mouseTextObject;
 
 	// Use this for initialization
 	void Start () {
@@ -73,7 +76,24 @@ public class GlobalSettings : MonoBehaviour {
 			DisplayQuadCams();
 		}
 
+
 		CameraBackgroundColor ();
+		UpdateMouseText();
+
+	}
+
+	public void UpdateMouseText(){
+		//get this into 2 decimal places format
+		float x = mousePos.x;
+		float y = mousePos.y;
+		x=x*100;
+		y=y*100;
+		x= Mathf.Round(x);
+		y= Mathf.Round(y);
+		x=x/100;
+		y=y/100;
+		mouseTextObject.transform.position = new Vector2(Input.mousePosition.x+50, Input.mousePosition.y-20);
+		mouseTextObject.GetComponent<Text>().text = "("+x+","+y+")";
 	}
 
 	public void setgLoLWidths(string val){
