@@ -14,11 +14,15 @@ public class CollocatedVis : Visualization
 		Mesh mesh;
 		DrawUtil[] drawingUtility;
 		int numberIncomingVectors;
+		int	numberValsPerVector;
 		int animationCounter;
 		Color[] colors;
 		Color visColor;
 		GameObject globalSettingsObject;
 		bool dataUpdated; //tells the cam when to redraw stuff based on an update in global settings
+		bool animationInProgress;
+		int[] animationQueue;
+		static int DRAWINGSPEED = 100;
 		//////////////////////////////
 		// Use this for initialization
 		void Start ()
@@ -43,14 +47,18 @@ public class CollocatedVis : Visualization
 				visColor = Color.magenta;
 				globalSettingsObject = GameObject.FindGameObjectWithTag("GlobalSettingsObject");
 				dataUpdated = false;
+
 	}
 	
 		// Update is called once per frame
 		void Update ()
 		{
 
-	if (animateOnLoad) {
-			animationCounter++;
+			if (animateOnLoad) {
+				animationCounter++;		
+
+				if(animationInProgress)	animateVectorsInQueue();
+								
 			//Debug.Log ("There are this many meshcontainmentarrays" + meshContainmentArray.Count());	
 				} else {
 					animationCounter = 10000;
@@ -59,7 +67,7 @@ public class CollocatedVis : Visualization
 			if (dataUpdated) {
 				for (int i = 0; i < numberIncomingVectors; i++) {
 						meshContainmentArray [i].GetComponent<MeshFilter> ().mesh 
-						= drawingUtility [i].AnimateCurrentFrame (1000, meshContainmentArray [i]);
+						= drawingUtility [i].filteredCoordinates();
 			}
 					
 				if (collidersLoaded == false) {
@@ -77,9 +85,38 @@ public class CollocatedVis : Visualization
 				Debug.Log ("Shit! You pressed Left Alt!");
 			}
 		}
-	
+	private void animateVectorsInQueue(){
 
-	
+				if (animationQueue.Length > 0) {
+						for (int j = 0; j < animationQueue.Length; j++) {
+								Debug.Log ("we are now exectuing!" + animationQueue.Length + "<size of queue Counter > " + animationCounter);
+								meshContainmentArray [animationQueue [j]].GetComponent<MeshFilter> ().mesh 
+				= drawingUtility [animationQueue [j]].AnimateCurrentFrame (animationCounter, meshContainmentArray [animationQueue [j]]);
+			
+						}
+				}
+		if (animationCounter >= DRAWINGSPEED*(numberValsPerVector/2))animationInProgress = false;
+
+		}
+
+	public override void addLineToAnimate(int[] val)
+	{
+		animationInProgress = true;
+		for (int i = 0; i < val.Length; i++) {
+			Debug.Log("index i = " + val[i]);
+				}
+
+		HashSet<int> tempInts = new HashSet<int> ();
+
+		foreach (int i in val) {
+					tempInts.Add (i);
+			Debug.Log("Vector" + i +" has been added to the animation queue");
+				}
+		animationQueue = tempInts.ToArray();
+		animateOnLoad = true;
+		animationCounter = 0;
+	}
+
 		//real code - We may need to find some efficiency improvements here, there is a signifcant delay
 		//when opening a large dataset. If that is not possible we can create a loading bar animation.
 		public override void UpdateData (DataObject dataFromFile)
@@ -101,6 +138,7 @@ public class CollocatedVis : Visualization
 
 				//Get the number of incoming vectors, we will need this number often
 				numberIncomingVectors = data.incomingData.Count -1;
+				numberValsPerVector = data.labels.Count - 1;
 				
 				meshContainmentArray = new GameObject[numberIncomingVectors];
 				//Create an array of drawing utilitys, one for each game object we will be drawing
@@ -110,7 +148,7 @@ public class CollocatedVis : Visualization
 
 				for (int i = 0; i < numberIncomingVectors; i++) {
 			
-					drawingUtility [i] = new DrawUtil (0.03f, data.incomingData [i], this.GetComponent<Camera>(),1,0);
+			drawingUtility [i] = new DrawUtil (0.03f, data.normalizedData [i], this.GetComponent<Camera>(),DRAWINGSPEED,0);
 				}
 
 
@@ -137,7 +175,7 @@ public class CollocatedVis : Visualization
 						meshContainmentArray [i].AddComponent<StayPut> ();
 						meshContainmentArray [i].transform.SetParent (gameObject.transform);
 						meshContainmentArray[i].tag = "vector";
-						meshContainmentArray [i].name = "Vector:" + i;
+						meshContainmentArray [i].name = i.ToString();
 						meshContainmentArray[i].GetComponent<Renderer>().material.shader = unlit;
 						meshContainmentArray[i].GetComponent<MeshRenderer>().material.color = visColor;
 						meshContainmentArray[i].layer = 8; //8 is collocated visuals layer

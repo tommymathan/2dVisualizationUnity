@@ -5,7 +5,7 @@ using System.Linq;
 
 public class MouseCollision : MonoBehaviour {
 
-	public List<GameObject> selection;
+	public HashSet<GameObject> selection;
 	public List<GameObject> hoverList;
 	public GlobalSettings gs;
 	public Color previousColor;
@@ -17,7 +17,7 @@ public class MouseCollision : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		previousColor = Color.white;
-		selection = new List<GameObject>();
+		selection = new HashSet<GameObject>();
 		hoverList = new List<GameObject>();
 		gs = GameObject.FindGameObjectWithTag ("GlobalSettingsObject").GetComponent<GlobalSettings> ();
 		colorDirection = false;
@@ -38,26 +38,39 @@ public class MouseCollision : MonoBehaviour {
 			}
 			else{
 				if(Input.GetKey(KeyCode.LeftShift)){ //if they are holding shift, keep adding selected lines to the selectionlist
-					foreach(GameObject go in hoverList){
-							if(!selection.Contains(go)){
+					foreach(GameObject go in hoverList){							
 								selection.Add(go);
-							}
 					}
 				}
 				else{//if they weren't holding shift then clear the selection and treat this last click as them choosing everything that they want to work with
 					selection.Clear();
 					foreach(GameObject go in hoverList){
-						if(!selection.Contains(go)){
 							selection.Add(go);
-						}
+						animatedSelectedLine();
 					}
 				}
 			}
 		}
 		LineSelectedChangeColor();
 		HoverAnimation();
+
 	}
 
+	//For some reason we have an extra zero being added to the array TODO:Ask chris if we have other element in the selection
+	void animatedSelectedLine(){
+		
+		GameObject dataManager = GameObject.FindGameObjectWithTag ("DataManagerTag");
+		List<int> selectedVectors = new List<int> ();
+		foreach (GameObject go in selection) {
+			int temp = -1;
+			int.TryParse(go.name,out temp);
+			selectedVectors.Add(temp);
+			Debug.Log("We have added" + go.name + " to the selected vector list");
+
+		}
+		dataManager.GetComponent<DataManager> ().addAnimationToViz (selectedVectors.ToArray());
+		
+	}
 	void OnTriggerEnter(Collider other) {
 		//find which index this vector is and select it from every vis type
 		int index = 0;

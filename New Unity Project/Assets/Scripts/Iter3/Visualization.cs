@@ -18,7 +18,9 @@ public abstract class Visualization: MonoBehaviour {
 
 		Debug.Log ("Update called on " + this.gameObject.ToString());
 	}
-
+	public virtual void addLineToAnimate(int [] val){
+		//Debug.Log ("Animation added to " + this.gameObject.ToString());
+		}
 	public void AddCameraControls(){
 		gameObject.AddComponent<MouseHandler> ();
 	}

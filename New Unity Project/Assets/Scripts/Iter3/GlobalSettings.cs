@@ -17,6 +17,10 @@ public class GlobalSettings : MonoBehaviour {
 	public float globalLineG;
 	public float globalLineB;
 
+	
+	//Global line type 
+	public int lineType;
+
 	//Anitmation Speed
 	public float animationSpeed = 1;
 
@@ -141,6 +145,13 @@ public class GlobalSettings : MonoBehaviour {
 		gLineB = 1;
 	}
 	
+	public void setLineType(int val)
+	{
+		GameObject dataManager = GameObject.FindGameObjectWithTag ("DataManagerTag");
+		lineType = val;
+		dataManager.GetComponent<DataManager> ().NotifyVizualizations ();
+		
+	}
 	public void linePinkColor()
 	{
 		gLineR = 1;

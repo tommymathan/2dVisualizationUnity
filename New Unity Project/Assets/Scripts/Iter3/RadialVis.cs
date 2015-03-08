@@ -108,7 +108,7 @@ public class RadialVis : Visualization
 		
 		for (int i = 0; i < numberIncomingVectors; i++) {
 			
-			drawingUtility [i] = new DrawUtil (0.03f, data.incomingData [i], this.GetComponent<Camera>(),1,2);
+			drawingUtility [i] = new DrawUtil (0.03f, data.normalizedData [i], this.GetComponent<Camera>(),1,2);
 		}
 		
 		

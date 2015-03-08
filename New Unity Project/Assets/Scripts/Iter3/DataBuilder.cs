@@ -10,6 +10,7 @@ public struct DataObject
 {
 	public List<String> labels;
 	public List<List<float>> incomingData;
+	public List<List<float>> normalizedData;
 }
 
 public class DataBuilder
@@ -20,7 +21,7 @@ public class DataBuilder
 	bool columnWise = false;
 	string[] fileLines;
 	float[] arrayOfMaxes;
-	 int NORMALIZATIONSCALAR = 5;
+	int NORMALIZATIONSCALAR = 5;
 	bool absoluteNormals =  true;
 	
 	
@@ -71,7 +72,8 @@ public class DataBuilder
 				if (float.TryParse (dataElement, out tempFloat)) {
 					//  Debug.Log("Temp float is" + tempFloat);
 					//  Debug.Log("count is" + count);
-					dataObject.incomingData [count].Add (tempFloat);	
+					dataObject.incomingData [count].Add (tempFloat);
+					dataObject.normalizedData [count].Add (tempFloat);
 					if (columnWise)
 						count++;
 				}
@@ -92,9 +94,9 @@ public class DataBuilder
 		//Get normalization value from GUI
 		GlobalSettings gs = GameObject.FindGameObjectWithTag ("GlobalSettingsObject").GetComponent<GlobalSettings> ();
 		NORMALIZATIONSCALAR = gs.normalizationVal;
-
+		
 		Debug.Log("Normalization Val: " + NORMALIZATIONSCALAR);
-
+		
 		float maxValue = 0f;
 		arrayOfMaxes = new float[dataObject.incomingData [0].Count];
 		
@@ -114,9 +116,9 @@ public class DataBuilder
 		for (int i =0; i < dataObject.incomingData.Count; i++) {
 			for (int j=0; j < dataObject.incomingData[i].Count; j++) {
 				if(absoluteNormals)
-					dataObject.incomingData [i] [j] = (dataObject.incomingData [i] [j] / arrayOfMaxes[j]) * NORMALIZATIONSCALAR;
+					dataObject.normalizedData [i] [j] = (dataObject.incomingData [i] [j] / arrayOfMaxes[j]) * NORMALIZATIONSCALAR;
 				else
-					dataObject.incomingData [i] [j] = (dataObject.incomingData [i] [j] / maxValue) * NORMALIZATIONSCALAR;
+					dataObject.normalizedData [i] [j] = (dataObject.incomingData [i] [j] / maxValue) * NORMALIZATIONSCALAR;
 			}
 		}
 		//	return (temp / arrayOfMaxes[lineCursor]) * 20;
@@ -163,12 +165,14 @@ public class DataBuilder
 		//Make lists to contain each of the incoming vectors
 		for (int i = 0; i < (temp1.Count > temp2.Count ? temp1.Count : temp2.Count); i++) {
 			dataObject.incomingData.Add (new List<float> ());
+			dataObject.normalizedData.Add (new List<float> ());
 		}
 		
 	}
 	private void makeDataObject(){
 		dataObject = new DataObject ();
 		dataObject.incomingData = new List<List<float>> ();
+		dataObject.normalizedData = new List<List<float>> ();
 		dataObject.labels = new List<string> ();
 	}
 }//end class

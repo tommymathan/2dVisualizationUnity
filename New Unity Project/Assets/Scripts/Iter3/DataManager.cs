@@ -68,7 +68,12 @@ public class DataManager : MonoBehaviour {
 		
 		//Assert that dataSet has more than 4 vectors left after removal
 	}
-
+	public void addAnimationToViz(int[] val)
+	{
+		for (int i = 0; i<vizList.Count(); i++) {
+			vizList[i].addLineToAnimate(val);
+		}
+		}
 	public void NotifyVizualizations(){
 		dataUpdated = false;
 		for (int i = 0; i<vizList.Count(); i++) {

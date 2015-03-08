@@ -39,10 +39,10 @@
 	<Reference Include="System.Core" />
 	<Reference Include="System.Xml.Linq" />
 	<Reference Include="UnityEngine">
-	  <HintPath>C:/Program Files/Unity5/Editor/Data/Managed/UnityEngine.dll</HintPath>
+	  <HintPath>M:/Program Files/Unity/Editor/Data/Managed/UnityEngine.dll</HintPath>
 	</Reference>
 	<Reference Include="UnityEditor">
-	  <HintPath>C:/Program Files/Unity5/Editor/Data/Managed/UnityEditor.dll</HintPath>
+	  <HintPath>M:/Program Files/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
 	</Reference>
   </ItemGroup>
   <ItemGroup>
@@ -58,7 +58,6 @@
      <Compile Include="Assets\Scripts\Iter3\DataBuilder.cs" />
      <Compile Include="Assets\Scripts\Iter3\DataManager.cs" />
      <Compile Include="Assets\Scripts\Iter3\DrawUtil.cs" />
-     <Compile Include="Assets\Scripts\Iter3\GathColorForUIElement.cs" />
      <Compile Include="Assets\Scripts\Iter3\GlobalSettings.cs" />
      <Compile Include="Assets\Scripts\Iter3\InlineVis.cs" />
      <Compile Include="Assets\Scripts\Iter3\MouseCollision.cs" />
@@ -82,7 +81,7 @@
      <Compile Include="Assets\notificationScript.cs" />
      <Compile Include="Assets\textValueButton.cs" />
  <Reference Include="UnityEngine.UI">
- <HintPath>C:/Program Files/Unity5/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
+ <HintPath>M:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

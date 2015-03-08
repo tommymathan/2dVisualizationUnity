@@ -29,6 +29,8 @@ public class DrawUtil
 	private Camera curVisCamera;
 	private int ANIMATIONSPEED = 100;
 	private int currentVisualizationMethod;
+	private int lineType;
+
 	
 	//Animation variables
 	private int animationFrame;
@@ -45,6 +47,7 @@ public class DrawUtil
 	
 	public DrawUtil (float w, List<float> d ,Camera visCamera,int visSetting)
 	{
+		lineType = 0;
 		animationFrame = 0;
 		lineWidth = w;
 		incomingDataSet = d;
@@ -57,6 +60,7 @@ public class DrawUtil
 	
 	public DrawUtil (float w, List<float> d ,Camera visCamera,int animationSpeed,int visSetting)
 	{
+		lineType = 0;
 		ANIMATIONSPEED = animationSpeed;
 		animationFrame = 0;
 		lineWidth = w;
@@ -71,6 +75,7 @@ public class DrawUtil
 	
 	public DrawUtil (float w, List<float> d ,Camera visCamera,int animationSpeed,int animationFrameStart,int visSetting)
 	{
+		lineType = 0;
 		ANIMATIONSPEED = animationSpeed;
 		animationFrame = animationFrameStart;
 		lineWidth = w;
@@ -119,26 +124,26 @@ public class DrawUtil
 			//We track the previous point so that we know where to animate from
 			previousX = temp [temp.Count - 2];
 			previousY = temp [temp.Count - 1];
-			Debug.Log("previous xy:" + previousX + " " + previousY);
+			//Debug.Log("previous xy:" + previousX + " " + previousY);
 			//The general idea here is to graph the previous x + % current x and
 			//previous y + % current y
 			
 			temp.Add ((((shiftedDataSet [cursor + 2]) - previousX) * currentPrecentageAnimated)
 			          + previousX);
 			
-			Debug.Log("The current data being added is" + (((shiftedDataSet  [cursor + 2]) * currentPrecentageAnimated)
-			          + previousX));
+			//Debug.Log("The current data being added is" + (((shiftedDataSet  [cursor + 2]) * currentPrecentageAnimated)
+			//          + previousX));
 			
 			temp.Add ((((shiftedDataSet [cursor + 3])-previousY) * currentPrecentageAnimated )
 			          + previousY);
-			Debug.Log("The current data being added is" + (((shiftedDataSet [cursor + 3]) * currentPrecentageAnimated)
-			          
-			          + previousY));
+			//Debug.Log("The current data being added is" + (((shiftedDataSet [cursor + 3]) * currentPrecentageAnimated)
+			//          
+			//          + previousY));
 			return DrawContiguousLineSegments (temp);
 			
 		} else {
 			animateOnUpdate = false;
-			return filteredCoordinates (incomingDataSet);
+			return filteredCoordinates ();
 		}
 	}
 
@@ -185,7 +190,7 @@ public class DrawUtil
 	
 	
 	
-	private Mesh filteredCoordinates(List<float> dataSet)
+	public Mesh filteredCoordinates()
 	{
 		switch (currentVisualizationMethod) {
 		case 0:
@@ -198,13 +203,13 @@ public class DrawUtil
 			return radialFilter (incomingDataSet);
 
 		case 3:
-			return collocatedFilter (dataSet);
+			return collocatedFilter (incomingDataSet);
 
 		case 4:
-			return collocatedFilter (dataSet);
+			return collocatedFilter (incomingDataSet);
 
 		default:
-			return collocatedFilter (dataSet);
+			return collocatedFilter (incomingDataSet);
 
 		}
 		
@@ -289,7 +294,11 @@ public class DrawUtil
 		object[] verts = new object[2];
 		Vector3 currentVector = new Vector3 (0, 0, 0); //used to gather a direction of the line to properly set the edges of the generated quad
 		Vector3 up = new Vector3 (0, 0, -10); //used for cross product
+		Vector3 forward = new Vector3 (1, 1, -10); //used for cross product
 		Vector3 right = new Vector3 (0, 0, 0); // used to push verts out from the lines to form quads
+		
+		Vector3 coneVector = new Vector3 (0, 0, 0);
+		Vector3 arrow = new Vector3 (0, 0, 0);
 		
 		List<Vector3> organizedData = new List<Vector3> ();
 		
@@ -300,11 +309,13 @@ public class DrawUtil
 		for (int i=0; i < dataSet.Count; i+=2) {
 			organizedData.Add (new Vector3 (dataSet [i], dataSet [i + 1], zDist));
 			
-			//Debug.Log ("Pair added " + dataSet[i] +" / " + dataSet[i+1]);
+			//			Debug.Log ("Pair added " + dataSet[i] +" / " + dataSet[i+1]);
 		}
 		
 		//now that the list of points is in order of occurrance, gather vectors for each line segment and create quads along those segments
 		//a direction is targetPosition-currentposition
+		checkForLineType ();
+		
 		for (int i=0; i<=organizedData.Count-2; i++) {
 			
 			if (i < organizedData.Count - 1) {
@@ -315,17 +326,44 @@ public class DrawUtil
 			}
 			//find right vector
 			right = -Vector3.Cross (currentVector.normalized, up.normalized) * lineWidth;
+			coneVector = -Vector3.Cross (currentVector.normalized, up.normalized) * (lineWidth/3);
 			
 			//add the points to the left and right of this point
 			//and add the points to the left and the right of the next point(assuming it's normal matches this normal)
 			organizedPoints.Add ((organizedData [i] + right));
 			organizedPoints.Add ((organizedData [i] - right));
-			organizedPoints.Add ((organizedData [i + 1] + right));
-			organizedPoints.Add ((organizedData [i + 1] - right));
+			
+			
+			//Cone line type
+			if(lineType == 2){
+				organizedPoints.Add ((organizedData [i + 1] + coneVector));
+				organizedPoints.Add ((organizedData [i + 1] - coneVector));
+				
+				organizedPointUvs.Add ((Vector2)(organizedData [i + 1] + coneVector));
+				organizedPointUvs.Add ((Vector2)(organizedData [i + 1] - coneVector));
+				
+			}
+			//Arrow line type
+			else if (lineType == 1)
+			{	
+				organizedPoints.Add ((organizedData [i + 1] + right));
+				organizedPoints.Add ((organizedData [i + 1] - right));
+				
+				organizedPointUvs.Add ((Vector2)(organizedData [i + 1] + right));
+				organizedPointUvs.Add ((Vector2)(organizedData [i + 1] - right));
+				
+			}
+			//No arrows line type
+			else{
+				organizedPoints.Add ((organizedData [i + 1] + right));
+				organizedPoints.Add ((organizedData [i + 1] - right));
+				
+				organizedPointUvs.Add ((Vector2)(organizedData [i + 1] + right));
+				organizedPointUvs.Add ((Vector2)(organizedData [i + 1] - right));
+			}
 			organizedPointUvs.Add ((Vector2)(organizedData [i] + right));
 			organizedPointUvs.Add ((Vector2)(organizedData [i] - right));
-			organizedPointUvs.Add ((Vector2)(organizedData [i + 1] + right));
-			organizedPointUvs.Add ((Vector2)(organizedData [i + 1] - right));
+			
 			
 			
 		}
@@ -367,6 +405,11 @@ public class DrawUtil
 		//Debug.Log (mesh.vertexCount);
 		return mesh;
 	}
+	private void checkForLineType(){
+		GameObject globalSettings = GameObject.FindGameObjectWithTag ("GlobalSettingsObject");
+		lineType = globalSettings.GetComponent<GlobalSettings> ().lineType;
+	}
+
 	
 	
 	public static void ManageVectorColliders(GameObject theObject){
