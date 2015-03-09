@@ -16,6 +16,7 @@ public class GlobalSettings : MonoBehaviour {
 	public float globalLineR;
 	public float globalLineG;
 	public float globalLineB;
+	public Dictionary<GameObject, Color> colorRetainer;
 
 	public bool globalLineUpdateFlag;
 
@@ -51,6 +52,9 @@ public class GlobalSettings : MonoBehaviour {
 	public float doubleClickTimer;
 	public float doubleClickRate;
 
+	//Notification Object
+	public GameObject loadingNotification;
+
 
 	//Background Color + GraphLine Colors
 	public float camR;
@@ -66,7 +70,11 @@ public class GlobalSettings : MonoBehaviour {
 	public Vector3 mousePos;
 	public GameObject mouseTextObject;
 	public bool mouseOverUI;
+	public HashSet<GameObject> selection;
+	public List<GameObject> hoverList;
 
+	//Updating counter
+	int counterLoad = 0;
 
 	// Use this for initialization
 	void Start () {
@@ -91,6 +99,7 @@ public class GlobalSettings : MonoBehaviour {
 		camLinesDemarked = Color.magenta;
 		camLinesInterval = 1f;
 		camLinesDemarkationInterval = 5f;
+		colorRetainer = new Dictionary<GameObject, Color>();
 
 		uiR = 1f;
 		uiG = 1f;
@@ -101,6 +110,8 @@ public class GlobalSettings : MonoBehaviour {
 		globalLineB = 1.0f;
 
 		mouseOverUI=false;
+		selection = new HashSet<GameObject>();
+		hoverList = new List<GameObject>();
 	}
 	
 	// Update is called once per frame
@@ -112,6 +123,18 @@ public class GlobalSettings : MonoBehaviour {
 		if(Input.GetKeyDown(KeyCode.F2)){
 			DisplayQuadCams();
 		}
+
+		if (dataManager.updating == true) {
+				loadingNotification.GetComponent<Image> ().enabled = true;
+				loadingNotification.transform.GetChild (0).GetComponent<Text> ().enabled = true;
+				loadingNotification.transform.GetChild (1).GetComponent<Image> ().enabled = true;
+		} else {
+			loadingNotification.GetComponent<Image> ().enabled = false;
+			loadingNotification.transform.GetChild (0).GetComponent<Text> ().enabled = false;
+			loadingNotification.transform.GetChild (1).GetComponent<Image> ().enabled = false;
+
+		}
+
 
 
 		CameraBackgroundColor ();
@@ -223,16 +246,37 @@ public class GlobalSettings : MonoBehaviour {
 	public void globalLineColorR(float val)
 	{
 		globalLineR = val;
+		setGlobalLineColor ();
 	}
 
 	public void globalLineColorG(float val)
 	{
 		globalLineG = val;
+		setGlobalLineColor ();
 	}
 
 	public void globalLineColorB(float val)
 	{
 		globalLineB = val;
+		setGlobalLineColor ();
+	}
+
+	public void setGlobalLineColor()
+	{	List<GameObject> ls = new List<GameObject>(GameObject.FindGameObjectsWithTag ("vector"));
+
+		for( int i = 0; i < ls.Count; i++)
+		{
+			ls[i].GetComponent<MeshRenderer>().material.color = new Color(globalLineR, globalLineG, globalLineB);
+
+		}
+
+		foreach (GameObject go in GameObject.FindGameObjectsWithTag("vector")) {
+			if(colorRetainer.ContainsKey(go)){
+				//change color
+				colorRetainer[go] = new Color(globalLineR, globalLineG, globalLineB);;
+			}
+		}
+
 	}
 
 	public void AnimationSpeed(string val)
