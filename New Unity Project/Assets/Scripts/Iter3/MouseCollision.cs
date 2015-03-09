@@ -70,7 +70,6 @@ public class MouseCollision : MonoBehaviour {
 						selection.Clear();
 						foreach(GameObject go in hoverList){
 								selection.Add(go);
-
 						}
 						updateSelectionInGlobalSettings();
 					}
@@ -237,7 +236,7 @@ public class MouseCollision : MonoBehaviour {
 		gameObject.GetComponent<BoxCollider>().size = new Vector3(Mathf.Abs(lastMousePos.x-mouseDownPos.x), Mathf.Abs(lastMousePos.y-mouseDownPos.y), 50f);
 		gameObject.GetComponent<BoxCollider>().center = new Vector3((mouseDownPos.x-lastMousePos.x)/2, (mouseDownPos.y-lastMousePos.y)/2, 0f);
 
-		if(hoverList.Count>0){//if they weren't holding shift then clear the selection and treat this last click as them choosing everything that they want to work with
+		if(hoverList.Count>0){
 			RevertColors();
 			selection.Clear();
 			foreach(GameObject go in hoverList){

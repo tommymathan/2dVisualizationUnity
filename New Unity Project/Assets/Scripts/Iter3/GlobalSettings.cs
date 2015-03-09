@@ -348,7 +348,7 @@ public class GlobalSettings : MonoBehaviour {
 	}
 
 	public void EnableCamManip(GameObject go){
-		if(!Input.GetMouseButton(0)){//if the user is holding down the mouse button, then don't activate the hovered cam because they are probably dragging a vis cam out of its current ounds and don't want to be interrupted in that process
+		if(!Input.GetMouseButton(1)){//if the user is holding down the mouse button, then don't activate the hovered cam because they are probably dragging a vis cam out of its current ounds and don't want to be interrupted in that process
 			foreach(GameObject otherCam in camList){
 				otherCam.GetComponent<MouseHandler>().enabled = false;
 			}

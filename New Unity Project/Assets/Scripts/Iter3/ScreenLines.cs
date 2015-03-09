@@ -7,16 +7,27 @@ public class ScreenLines : MonoBehaviour {
 	private float rBound;
 	private float bBound;
 	private float tBound;
+	private float interval;
 	private Camera thisCamera;
-	
+
+	private float demarkInterval; //used to choose how often a demarkation is drawn
+	private Color normalColor;
+	private Color originColor;
+	private Color demarkationColor;
+
 	// Use this for initialization
 	void Start () {
+		interval = 1;
+		demarkInterval = 5f;
+		Debug.Log ("Graph interval: " + interval + "|Demarkation Interval: " +demarkInterval);
 		lBound = -10.0f;
 		rBound = 10.0f;
 		bBound = -10.0f;
 		tBound = 10.0f;
-		
 		thisCamera = gameObject.GetComponentInParent<Camera>();
+		normalColor = Color.grey;
+		originColor = Color.blue;
+		demarkationColor = Color.magenta;
 	}
 	
 	// Update is called once per frame
@@ -33,25 +44,37 @@ public class ScreenLines : MonoBehaviour {
 		lineMaterial.SetPass (0);
 		GL.Begin (GL.LINES);
 		
-		GL.Color (Color.blue);
+		GL.Color (originColor);
 		
 		for (float tempLBound = lBound; tempLBound <= rBound; tempLBound++) {
-			if(tempLBound!=0.0f){
-				GL.Color (Color.grey);
+			if((tempLBound!=0.0f) && !(tempLBound%demarkInterval==0) && (tempLBound%interval==0)){
+				GL.Color (normalColor);
+			}
+			else if((tempLBound!=0.0f) && (tempLBound%demarkInterval==0)){
+				GL.Color (demarkationColor);
+			}
+			else if(!(tempLBound%interval==0)){
+				GL.Color (Color.clear);
 			}
 			else{
-				GL.Color (Color.blue);
+				GL.Color (originColor);
 			}
 			GL.Vertex3 (tempLBound, bBound, 0f);
 			GL.Vertex3 (tempLBound, tBound, 0f);
 		}
 		
 		for (float tempBBound = bBound; tempBBound <= tBound; tempBBound++) {
-			if(tempBBound != 0.0f){
-				GL.Color (Color.grey);
+			if((tempBBound!=0.0f) && !(tempBBound%demarkInterval==0) && (tempBBound%interval==0)){
+				GL.Color (normalColor);
+			}
+			else if((tempBBound!=0.0f) && (tempBBound%demarkInterval==0)){
+				GL.Color (demarkationColor);
+			}
+			else if(!(tempBBound%interval==0)){
+				GL.Color (Color.clear);
 			}
 			else{
-				GL.Color (Color.blue);
+				GL.Color (originColor);
 			}
 			GL.Vertex3 (lBound, tempBBound, 0f);
 			GL.Vertex3 (rBound, tempBBound, 0f);
@@ -64,14 +87,14 @@ public class ScreenLines : MonoBehaviour {
 	{
 		if (!lineMaterial) {
 			lineMaterial = new Material ("Shader \"Lines/Colored Blended\" {" +
-			                             "SubShader { Pass { " +
-			                             "    Blend SrcAlpha OneMinusSrcAlpha " +
-			                             "    ZWrite Off Cull Off Fog { Mode Off } " +
-			                             "    BindChannels {" +
-			                             "      Bind \"vertex\", vertex Bind \"color\", color }" +
+			                             "SubShader { Tags { \"Queue\" = \"Transparent+2\" \"RenderType\"=\"Transparent\"}" +
+			                             "Pass {" +
+			                             "   BindChannels { Bind \"Color\",color }" +
+			                             "   Blend SrcAlpha OneMinusSrcAlpha" +
+			                             "   ZWrite Off Cull Off Fog { Mode Off }" +
 			                             "} } }");
 		}
-		
+
 		lineMaterial.hideFlags = HideFlags.HideAndDontSave;
 		lineMaterial.shader.hideFlags = HideFlags.HideAndDontSave;
 	}
