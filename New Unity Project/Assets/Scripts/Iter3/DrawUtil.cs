@@ -30,7 +30,7 @@ public class DrawUtil
 	private int ANIMATIONSPEED = 100;
 	private int currentVisualizationMethod;
 	private int lineType;
-
+	
 	
 	//Animation variables
 	private int animationFrame;
@@ -45,18 +45,7 @@ public class DrawUtil
 	private List<float> colliderDataSet;
 	private bool collidersLoaded;
 	
-	public DrawUtil (float w, List<float> d ,Camera visCamera,int visSetting)
-	{
-		lineType = 0;
-		animationFrame = 0;
-		lineWidth = w;
-		incomingDataSet = d;
-		animateOnUpdate = true;
-		curVisCamera = visCamera;
-		collidersLoaded = false;
-		currentVisualizationMethod = visSetting;
-		checkIncomingData ();
-	}
+	
 	
 	public DrawUtil (float w, List<float> d ,Camera visCamera,int animationSpeed,int visSetting)
 	{
@@ -70,22 +59,9 @@ public class DrawUtil
 		collidersLoaded=false;
 		currentVisualizationMethod = visSetting;		
 		checkIncomingData ();
-		collocatedPointShifter ();
+		generalPointShifter ();
 	}
 	
-	public DrawUtil (float w, List<float> d ,Camera visCamera,int animationSpeed,int animationFrameStart,int visSetting)
-	{
-		lineType = 0;
-		ANIMATIONSPEED = animationSpeed;
-		animationFrame = animationFrameStart;
-		lineWidth = w;
-		incomingDataSet = d;
-		animateOnUpdate = true;
-		curVisCamera = visCamera;
-		collidersLoaded = false;
-		currentVisualizationMethod = visSetting;
-		checkIncomingData ();
-	}
 	
 	
 	
@@ -124,21 +100,17 @@ public class DrawUtil
 			//We track the previous point so that we know where to animate from
 			previousX = temp [temp.Count - 2];
 			previousY = temp [temp.Count - 1];
-			//Debug.Log("previous xy:" + previousX + " " + previousY);
+			
 			//The general idea here is to graph the previous x + % current x and
 			//previous y + % current y
 			
 			temp.Add ((((shiftedDataSet [cursor + 2]) - previousX) * currentPrecentageAnimated)
 			          + previousX);
 			
-			//Debug.Log("The current data being added is" + (((shiftedDataSet  [cursor + 2]) * currentPrecentageAnimated)
-			//          + previousX));
 			
 			temp.Add ((((shiftedDataSet [cursor + 3])-previousY) * currentPrecentageAnimated )
 			          + previousY);
-			//Debug.Log("The current data being added is" + (((shiftedDataSet [cursor + 3]) * currentPrecentageAnimated)
-			//          
-			//          + previousY));
+			
 			return DrawContiguousLineSegments (temp);
 			
 		} else {
@@ -146,18 +118,18 @@ public class DrawUtil
 			return filteredCoordinates ();
 		}
 	}
-
+	
 	private void generalPointShifter(){
-
+		
 		switch (currentVisualizationMethod) {
 		case 0:
 			collocatedPointShifter ();
 			break;
 		case 1:
-			//
+			shiftedPointShifter ();
 			break;
 		case 2:
-			//
+			radialPointShifter();
 			break;
 		case 3:
 			//
@@ -188,6 +160,40 @@ public class DrawUtil
 		}
 	}
 	
+	private void radialPointShifter(){
+		Debug.Log ("Radial point shifter called");
+		shiftedDataSet = new List<float> ();
+		float orginX = incomingDataSet [0]; 
+		float orginY = incomingDataSet [1]; 
+		
+		for (int j = 2; j < incomingDataSet.Count; j+=2) {
+			
+			shiftedDataSet.Add (orginX);
+			shiftedDataSet.Add (orginY);
+			
+			shiftedDataSet.Add( incomingDataSet [j]);
+			shiftedDataSet.Add( incomingDataSet [j + 1]);
+			
+		}
+	}
+	
+	private void shiftedPointShifter(){
+		Debug.Log ("Shifted point shifter called");
+		shiftedDataSet = new List<float> ();
+		float orginX = 0; 
+		float orginY = 0; 
+		
+		for (int j = 0; j < incomingDataSet.Count; j+=2) {
+			
+			shiftedDataSet.Add( incomingDataSet [j]+ orginX);
+			shiftedDataSet.Add( incomingDataSet [j + 1]+orginY);
+			
+			orginX = ( orginX +1 ); 		
+			orginY = ( orginY + 1);	
+			
+		}
+	}
+	
 	
 	
 	public Mesh filteredCoordinates()
@@ -195,22 +201,22 @@ public class DrawUtil
 		switch (currentVisualizationMethod) {
 		case 0:
 			return collocatedFilter (incomingDataSet);
-
+			
 		case 1:
 			return shiftedFilter (incomingDataSet);
-
+			
 		case 2:
 			return radialFilter (incomingDataSet);
-
+			
 		case 3:
 			return collocatedFilter (incomingDataSet);
-
+			
 		case 4:
 			return collocatedFilter (incomingDataSet);
-
+			
 		default:
 			return collocatedFilter (incomingDataSet);
-
+			
 		}
 		
 	}
@@ -409,7 +415,7 @@ public class DrawUtil
 		GameObject globalSettings = GameObject.FindGameObjectWithTag ("GlobalSettingsObject");
 		lineType = globalSettings.GetComponent<GlobalSettings> ().lineType;
 	}
-
+	
 	
 	
 	public static void ManageVectorColliders(GameObject theObject){

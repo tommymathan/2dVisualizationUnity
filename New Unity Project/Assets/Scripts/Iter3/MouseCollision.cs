@@ -60,15 +60,18 @@ public class MouseCollision : MonoBehaviour {
 					if(Input.GetKey(KeyCode.LeftShift)){ //if they are holding shift, keep adding selected lines to the selectionlist
 						foreach(GameObject go in hoverList){							
 									selection.Add(go);
+
 						}
+						updateSelectionInGlobalSettings();
 					}
 					else if(hoverList.Count>0){//if they weren't holding shift then clear the selection and treat this last click as them choosing everything that they want to work with
 						RevertColors();
 						selection.Clear();
 						foreach(GameObject go in hoverList){
 								selection.Add(go);
-								//animatedSelectedLine();
+
 						}
+						updateSelectionInGlobalSettings();
 					}
 				}
 				lastMousePos = Input.mousePosition;
@@ -82,21 +85,22 @@ public class MouseCollision : MonoBehaviour {
 		}
 	}
 
-	//For some reason we have an extra zero being added to the array TODO:Ask chris if we have other element in the selection
-	void animatedSelectedLine(){
-		
-		GameObject dataManager = GameObject.FindGameObjectWithTag ("DataManagerTag");
-		List<int> selectedVectors = new List<int> ();
-		foreach (GameObject go in selection) {
-			int temp = -1;
-			int.TryParse(go.name,out temp);
-			selectedVectors.Add(temp);
-			Debug.Log("We have added" + go.name + " to the selected vector list");
-
+	void updateSelectionInGlobalSettings()
+	{
+		HashSet<int> selectedVectors = new HashSet<int> ();
+		int temp = -1;
+		if (selection.Count > 0) {
+			foreach (GameObject go in selection) {
+				if(int.TryParse (go.name, out temp))selectedVectors.Add (temp);
+				
+				Debug.Log ("We have added" + temp + " to the selected vector list");
+				
+			}
+			
+			gs.updateSelection (selectedVectors);
 		}
-		dataManager.GetComponent<DataManager> ().addAnimationToViz (selectedVectors.ToArray());
-		
 	}
+
 	void OnTriggerEnter(Collider other) {
 		//find which index this vector is and select it from every vis type
 		int index = 0;

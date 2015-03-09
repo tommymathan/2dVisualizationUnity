@@ -26,6 +26,8 @@ public class GlobalSettings : MonoBehaviour {
 	
 	//Global line type 
 	public int lineType;
+	//Current selected lines indexes
+	public HashSet<int> selectedLines;
 
 	//Anitmation Speed
 	public float animationSpeed = 1;
@@ -236,6 +238,10 @@ public class GlobalSettings : MonoBehaviour {
 		ScaleFactor = (float)temp;
 	}
 
+	public void updateSelection(HashSet<int> vals)
+	{
+		selectedLines = vals;
+	}
 	//Change camera back ground colors
 	public void CameraBackgroundColor()
 	{
