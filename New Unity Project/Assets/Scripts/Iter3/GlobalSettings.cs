@@ -58,6 +58,8 @@ public class GlobalSettings : MonoBehaviour {
 	public Color camLinesRegular;
 	public Color camLinesOrigin;
 	public Color camLinesDemarked;
+	public float camLinesInterval;
+	public float camLinesDemarkationInterval;
 
 	//Mouse things
 	public Vector3 mousePos;
@@ -85,10 +87,13 @@ public class GlobalSettings : MonoBehaviour {
 		camLinesRegular = Color.grey;
 		camLinesOrigin = Color.blue;
 		camLinesDemarked = Color.magenta;
+		camLinesInterval = 1f;
+		camLinesDemarkationInterval = 5f;
 
 		uiR = 1f;
 		uiG = 1f;
 		uiB = 1f;
+
 		globalLineR = 1.0f;
 		globalLineG = 1.0f;
 		globalLineB = 1.0f;

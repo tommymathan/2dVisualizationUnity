@@ -18,9 +18,6 @@ public class ScreenLines : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		gs = GameObject.FindGameObjectWithTag("GlobalSettingsObject").GetComponent<GlobalSettings>();
-		interval = 1;
-		demarkInterval = 5f;
-		Debug.Log ("Graph interval: " + interval + "|Demarkation Interval: " +demarkInterval);
 		lBound = -10.0f;
 		rBound = 10.0f;
 		bBound = -10.0f;
@@ -38,6 +35,8 @@ public class ScreenLines : MonoBehaviour {
 		normalColor = gs.camLinesRegular;
 		originColor = gs.camLinesOrigin;
 		demarkationColor = gs.camLinesDemarked;
+		interval = gs.camLinesInterval;
+		demarkInterval = gs.camLinesDemarkationInterval;
 	}
 	
 	void OnPostRender () {
