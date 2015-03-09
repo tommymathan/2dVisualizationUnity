@@ -7,13 +7,13 @@ public class ScreenLines : MonoBehaviour {
 	private float rBound;
 	private float bBound;
 	private float tBound;
-	private float interval;
+	public float interval;
 	private Camera thisCamera;
 
-	private float demarkInterval; //used to choose how often a demarkation is drawn
-	private Color normalColor;
-	private Color originColor;
-	private Color demarkationColor;
+	public float demarkInterval; //used to choose how often a demarkation is drawn
+	public Color normalColor;
+	public Color originColor;
+	public Color demarkationColor;
 
 	// Use this for initialization
 	void Start () {
