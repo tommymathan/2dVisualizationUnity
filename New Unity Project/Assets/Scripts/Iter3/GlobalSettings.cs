@@ -26,6 +26,7 @@ public class GlobalSettings : MonoBehaviour {
 	
 	//Global line type 
 	public int lineType;
+
 	//Current selected lines indexes
 	public HashSet<int> selectedLines;
 
@@ -50,10 +51,13 @@ public class GlobalSettings : MonoBehaviour {
 	public float doubleClickTimer;
 	public float doubleClickRate;
 
-	//Background Color
+	//Background Color + GraphLine Colors
 	public float camR;
 	public float camG;
 	public float camB;
+	public Color camLinesRegular;
+	public Color camLinesOrigin;
+	public Color camLinesDemarked;
 
 	//Mouse things
 	public Vector3 mousePos;
@@ -78,6 +82,9 @@ public class GlobalSettings : MonoBehaviour {
 		camR = 0.83912f;
 		camG = 0.83912f;
 		camB = 0.83912f;
+		camLinesRegular = Color.grey;
+		camLinesOrigin = Color.blue;
+		camLinesDemarked = Color.magenta;
 
 		uiR = 1f;
 		uiG = 1f;

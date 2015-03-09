@@ -9,7 +9,7 @@ public class ScreenLines : MonoBehaviour {
 	private float tBound;
 	public float interval;
 	private Camera thisCamera;
-
+	private GlobalSettings gs;
 	public float demarkInterval; //used to choose how often a demarkation is drawn
 	public Color normalColor;
 	public Color originColor;
@@ -17,6 +17,7 @@ public class ScreenLines : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		gs = GameObject.FindGameObjectWithTag("GlobalSettingsObject").GetComponent<GlobalSettings>();
 		interval = 1;
 		demarkInterval = 5f;
 		Debug.Log ("Graph interval: " + interval + "|Demarkation Interval: " +demarkInterval);
@@ -25,9 +26,7 @@ public class ScreenLines : MonoBehaviour {
 		bBound = -10.0f;
 		tBound = 10.0f;
 		thisCamera = gameObject.GetComponentInParent<Camera>();
-		normalColor = Color.grey;
-		originColor = Color.blue;
-		demarkationColor = Color.magenta;
+
 	}
 	
 	// Update is called once per frame
@@ -36,6 +35,9 @@ public class ScreenLines : MonoBehaviour {
 		rBound = Mathf.Ceil(thisCamera.ViewportToWorldPoint(new Vector3(1,0,GetComponent<Camera>().nearClipPlane)).x);
 		bBound = Mathf.Floor(thisCamera.ViewportToWorldPoint(new Vector3(0,0,GetComponent<Camera>().nearClipPlane)).y);
 		tBound = Mathf.Ceil(thisCamera.ViewportToWorldPoint(new Vector3(0,1,GetComponent<Camera>().nearClipPlane)).y);
+		normalColor = gs.camLinesRegular;
+		originColor = gs.camLinesOrigin;
+		demarkationColor = gs.camLinesDemarked;
 	}
 	
 	void OnPostRender () {
