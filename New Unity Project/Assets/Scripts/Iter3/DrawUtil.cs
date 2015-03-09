@@ -19,6 +19,7 @@ public class DrawUtil
 	private MeshFilter meshFilter; // this will refer to the MF for any spawned children
 	
 	private List<float> shiftedDataSet;
+	private List<Vector3> arrowPoints;
 	
 	
 	private int zDist; //backdist for camera(has no affect on FOV in ortho mode
@@ -49,6 +50,7 @@ public class DrawUtil
 	
 	public DrawUtil (float w, List<float> d ,Camera visCamera,int animationSpeed,int visSetting)
 	{
+		arrowPoints = new List<Vector3> ();
 		lineType = 0;
 		ANIMATIONSPEED = animationSpeed;
 		animationFrame = 0;
@@ -293,6 +295,65 @@ public class DrawUtil
 		
 	}
 	
+	
+	
+	
+	//Tony's arrow drawing method 
+	void drawArrowHead (Vector3 point1, Vector3 point2)
+	{
+		float arrowHeadSize = 0.3f;
+		
+		//vector along line
+		Vector3 vec = new Vector3 ();
+		vec.x = point2.x - point1.x;
+		vec.y = point2.y - point1.y;
+		vec.z = point2.z - point1.z;
+		
+		vec.Normalize ();
+		
+		//Perpendicular vector
+		Vector3 perp1 = new Vector3 ();
+		Vector3 perp2 = new Vector3 ();
+		perp1.Set (-vec.y, vec.x, 0);
+		perp2.Set (vec.y, -vec.x, 0);
+		
+		//Point behind endpoint
+		Vector3 point3 = new Vector3 ();
+		point3 = point2 - (vec * arrowHeadSize);
+		
+		
+		//Point on of the corners of the triangle
+		Vector3 point4 = new Vector3 ();
+		Vector4 point5 = new Vector3 ();
+		point4 = point3 + (perp2 * arrowHeadSize);
+		point5 = point3 + (perp1 * arrowHeadSize);
+		
+		
+		
+		arrowPoints.Add(new Vector3 (point2.x, point2.y, 0.0f));
+		arrowPoints.Add(new Vector3(point4.x, point4.y, 0.0f));
+		arrowPoints.Add(new Vector3(point5.x, point5.y, 0.0f));
+		
+		
+		Debug.Log ("we should now have a triangle");
+		
+	}
+	
+	public Mesh generateTriangleMesh ()
+	{
+		Mesh mesh;
+		mesh = new Mesh ();
+		if (arrowPoints.Count > 0) {
+			int [] tri = new int[arrowPoints.Count];
+			for (int i= 0; i < arrowPoints.Count; i++) {
+				tri [i] = i;
+			}
+			mesh.vertices = arrowPoints.ToArray ();
+			mesh.triangles = tri;
+		}
+		return mesh;
+	}
+	
 	public Mesh DrawContiguousLineSegments (List<float> dataSet)
 	{
 		Mesh mesh; //temp mesh
@@ -300,14 +361,13 @@ public class DrawUtil
 		object[] verts = new object[2];
 		Vector3 currentVector = new Vector3 (0, 0, 0); //used to gather a direction of the line to properly set the edges of the generated quad
 		Vector3 up = new Vector3 (0, 0, -10); //used for cross product
-		Vector3 forward = new Vector3 (1, 1, -10); //used for cross product
+		
 		Vector3 right = new Vector3 (0, 0, 0); // used to push verts out from the lines to form quads
 		
 		Vector3 coneVector = new Vector3 (0, 0, 0);
 		Vector3 arrow = new Vector3 (0, 0, 0);
 		
-		List<Vector3> organizedData = new List<Vector3> ();
-		
+		List<Vector3> organizedData = new List<Vector3> ();		
 		List<Vector3> organizedPoints = new List<Vector3> ();
 		List<Vector2> organizedPointUvs = new List<Vector2> ();
 		
@@ -357,6 +417,7 @@ public class DrawUtil
 				
 				organizedPointUvs.Add ((Vector2)(organizedData [i + 1] + right));
 				organizedPointUvs.Add ((Vector2)(organizedData [i + 1] - right));
+				drawArrowHead(organizedData[i],organizedData[i+1]);
 				
 			}
 			//No arrows line type
@@ -408,8 +469,38 @@ public class DrawUtil
 			//ManageColliders(colliderDataSet);
 			collidersLoaded = true;
 		}
-		//Debug.Log (mesh.vertexCount);
+		
+		if (lineType == 1) {
+			
+			return combineMesh(mesh,generateTriangleMesh());
+		}
 		return mesh;
+	}
+	
+	private Mesh combineMesh(Mesh mesh1, Mesh mesh2)
+	{
+		Mesh mesh = new Mesh ();
+		
+		int size = mesh1.vertexCount + mesh2.vertexCount;
+		Vector3[] points = new Vector3[mesh1.vertexCount+mesh2.vertexCount];
+		int[] tris = new int[mesh1.triangles.GetLength(0) + mesh2.triangles.GetLength(0)];
+		int[] mesh1Triangles = mesh1.triangles;
+		int[] mesh2Triangles = mesh2.triangles;
+		
+		for(int i = 0; i < mesh1.vertexCount;i++)
+		{
+			points[i] = mesh1.vertices[i];
+			tris[i] = mesh1Triangles[i];
+		}
+		for(int i = 0; i < mesh2.vertexCount;i++)
+		{
+			points[mesh1.vertexCount + i] = mesh2.vertices[i];
+			tris[mesh1.vertexCount-1 + i] = (mesh2Triangles[i]+ mesh1.vertexCount);
+		}
+		mesh.vertices = points;
+		mesh.triangles = tris;
+		return mesh;
+		
 	}
 	private void checkForLineType(){
 		GameObject globalSettings = GameObject.FindGameObjectWithTag ("GlobalSettingsObject");
