@@ -1,17 +1,15 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Iter3\MouseCollision.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Iter3\DrawUtil.cs">
     <Files>
-      <File FileName="Assets\Scripts\Iter3\DataBuilder.cs" Line="144" Column="44" />
-      <File FileName="Assets\Scripts\Iter3\MouseCollision.cs" Line="59" Column="123" />
-      <File FileName="Assets\Scripts\Iter3\MouseHandler.cs" Line="20" Column="1" />
-      <File FileName="Assets\Scripts\Iter3\CollocatedVis.cs" Line="105" Column="22" />
-      <File FileName="Assets\Scripts\Iter3\DrawUtil.cs" Line="193" Column="8" />
-      <File FileName="Assets\Scripts\Iter3\GlobalSettings.cs" Line="152" Column="68" />
-      <File FileName="Assets\Scripts\Iter3\RadialVis.cs" Line="183" Column="2" />
-      <File FileName="Assets\Scripts\Iter3\ShiftedVis.cs" Line="110" Column="4" />
-      <File FileName="Assets\Scripts\Iter3\DataManager.cs" Line="76" Column="4" />
-      <File FileName="Assets\Scripts\Iter3\Visualization.cs" Line="22" Column="5" />
+      <File FileName="Assets\Scripts\Iter3\DataBuilder.cs" Line="179" Column="2" />
+      <File FileName="Assets\Scripts\Iter3\GlobalSettings.cs" Line="379" Column="2" />
+      <File FileName="Assets\UIMangerScript.cs" Line="82" Column="1" />
+      <File FileName="Assets\Scripts\Iter3\MouseCollision.cs" Line="260" Column="1" />
+      <File FileName="Assets\Scripts\Iter3\DataManager.cs" Line="96" Column="3" />
+      <File FileName="Assets\Scripts\Iter3\Visualization.cs" Line="59" Column="1" />
+      <File FileName="Assets\Scripts\Iter3\CollocatedVis.cs" Line="159" Column="2" />
+      <File FileName="Assets\Scripts\Iter3\DrawUtil.cs" Line="546" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

@@ -196,7 +196,10 @@ public class DrawUtil
 		}
 	}
 	
-	
+	public void updateDrawingSpeed(int val)
+	{
+		ANIMATIONSPEED = val;
+	}
 	
 	public Mesh filteredCoordinates()
 	{

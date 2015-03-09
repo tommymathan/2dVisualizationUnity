@@ -49,5 +49,10 @@ public abstract class Visualization: MonoBehaviour {
 	public void AddCameraControls(){
 		gameObject.AddComponent<MouseHandler> ();
 	}
+
+	public void setAnimationSpeed(int val)
+	{
+		DRAWINGSPEED = val;
+	}
 }
 

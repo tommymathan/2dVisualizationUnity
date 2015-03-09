@@ -31,7 +31,7 @@ public class GlobalSettings : MonoBehaviour {
 	public HashSet<int> selectedLines;
 
 	//Anitmation Speed
-	public float animationSpeed = 1;
+	public int animationSpeed = 1;
 
 	//Normalization
 	public int normalizationVal = 5;
@@ -51,6 +51,7 @@ public class GlobalSettings : MonoBehaviour {
 	public float doubleClickTimer;
 	public float doubleClickRate;
 
+
 	//Background Color + GraphLine Colors
 	public float camR;
 	public float camG;
@@ -65,6 +66,7 @@ public class GlobalSettings : MonoBehaviour {
 	public Vector3 mousePos;
 	public GameObject mouseTextObject;
 	public bool mouseOverUI;
+
 
 	// Use this for initialization
 	void Start () {
@@ -236,7 +238,12 @@ public class GlobalSettings : MonoBehaviour {
 	public void AnimationSpeed(string val)
 	{
 		double temp = float.Parse (val);
-		animationSpeed = (float)temp;
+		animationSpeed = (int)temp;
+		
+		for( int i = 0; i < camList.Length; i++)
+		{
+			camList[i].GetComponent<Visualization>().setAnimationSpeed(animationSpeed);
+		}
 	}
 
 	public void normalizationFactor(string val)
