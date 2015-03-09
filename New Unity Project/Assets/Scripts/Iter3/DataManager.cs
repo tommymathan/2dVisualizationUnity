@@ -47,6 +47,7 @@ public class DataManager : MonoBehaviour {
 	}
 	void parseDataFile(){
 		++updateCounter;
+		//Debug.Log ("currentCounter" + updateCounter);
 		dataParser = new DataBuilder (dataPath);
 		dataSet = new DataObject ();
 		dataSet = dataParser.getDataObject();
@@ -83,7 +84,7 @@ public class DataManager : MonoBehaviour {
 		for (int i = 0; i<vizList.Count(); i++) {
 			vizList[i].UpdateData(dataSet);
 		}
-		++updateCounter;
+		//++updateCounter;
 	}
 	
 	public void SetDataPath(string givenPath){

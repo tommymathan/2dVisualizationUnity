@@ -19,7 +19,7 @@ public class DataBuilder
 	char[] delimiters = new char[] { ' ', ',' };
 	DataObject dataObject;
 	bool columnWise = false;
-	string[] fileLines;
+	public string[] fileLines;
 	float[] arrayOfMaxes;
 	int NORMALIZATIONSCALAR = 5;
 	bool absoluteNormals =  true;
@@ -124,7 +124,12 @@ public class DataBuilder
 		//	return (temp / arrayOfMaxes[lineCursor]) * 20;
 	}
 	//Returns an organized representation of a csv file
-	
+
+	public string[] getStringValues()
+	{
+		return fileLines;
+	}
+
 	public DataObject getDataObject ()
 	{
 		return dataObject;

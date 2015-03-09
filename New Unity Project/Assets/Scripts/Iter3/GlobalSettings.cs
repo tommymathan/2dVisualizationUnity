@@ -78,7 +78,7 @@ public class GlobalSettings : MonoBehaviour {
 		doubleClickTimer = Time.time;
 		doubleClickRate = 0.3f;
 
-		Debug.LogError("Visualization Selection Disabled, Press F1 to enable~chris");
+		//Debug.LogError("Visualization Selection Disabled, Press F1 to enable~chris");
 		gLOLWidths = 0.04f;
 		globalLineUpdateFlag = false;
 
