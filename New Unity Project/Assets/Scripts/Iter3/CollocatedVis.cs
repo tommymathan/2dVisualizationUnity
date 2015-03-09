@@ -92,9 +92,10 @@ public class CollocatedVis : Visualization
 	public override void UpdateData (DataObject dataFromFile)
 	{
 		MouseCollision mouseCollider = this.GetComponentInChildren<MouseCollision> ();
-		mouseCollider.colorRetainer.Clear ();
-		mouseCollider.hoverList.Clear ();
-		mouseCollider.selection.Clear ();
+		globalSettingsObject.GetComponent<GlobalSettings>().colorRetainer.Clear ();
+		globalSettingsObject.GetComponent<GlobalSettings>().hoverList.Clear ();
+		globalSettingsObject.GetComponent<GlobalSettings>().selection.Clear ();
+		//TODO:Clear out the Color dictionary and rebuild it
 		//Destroy every vector in this vis when updating data;
 		for(int i = 0; i<meshContainmentArray.Count(); i++){
 			DestroyImmediate(meshContainmentArray[i]);
