@@ -62,7 +62,6 @@ public class MouseCollision : MonoBehaviour {
 					if(Input.GetKey(KeyCode.LeftShift)){ //if they are holding shift, keep adding selected lines to the selectionlist
 						foreach(GameObject go in gs.hoverList){							
 							gs.selection.Add(go);
-
 						}
 						updateSelectionInGlobalSettings();
 					}
@@ -90,8 +89,6 @@ public class MouseCollision : MonoBehaviour {
 			}
 			HoverAnimation();
 			SelectionAnimation();
-
-
 		}
 	}
 
@@ -174,14 +171,14 @@ public class MouseCollision : MonoBehaviour {
 				baseColor.b -=0.04f;
 			}
 		}
-		if (!gs == null) { 
+
 						foreach (GameObject go in gs.selection) {
 								if (!gs.colorRetainer.ContainsKey (go)) {
 										gs.colorRetainer.Add (go, go.GetComponent<MeshRenderer> ().material.color);
 								}
 								go.GetComponent<MeshRenderer> ().material.color = baseColor;
 						}
-				}
+
 	}
 
 	void RevertColors(){
