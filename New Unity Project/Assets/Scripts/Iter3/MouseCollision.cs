@@ -41,7 +41,9 @@ public class MouseCollision : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if(Input.GetMouseButton(0)){
-			DragFunc();
+			if(!gs.mouseOverUI){//if the mouse isn't over any UI element...
+				DragFunc();
+			}
 		}
 
 		if(Input.GetMouseButtonUp(0)){
@@ -137,6 +139,7 @@ public class MouseCollision : MonoBehaviour {
 			}
 		}
 		//other.gameObject.GetComponent<Renderer>().material.color = colorRetainer[other.gameObject];
+
 	}
 	void SelectionAnimation(){
 
@@ -213,14 +216,24 @@ public class MouseCollision : MonoBehaviour {
 		}
 		//gs.globalLineUpdateFlag = false;
 		selection.Clear ();
+		updateSelectionInGlobalSettings();
 
 	}
 
-	void DragFunc(){
+	void DragFunc(){ //drag selection func
 		lastMousePos = gameObject.transform.parent.GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition);
-		Debug.Log("Mouse went down at:" + mouseDownPos + "| Mouse is now at: " + lastMousePos);
+		//Debug.Log("Mouse went down at:" + mouseDownPos + "| Mouse is now at: " + lastMousePos);
 		gameObject.GetComponent<BoxCollider>().size = new Vector3(Mathf.Abs(lastMousePos.x-mouseDownPos.x), Mathf.Abs(lastMousePos.y-mouseDownPos.y), 50f);
 		gameObject.GetComponent<BoxCollider>().center = new Vector3((mouseDownPos.x-lastMousePos.x)/2, (mouseDownPos.y-lastMousePos.y)/2, 0f);
+
+		if(hoverList.Count>0){//if they weren't holding shift then clear the selection and treat this last click as them choosing everything that they want to work with
+			RevertColors();
+			selection.Clear();
+			foreach(GameObject go in hoverList){
+				selection.Add(go);
+			}
+			updateSelectionInGlobalSettings();
+		}
 	}
 
 	void RevertMouseCollider(){
