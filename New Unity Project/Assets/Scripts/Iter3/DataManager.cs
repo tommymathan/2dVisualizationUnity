@@ -10,10 +10,12 @@ public class DataManager : MonoBehaviour {
 	private bool dataUpdated;
 	private string dataPath;
 	private DataObject dataSet;
-	private DataBuilder dataParser;
+	public DataBuilder dataParser;
+	public int updateCounter;
 	
 	// Use this for initialization
 	void Start () {
+		++updateCounter;
 		dataUpdated = false;
 		dataParser = new DataBuilder ();
 		dataSet = new DataObject ();
@@ -44,6 +46,7 @@ public class DataManager : MonoBehaviour {
 	{
 	}
 	void parseDataFile(){
+		++updateCounter;
 		dataParser = new DataBuilder (dataPath);
 		dataSet = new DataObject ();
 		dataSet = dataParser.getDataObject();
@@ -80,6 +83,7 @@ public class DataManager : MonoBehaviour {
 		for (int i = 0; i<vizList.Count(); i++) {
 			vizList[i].UpdateData(dataSet);
 		}
+		++updateCounter;
 	}
 	
 	public void SetDataPath(string givenPath){
