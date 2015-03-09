@@ -50,7 +50,7 @@ public abstract class Visualization: MonoBehaviour {
 		gameObject.AddComponent<MouseHandler> ();
 	}
 
-	public void setAnimationSpeed(int val)
+	public virtual void updateAnimationSpeed(int val)
 	{
 		DRAWINGSPEED = val;
 	}

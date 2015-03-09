@@ -242,7 +242,7 @@ public class GlobalSettings : MonoBehaviour {
 		
 		for( int i = 0; i < camList.Length; i++)
 		{
-			camList[i].GetComponent<Visualization>().setAnimationSpeed(animationSpeed);
+			camList[i].GetComponent<Visualization>().updateAnimationSpeed(animationSpeed);
 		}
 	}
 

@@ -87,7 +87,14 @@ public class CollocatedVis : Visualization
 		animateOnLoad = true;
 		animationCounter = 0;
 	}
-	
+
+	public override void updateAnimationSpeed(int val){
+		DRAWINGSPEED = val;
+		for(int i = 0; i < numberIncomingVectors;i++)
+		{
+			drawingUtility[i].updateDrawingSpeed(DRAWINGSPEED);
+		}
+	}
 	
 	public override void UpdateData (DataObject dataFromFile)
 	{

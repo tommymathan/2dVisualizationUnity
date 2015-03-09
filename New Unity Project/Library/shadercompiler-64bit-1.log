@@ -1,5 +1,5 @@
-Base path: C:/Users/Public/Documents/Unity5 (3)/Unity5/Editor/Data
-Pipe name: \\.\pipe\UnityShaderCompiler-64bit-1-5336
+Base path: C:/Users/Public/Documents/Unity5/Unity5/Editor/Data
+Pipe name: \\.\pipe\UnityShaderCompiler-64bit-1-4840
 Cmd: getPlatforms
 Cmd: compileSnippet
   api=4 type=0 insize=818 outsize=762 kw= ok=1
