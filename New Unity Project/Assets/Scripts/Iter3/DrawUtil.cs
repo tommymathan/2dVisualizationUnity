@@ -45,11 +45,13 @@ public class DrawUtil
 	//collider variables use the drawutil to find verts
 	private List<float> colliderDataSet;
 	private bool collidersLoaded;
+	private GlobalSettings gs;
 	
 	
 	
 	public DrawUtil (float w, List<float> d ,Camera visCamera,int animationSpeed,int visSetting)
 	{
+		gs = GameObject.FindGameObjectWithTag("GlobalSettingsObject").GetComponent<GlobalSettings>();
 		arrowPoints = new List<Vector3> ();
 		lineType = 0;
 		ANIMATIONSPEED = animationSpeed;
@@ -71,7 +73,7 @@ public class DrawUtil
 	{
 		if (currentVisObject == null) {
 			currentVisObject = go;
-			Debug.Log ("Null vis object, rebuilding...");
+			//Debug.Log ("Null vis object, rebuilding...");
 		}
 		//if this is the first time the loop is executing we need to set the starting frame so that we know
 		//how far we've come in this animation
@@ -146,10 +148,10 @@ public class DrawUtil
 		}
 	}
 	private void collocatedPointShifter(){
-		Debug.Log ("collocated point shifter called");
+		//Debug.Log ("collocated point shifter called");
 		shiftedDataSet = new List<float> ();
-		float orginX = incomingDataSet [0]; //temp code for demo
-		float orginY = incomingDataSet [1]; //temp code for demo
+		float orginX = incomingDataSet [0]; 
+		float orginY = incomingDataSet [1]; 
 		shiftedDataSet.Add (incomingDataSet [0]);
 		shiftedDataSet.Add (incomingDataSet [1]);
 		for (int j = 2; j < incomingDataSet.Count; j+=2) {
@@ -163,7 +165,7 @@ public class DrawUtil
 	}
 	
 	private void radialPointShifter(){
-		Debug.Log ("Radial point shifter called");
+		//Debug.Log ("Radial point shifter called");
 		shiftedDataSet = new List<float> ();
 		float orginX = incomingDataSet [0]; 
 		float orginY = incomingDataSet [1]; 
@@ -180,7 +182,7 @@ public class DrawUtil
 	}
 	
 	private void shiftedPointShifter(){
-		Debug.Log ("Shifted point shifter called");
+		//Debug.Log ("Shifted point shifter called");
 		shiftedDataSet = new List<float> ();
 		float orginX = 0; 
 		float orginY = 0; 
@@ -304,7 +306,7 @@ public class DrawUtil
 	//Tony's arrow drawing method 
 	void drawArrowHead (Vector3 point1, Vector3 point2)
 	{
-		float arrowHeadSize = 0.3f;
+		float arrowHeadSize = gs.gLOLWidths*10;
 		
 		//vector along line
 		Vector3 vec = new Vector3 ();
@@ -338,7 +340,7 @@ public class DrawUtil
 		arrowPoints.Add(new Vector3(point5.x, point5.y, 0.0f));
 		
 		
-		Debug.Log ("we should now have a triangle");
+		//Debug.Log ("we should now have a triangle");
 		
 	}
 	
@@ -487,19 +489,35 @@ public class DrawUtil
 		int size = mesh1.vertexCount + mesh2.vertexCount;
 		Vector3[] points = new Vector3[mesh1.vertexCount+mesh2.vertexCount];
 		int[] tris = new int[mesh1.triangles.GetLength(0) + mesh2.triangles.GetLength(0)];
+		List<int> trisL = new List<int> ();
 		int[] mesh1Triangles = mesh1.triangles;
 		int[] mesh2Triangles = mesh2.triangles;
 		
 		for(int i = 0; i < mesh1.vertexCount;i++)
 		{
 			points[i] = mesh1.vertices[i];
+		}
+
+		for(int i = 0; i < mesh1.triangles.Length;i++)
+		{
 			tris[i] = mesh1Triangles[i];
 		}
+
 		for(int i = 0; i < mesh2.vertexCount;i++)
 		{
 			points[mesh1.vertexCount + i] = mesh2.vertices[i];
-			tris[mesh1.vertexCount-1 + i] = (mesh2Triangles[i]+ mesh1.vertexCount);
 		}
+
+		foreach (int i in mesh1.triangles) {
+			trisL.Add(i);
+		}
+
+		foreach (int i in mesh2.triangles) {
+			trisL.Add(mesh1.vertexCount + i);
+		}
+
+		tris = trisL.ToArray ();
+
 		mesh.vertices = points;
 		mesh.triangles = tris;
 		return mesh;

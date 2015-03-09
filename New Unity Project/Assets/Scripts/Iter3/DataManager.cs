@@ -12,10 +12,12 @@ public class DataManager : MonoBehaviour {
 	private DataObject dataSet;
 	public DataBuilder dataParser;
 	public int updateCounter;
+	public bool updating = false;
 	
 	// Use this for initialization
 	void Start () {
 		++updateCounter;
+		updating = true;
 		dataUpdated = false;
 		dataParser = new DataBuilder ();
 		dataSet = new DataObject ();
@@ -30,6 +32,8 @@ public class DataManager : MonoBehaviour {
 		}
 		Debug.Log (vizList.Count () + " Visualizations are registered with the DataManager");
 		dataPath = "";
+
+		updating = false;
 	}
 	
 	// Update is called once per frame
@@ -47,7 +51,7 @@ public class DataManager : MonoBehaviour {
 	}
 	void parseDataFile(){
 		++updateCounter;
-		//Debug.Log ("currentCounter" + updateCounter);
+		updating = true;
 		dataParser = new DataBuilder (dataPath);
 		dataSet = new DataObject ();
 		dataSet = dataParser.getDataObject();
@@ -69,6 +73,8 @@ public class DataManager : MonoBehaviour {
 				}				
 			}
 		}
+
+		updating = false;
 		
 		//Assert that dataSet has more than 4 vectors left after removal
 	}
@@ -81,10 +87,12 @@ public class DataManager : MonoBehaviour {
 	}
 	public void NotifyVizualizations(){
 		dataUpdated = false;
+		updating = true;
 		for (int i = 0; i<vizList.Count(); i++) {
 			vizList[i].UpdateData(dataSet);
 		}
-		//++updateCounter;
+		++updateCounter;
+		updating = false;
 	}
 	
 	public void SetDataPath(string givenPath){

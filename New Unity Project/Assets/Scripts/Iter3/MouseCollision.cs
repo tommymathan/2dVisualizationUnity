@@ -5,8 +5,8 @@ using System.Linq;
 
 public class MouseCollision : MonoBehaviour {
 
-	public HashSet<GameObject> selection;
-	public List<GameObject> hoverList;
+	//public HashSet<GameObject> selection;
+	//public List<GameObject> hoverList;
 	public GlobalSettings gs;
 	public Color previousColor; //used for hover anim
 	public Color baseColor;//used for selection anim
@@ -15,7 +15,7 @@ public class MouseCollision : MonoBehaviour {
 	public float nextActionTimeForHover;
 	public float nextActionTimeForSelection;
 	public float period;
-	public Dictionary<GameObject, Color> colorRetainer;
+	//public Dictionary<GameObject, Color> colorRetainer;
 	public Vector2 lastMousePos; //used to detect if the user was dragging or not
 	public Vector3 mouseDownPos;
 	public Vector3 mouseColliderC;//used to revert back to old mouse collider settings
@@ -25,15 +25,16 @@ public class MouseCollision : MonoBehaviour {
 	void Start () {
 		previousColor = Color.red;
 		baseColor = Color.gray;
-		selection = new HashSet<GameObject>();
-		hoverList = new List<GameObject>();
 		gs = GameObject.FindGameObjectWithTag ("GlobalSettingsObject").GetComponent<GlobalSettings> ();
+
+
+	//	Debug.Log ("GSO is : " +gs.transform.parent.name);
 		hoverColorDirection = false;
 		selectionColorDirection = false;
 		nextActionTimeForHover = 0f;
 		nextActionTimeForSelection = 0f;
 		period = 0.05f;
-		colorRetainer = new Dictionary<GameObject, Color>();
+		//colorRetainer = new Dictionary<GameObject, Color>();
 		mouseColliderC = gameObject.GetComponent<BoxCollider>().center;
 		mouseColliderS = gameObject.GetComponent<BoxCollider>().size;
 	}
@@ -42,9 +43,9 @@ public class MouseCollision : MonoBehaviour {
 	void Update () {
 		if(Input.GetMouseButtonUp(0)){ // if you clicked nothing and were't dicking with the UI, then assume the user wanted to deselect
 			RevertMouseCollider();
-			if((!gs.mouseOverUI)&&(hoverList.Count==0)){
+			if((!gs.mouseOverUI)&&(gs.hoverList.Count==0)){
 				RevertColors();
-				selection.Clear();
+				gs.selection.Clear();
 				updateSelectionInGlobalSettings();
 			}
 		}
@@ -53,23 +54,22 @@ public class MouseCollision : MonoBehaviour {
 			if(Input.GetMouseButtonDown(0)){
 				mouseDownPos = gameObject.transform.parent.GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition);
 				gs.globalLineUpdateFlag = false;
-				if((lastMousePos.x==Input.mousePosition.x)&&(lastMousePos.y==Input.mousePosition.y)&&(hoverList.Count==0)){//if you clicked on nothing, assume that the user doesn't want to have a selection highlighted anymore, only do this if they weren't drag-clicking
+				if((lastMousePos.x==Input.mousePosition.x)&&(lastMousePos.y==Input.mousePosition.y)&&(gs.hoverList.Count==0)){//if you clicked on nothing, assume that the user doesn't want to have a selection highlighted anymore, only do this if they weren't drag-clicking
 					RevertColors();
-					selection.Clear();
+					gs.selection.Clear();
 				}
 				else{
 					if(Input.GetKey(KeyCode.LeftShift)){ //if they are holding shift, keep adding selected lines to the selectionlist
-						foreach(GameObject go in hoverList){							
-									selection.Add(go);
-
+						foreach(GameObject go in gs.hoverList){							
+							gs.selection.Add(go);
 						}
 						updateSelectionInGlobalSettings();
 					}
-					else if(hoverList.Count>0){//if they weren't holding shift then clear the selection and treat this last click as them choosing everything that they want to work with
+					else if(gs.hoverList.Count>0){//if they weren't holding shift then clear the selection and treat this last click as them choosing everything that they want to work with
 						RevertColors();
-						selection.Clear();
-						foreach(GameObject go in hoverList){
-								selection.Add(go);
+						gs.selection.Clear();
+						foreach(GameObject go in gs.hoverList){
+							gs.selection.Add(go);
 						}
 						updateSelectionInGlobalSettings();
 					}
@@ -89,8 +89,6 @@ public class MouseCollision : MonoBehaviour {
 			}
 			HoverAnimation();
 			SelectionAnimation();
-
-
 		}
 	}
 
@@ -98,8 +96,8 @@ public class MouseCollision : MonoBehaviour {
 	{
 		HashSet<int> selectedVectors = new HashSet<int> ();
 		int temp = -1;
-		if (selection.Count > 0) {
-			foreach (GameObject go in selection) {
+		if (gs.selection.Count > 0) {
+			foreach (GameObject go in gs.selection) {
 				if(int.TryParse (go.name, out temp))selectedVectors.Add (temp);
 				//Debug.Log ("We have added" + temp + " to the selected vector list");
 			}
@@ -118,13 +116,13 @@ public class MouseCollision : MonoBehaviour {
 		//add this item to the hoverlist, if it is the first time that this item has been hovered then add it to the dictionary so we can remember it's original color
 		foreach(GameObject go in gs.camList){
 			if(go.transform.childCount>1){
-				hoverList.Add(go.transform.GetChild(index).gameObject);
-				if(!colorRetainer.ContainsKey(other.gameObject)){
-					colorRetainer.Add(go.transform.GetChild(index).gameObject, go.transform.GetChild(index).GetComponent<Renderer>().material.color);
+				gs.hoverList.Add(go.transform.GetChild(index).gameObject);
+				if(!gs.colorRetainer.ContainsKey(other.gameObject)){
+					gs.colorRetainer.Add(go.transform.GetChild(index).gameObject, go.transform.GetChild(index).GetComponent<Renderer>().material.color);
 				}
 			}
 		}
-		hoverList = hoverList.Distinct().ToList();
+		gs.hoverList = gs.hoverList.Distinct().ToList();
 
 	}
 
@@ -138,15 +136,15 @@ public class MouseCollision : MonoBehaviour {
 		}
 		foreach(GameObject go in gs.camList){
 			if(go.transform.childCount>1){
-				go.transform.GetChild(index).gameObject.GetComponent<Renderer>().material.color = colorRetainer[other.gameObject];
-				hoverList.Remove(go.transform.GetChild(index).gameObject);
+				go.transform.GetChild(index).gameObject.GetComponent<Renderer>().material.color = gs.colorRetainer[other.gameObject];
+				gs.hoverList.Remove(go.transform.GetChild(index).gameObject);
 			}
 		}
 		//other.gameObject.GetComponent<Renderer>().material.color = colorRetainer[other.gameObject];
 
 		foreach(GameObject go in gs.camList){
-			if(selection.Contains(go)){
-				selection.Remove(go);
+			if(gs.selection.Contains(go)){
+				gs.selection.Remove(go);
 			}
 		}
 			updateSelectionInGlobalSettings();
@@ -174,18 +172,18 @@ public class MouseCollision : MonoBehaviour {
 			}
 		}
 
-		foreach(GameObject go in selection){
-			if(!colorRetainer.ContainsKey(go)){
-				colorRetainer.Add(go,go.GetComponent<MeshRenderer>().material.color);
-			}
-			go.GetComponent<MeshRenderer>().material.color = baseColor;
-		}
+						foreach (GameObject go in gs.selection) {
+								if (!gs.colorRetainer.ContainsKey (go)) {
+										gs.colorRetainer.Add (go, go.GetComponent<MeshRenderer> ().material.color);
+								}
+								go.GetComponent<MeshRenderer> ().material.color = baseColor;
+						}
 
 	}
 
 	void RevertColors(){
-		foreach(GameObject go in selection){
-			go.GetComponent<MeshRenderer>().material.color = colorRetainer[go];
+		foreach(GameObject go in gs.selection){
+			go.GetComponent<MeshRenderer>().material.color = gs.colorRetainer[go];
 		}
 	}
 
@@ -209,8 +207,8 @@ public class MouseCollision : MonoBehaviour {
 				//previousColor.b -=0.04f;
 			}
 		}
-		foreach(GameObject go in hoverList){
-			if(!selection.Contains(go)){
+		foreach(GameObject go in gs.hoverList){
+			if(!gs.selection.Contains(go)){
 				go.GetComponent<MeshRenderer>().material.color = previousColor;
 			}
 		}
@@ -218,14 +216,14 @@ public class MouseCollision : MonoBehaviour {
 
 	public void LineSelectedChangeColor(){
 		Color workingColor = new Color (gs.gLineR, gs.gLineG, gs.gLineB);;
-		foreach (GameObject go in selection) {
+		foreach (GameObject go in gs.selection) {
 			Material passedMaterial = go.GetComponent<MeshRenderer> ().material;
 			passedMaterial.color = workingColor;
 			//Debug.Log ("Red: " + gs.gLineR + "\nGreen" + gs.gLineG + "\nBlue" + gs.gLineB);
-			colorRetainer[go] = workingColor;
+			gs.colorRetainer[go] = workingColor;
 		}
 		//gs.globalLineUpdateFlag = false;
-		selection.Clear ();
+		gs.selection.Clear ();
 		updateSelectionInGlobalSettings();
 
 	}
@@ -235,14 +233,15 @@ public class MouseCollision : MonoBehaviour {
 		//Debug.Log("Mouse went down at:" + mouseDownPos + "| Mouse is now at: " + lastMousePos);
 		gameObject.GetComponent<BoxCollider>().size = new Vector3(Mathf.Abs(lastMousePos.x-mouseDownPos.x), Mathf.Abs(lastMousePos.y-mouseDownPos.y), 50f);
 		gameObject.GetComponent<BoxCollider>().center = new Vector3((mouseDownPos.x-lastMousePos.x)/2, (mouseDownPos.y-lastMousePos.y)/2, 0f);
-
-		if(hoverList.Count>0){
-			RevertColors();
-			selection.Clear();
-			foreach(GameObject go in hoverList){
-				selection.Add(go);
+		if(!gs.mouseOverUI){
+			if(gs.hoverList.Count>0){
+				RevertColors();
+				gs.selection.Clear();
+				foreach(GameObject go in gs.hoverList){
+					gs.selection.Add(go);
+				}
+				updateSelectionInGlobalSettings();
 			}
-			updateSelectionInGlobalSettings();
 		}
 	}
 
