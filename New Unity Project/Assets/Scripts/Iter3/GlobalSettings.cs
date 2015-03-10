@@ -70,6 +70,7 @@ public class GlobalSettings : MonoBehaviour {
 	public Vector3 mousePos;
 	public GameObject mouseTextObject;
 	public bool mouseOverUI;
+	public bool mouseOverDataTable;
 	public HashSet<GameObject> selection;
 	public List<GameObject> hoverList;
 
@@ -97,8 +98,8 @@ public class GlobalSettings : MonoBehaviour {
 		camLinesRegular = Color.grey;
 		camLinesOrigin = Color.blue;
 		camLinesDemarked = Color.magenta;
-		camLinesInterval = 1f;
-		camLinesDemarkationInterval = 5f;
+		camLinesInterval = 100000f;
+		camLinesDemarkationInterval = 0f;
 		colorRetainer = new Dictionary<GameObject, Color>();
 
 		uiR = 1f;
@@ -110,6 +111,7 @@ public class GlobalSettings : MonoBehaviour {
 		globalLineB = 1.0f;
 
 		mouseOverUI=false;
+		mouseOverDataTable = false;
 		selection = new HashSet<GameObject>();
 		hoverList = new List<GameObject>();
 	}
@@ -282,7 +284,7 @@ public class GlobalSettings : MonoBehaviour {
 	public void AnimationSpeed(string val)
 	{
 		double temp = float.Parse (val);
-		animationSpeed = (int)temp;
+		animationSpeed = (int)temp * 10;
 		
 		for( int i = 0; i < camList.Length; i++)
 		{
@@ -364,13 +366,13 @@ public class GlobalSettings : MonoBehaviour {
 
 		cam.rect = new Rect(0,0,1,1);
 		onCameraSelectionScreen = false;
-		Debug.LogError("Visualization Selection Disabled, Press F2 to return to vizSelect Screen~chris");
+		//Debug.LogError("Visualization Selection Disabled, Press F2 to return to vizSelect Screen~chris");
 
 
 	}
 
 	public void DisplayQuadCams(){
-		Debug.LogError("Visualization Selection Enabled by user~chris");
+		//Debug.LogError("Visualization Selection Enabled by user~chris");
 		onCameraSelectionScreen = true;
 
 		for(int i = 0; i<camButtonList.Count; i++){
@@ -414,8 +416,10 @@ public class GlobalSettings : MonoBehaviour {
 		if(!Input.GetMouseButton(1)){//if the user is holding down the mouse button, then don't activate the hovered cam because they are probably dragging a vis cam out of its current ounds and don't want to be interrupted in that process
 			foreach(GameObject otherCam in camList){
 				otherCam.GetComponent<MouseHandler>().enabled = false;
+				otherCam.transform.GetChild (0).GetComponent<BoxCollider>().enabled = false;
 			}
 			go.GetComponent<MouseHandler>().enabled = true;
+			go.transform.GetChild (0).GetComponent<BoxCollider>().enabled = true;
 		}
 	}
 
@@ -424,6 +428,31 @@ public class GlobalSettings : MonoBehaviour {
 			if(colorRetainer.ContainsKey(go)){
 				go.GetComponent<MeshRenderer>().material.color = colorRetainer[go];
 			}
+		}
+	}
+
+	public void HideOthers(){
+		if (selection.Count > 0) {
+						foreach (GameObject go in GameObject.FindGameObjectsWithTag("vector")) {
+								if (!selection.Contains (go)) {
+										go.GetComponent<MeshRenderer> ().enabled = false;
+								}
+						}
+				}
+	}
+
+	public void HideSelected(){
+		if (selection.Count > 0) {
+						foreach (GameObject go in selection) {
+								go.GetComponent<MeshRenderer> ().enabled = false;
+						}
+				}	
+	}
+
+	public void ShowAll(){
+
+		foreach(GameObject go in GameObject.FindGameObjectsWithTag("vector")){
+				go.GetComponent<MeshRenderer>().enabled = true;
 		}
 	}
 }

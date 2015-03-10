@@ -61,18 +61,18 @@ public class MouseHandler : MonoBehaviour {
 	}
 	
 	public void ZoomFunction(){
-		if (Input.GetAxis ("Mouse ScrollWheel") > 0) { // forward
-			myCam.orthographicSize++;
-		}
-		if (Input.GetAxis ("Mouse ScrollWheel") < 0) { // back
-			if((myCam.orthographicSize <= 1.0) && (myCam.orthographicSize>0.1)){ //dont allow the ortho size to hit 0 because it freaks the f out
-				myCam.orthographicSize-=0.1f;
-			}
-			else if(myCam.orthographicSize>0.1){
-				myCam.orthographicSize--;
-			}
-		}
-		
+		if (!gs.mouseOverDataTable) {
+						if (Input.GetAxis ("Mouse ScrollWheel") > 0) { // forward
+								myCam.orthographicSize++;
+						}
+						if (Input.GetAxis ("Mouse ScrollWheel") < 0) { // back
+								if ((myCam.orthographicSize <= 1.0) && (myCam.orthographicSize > 0.1)) { //dont allow the ortho size to hit 0 because it freaks the f out
+										myCam.orthographicSize -= 0.1f;
+								} else if (myCam.orthographicSize > 0.1) {
+										myCam.orthographicSize--;
+								}
+						}
+				}
 	}
 
 	void OnTriggerEnter(Collider other) {

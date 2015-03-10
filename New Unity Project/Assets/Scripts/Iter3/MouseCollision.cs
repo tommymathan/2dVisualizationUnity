@@ -231,14 +231,21 @@ public class MouseCollision : MonoBehaviour {
 	void DragFunc(){ //drag selection func
 		lastMousePos = gameObject.transform.parent.GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition);
 		//Debug.Log("Mouse went down at:" + mouseDownPos + "| Mouse is now at: " + lastMousePos);
-		gameObject.GetComponent<BoxCollider>().size = new Vector3(Mathf.Abs(lastMousePos.x-mouseDownPos.x), Mathf.Abs(lastMousePos.y-mouseDownPos.y), 50f);
+		if (Mathf.Abs (lastMousePos.x - mouseDownPos.x) < 0.1) {
+			gameObject.GetComponent<BoxCollider>().size = new Vector3(0.01f, 0.01f, 50f);
+		} else {
+			gameObject.GetComponent<BoxCollider>().size = new Vector3(Mathf.Abs(lastMousePos.x-mouseDownPos.x), Mathf.Abs(lastMousePos.y-mouseDownPos.y), 50f);
+		}
+		
 		gameObject.GetComponent<BoxCollider>().center = new Vector3((mouseDownPos.x-lastMousePos.x)/2, (mouseDownPos.y-lastMousePos.y)/2, 0f);
 		if(!gs.mouseOverUI){
 			if(gs.hoverList.Count>0){
 				RevertColors();
 				gs.selection.Clear();
 				foreach(GameObject go in gs.hoverList){
-					gs.selection.Add(go);
+					if(!gs.selection.Contains(go)){
+						gs.selection.Add(go);
+					}
 				}
 				updateSelectionInGlobalSettings();
 			}
