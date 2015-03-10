@@ -415,8 +415,15 @@ public class GlobalSettings : MonoBehaviour {
 			foreach(GameObject otherCam in camList){
 				otherCam.GetComponent<MouseHandler>().enabled = false;
 			}
-			
 			go.GetComponent<MouseHandler>().enabled = true;
+		}
+	}
+
+	public void RevertColors(){
+		foreach(GameObject go in hoverList){
+			if(colorRetainer.ContainsKey(go)){
+				go.GetComponent<MeshRenderer>().material.color = colorRetainer[go];
+			}
 		}
 	}
 }

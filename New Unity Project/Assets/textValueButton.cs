@@ -26,8 +26,6 @@ public class textValueButton : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
 	public void OnPointerEnter(PointerEventData data)
 	{
-		gs.hoverList.Clear ();
-		//Debug.Log ("This is the button row" + row);
 		gs.mouseOverUI = false;
 		isMouseOver = true;
 		foreach (GameObject go in gs.camList) {
@@ -35,13 +33,15 @@ public class textValueButton : MonoBehaviour, IPointerEnterHandler, IPointerExit
 			if(go.transform.childCount > 1)
 			{
 				//gs.hoverList.Clear ();
-				if(!gs.hoverList.Contains(go))
-				   {
-
-						gs.hoverList.Add(go.transform.GetChild(row+1).gameObject);
+				if(!gs.hoverList.Contains(go.transform.GetChild(row+1).gameObject))
+				{
+					gs.hoverList.Add(go.transform.GetChild(row+1).gameObject);
+					if(!gs.colorRetainer.ContainsKey(go.transform.GetChild(row+1).gameObject)){
+						gs.colorRetainer.Add(go.transform.GetChild(row+1).gameObject, go.transform.GetChild(row+1).gameObject.GetComponent<MeshRenderer>().material.color);
+					}
 				}
 			}
-				}
+		}
 
 
 	}
@@ -51,15 +51,10 @@ public class textValueButton : MonoBehaviour, IPointerEnterHandler, IPointerExit
 	 */
 	public void OnPointerExit(PointerEventData data)
 	{
-		Debug.Log ("WE are exitiing");
-		//gs.hoverList.re;
-		for (int i = 0; i < gs.hoverList.Count(); i++) {
-			gs.hoverList.RemoveAt(i);
-				}
+		gs.RevertColors();
 		gs.hoverList.Clear ();
 		gs.mouseOverUI = false;
 		isMouseOver = false;
-				
 	}
 
 	public void OnPointerClick(PointerEventData data)
