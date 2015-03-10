@@ -26,12 +26,24 @@ public class textValueButton : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
 	public void OnPointerEnter(PointerEventData data)
 	{
-
-		gs.mouseOverUI = true;
+		gs.hoverList.Clear ();
+		//Debug.Log ("This is the button row" + row);
+		gs.mouseOverUI = false;
 		isMouseOver = true;
 		foreach (GameObject go in gs.camList) {
-			gs.hoverlist.add(go.transform.GetChild(row+1);
+
+			if(go.transform.childCount > 1)
+			{
+				//gs.hoverList.Clear ();
+				if(!gs.hoverList.Contains(go))
+				   {
+
+						gs.hoverList.Add(go.transform.GetChild(row+1).gameObject);
 				}
+			}
+				}
+
+
 	}
 	
 	/* 
@@ -39,9 +51,20 @@ public class textValueButton : MonoBehaviour, IPointerEnterHandler, IPointerExit
 	 */
 	public void OnPointerExit(PointerEventData data)
 	{
+		Debug.Log ("WE are exitiing");
+		//gs.hoverList.re;
+		for (int i = 0; i < gs.hoverList.Count(); i++) {
+			gs.hoverList.RemoveAt(i);
+				}
+		gs.hoverList.Clear ();
 		gs.mouseOverUI = false;
 		isMouseOver = false;
-		gs.hoverlist.clear ();
+				
+	}
+
+	public void OnPointerClick(PointerEventData data)
+	{
+
 	}
 
 
