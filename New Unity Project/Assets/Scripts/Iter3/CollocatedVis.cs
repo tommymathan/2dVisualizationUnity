@@ -136,7 +136,6 @@ public class CollocatedVis : Visualization
 		//When we do a list of objects we will add the game object to the first element of the array
 		//for now we just use this loop to test		
 		for (int i = 0; i < numberIncomingVectors; i++) {
-			Shader unlit = Shader.Find("Unlit/Color");
 			meshContainmentArray [i] = new GameObject ();
 			meshContainmentArray [i].AddComponent<MeshFilter> ();
 			meshContainmentArray[i].GetComponent<MeshFilter>().mesh.RecalculateNormals();
@@ -145,7 +144,7 @@ public class CollocatedVis : Visualization
 			meshContainmentArray [i].transform.SetParent (gameObject.transform);
 			meshContainmentArray[i].tag = "vector";
 			meshContainmentArray [i].name = i.ToString();
-			meshContainmentArray[i].GetComponent<Renderer>().material.shader = unlit;
+			meshContainmentArray[i].GetComponent<Renderer>().material = globalSettingsObject.GetComponent<GlobalSettings>().lolMat;
 			GlobalSettings gs = globalSettingsObject.GetComponent<GlobalSettings>();
 			meshContainmentArray[i].GetComponent<MeshRenderer>().material.color = new Color(gs.globalLineR,gs.globalLineG,gs.globalLineB);
 

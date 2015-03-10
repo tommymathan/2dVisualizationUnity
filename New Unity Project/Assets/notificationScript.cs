@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿#if UNITY_STANDALONE_WIN
+using UnityEngine;
 using System.Collections;
 using System.IO;
 
@@ -62,3 +63,4 @@ public class notificationScript : MonoBehaviour {
 		
 	}
 }
+#endif 

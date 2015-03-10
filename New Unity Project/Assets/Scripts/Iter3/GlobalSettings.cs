@@ -74,6 +74,8 @@ public class GlobalSettings : MonoBehaviour {
 	public HashSet<GameObject> selection;
 	public List<GameObject> hoverList;
 
+	public Material lolMat;
+
 	//Updating counter
 	int counterLoad = 0;
 

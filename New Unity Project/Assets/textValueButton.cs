@@ -26,8 +26,7 @@ public class textValueButton : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
 	public void OnPointerEnter(PointerEventData data)
 	{
-		gs.mouseOverUI = false;
-		isMouseOver = true;
+		gs.mouseOverUI = true;
 		foreach (GameObject go in gs.camList) {
 
 			if(go.transform.childCount > 1)
@@ -54,7 +53,6 @@ public class textValueButton : MonoBehaviour, IPointerEnterHandler, IPointerExit
 		gs.RevertColors();
 		gs.hoverList.Clear ();
 		gs.mouseOverUI = false;
-		isMouseOver = false;
 	}
 
 	public void OnPointerClick(PointerEventData data)
