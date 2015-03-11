@@ -137,7 +137,7 @@ public class DrawUtil
 			radialPointShifter();
 			break;
 		case 3:
-			//
+			inlinePointShifter ();
 			break;
 		case 4:
 			//
@@ -198,6 +198,18 @@ public class DrawUtil
 			
 		}
 	}
+
+	private void inlinePointShifter(){
+		//Debug.Log ("Radial point shifter called");
+		shiftedDataSet = new List<float> ();
+		float xVal = 0f;
+		
+		for (int j = 0; j < incomingDataSet.Count; j++) {
+			shiftedDataSet.Add (xVal);
+			xVal++;
+			shiftedDataSet.Add( incomingDataSet [j]);
+		}
+	}
 	
 	public void updateDrawingSpeed(int val)
 	{
@@ -217,7 +229,7 @@ public class DrawUtil
 			return radialFilter (incomingDataSet);
 			
 		case 3:
-			return collocatedFilter (incomingDataSet);
+			return inlineFilter (incomingDataSet);
 			
 		case 4:
 			return collocatedFilter (incomingDataSet);
@@ -301,7 +313,24 @@ public class DrawUtil
 		
 	}
 	
-	
+	private Mesh inlineFilter(List<float> dataSet)
+	{
+		//Current origin point
+		float xVal = 0f;	
+		
+		//temporary list to that stores the manipulated dataset to be drawn
+		List<float> temp = new List<float>();
+		
+		
+		
+		for (int i = 0; i < dataSet.Count; i++) {
+			temp.Add(xVal);
+			xVal++;
+			temp.Add (dataSet[i]);
+		}
+		return DrawContiguousLineSegments (temp);
+		
+	}	
 	
 	
 	//Tony's arrow drawing method 

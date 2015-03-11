@@ -147,6 +147,8 @@ public class MouseCollision : MonoBehaviour {
 				gs.selection.Remove(go);
 			}
 		}
+
+		gs.hoverList.Clear ();
 			updateSelectionInGlobalSettings();
 	}
 	void SelectionAnimation(){
