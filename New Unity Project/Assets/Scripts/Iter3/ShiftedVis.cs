@@ -33,51 +33,11 @@ public class ShiftedVis : Visualization
 	void Update ()
 	{
 		
-		if (animateOnLoad) {
-			animationCounter++;				
-			if (animationInProgress)
-				animateVectorsInQueue ();
-			
-		}
-		if (dataUpdated) {
-			for (int i = 0; i < numberIncomingVectors; i++) {
-				meshContainmentArray [i].GetComponent<MeshFilter> ().mesh 
-					= drawingUtility [i].filteredCoordinates();
-			}
-			
-			if (collidersLoaded == false) {
-				Debug.Log ("updating vector colliders");
-				GameObject[] vectorList = GameObject.FindGameObjectsWithTag ("vector");
-				for (int i = 0; i<vectorList.Length; i++) {
-					DrawUtil.ManageVectorColliders (vectorList [i]);
-				}
-				collidersLoaded = true;
-			}
-			dataUpdated = false;
-		}
-		
-		if(Input.GetKeyDown(KeyCode.LeftAlt)){
-			Debug.Log ("Shit! You pressed Left Alt!");
-		}
+		updateVisMethod ();
 	}
 	
 	
-	private void animateVectorsInQueue(){
-		int[] animation = animationQueue.ToArray ();
-		if (animationQueue.Count > 0) {
-			for (int j = 0; j < animationQueue.Count; j++) {
-				Debug.Log ("we are now exectuing!" + animationQueue.Count + "<size of queue Counter > " + animationCounter);
-				meshContainmentArray [animation[j]].GetComponent<MeshFilter> ().mesh 
-					= drawingUtility [animation[j]].AnimateCurrentFrame (animationCounter, meshContainmentArray [animation [j]]);
-				
-			}
-		}
-		if (animationCounter >= DRAWINGSPEED * (numberValsPerVector / 2)) {
-			animationInProgress = false;
-			animationQueue.Clear();
-		}
-		
-	}
+
 	
 	public override void addLineToAnimate(HashSet<int> val)
 	{

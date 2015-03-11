@@ -58,7 +58,7 @@ public class DrawUtil
 		animationFrame = 0;
 		lineWidth = w;
 		incomingDataSet = d;
-		animateOnUpdate = true;
+		animateOnUpdate = false;
 		curVisCamera = visCamera;
 		collidersLoaded=false;
 		currentVisualizationMethod = visSetting;		
@@ -118,6 +118,7 @@ public class DrawUtil
 			return DrawContiguousLineSegments (temp);
 			
 		} else {
+			Debug.Log("we should be done animating now");
 			animateOnUpdate = false;
 			return filteredCoordinates ();
 		}
@@ -422,6 +423,7 @@ public class DrawUtil
 				
 				organizedPointUvs.Add ((Vector2)(organizedData [i + 1] + right));
 				organizedPointUvs.Add ((Vector2)(organizedData [i + 1] - right));
+				if(!animateOnUpdate)
 				drawArrowHead(organizedData[i],organizedData[i+1]);
 				
 			}
@@ -475,7 +477,7 @@ public class DrawUtil
 			collidersLoaded = true;
 		}
 		
-		if (lineType == 1) {
+		if (lineType == 1 && !animateOnUpdate) {
 			
 			return combineMesh(mesh,generateTriangleMesh());
 		}
