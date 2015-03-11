@@ -116,6 +116,10 @@ public class GlobalSettings : MonoBehaviour {
 		mouseOverDataTable = false;
 		selection = new HashSet<GameObject>();
 		hoverList = new List<GameObject>();
+
+		loadingNotification.GetComponent<Image> ().enabled = false;
+		loadingNotification.transform.GetChild (0).GetComponent<Text> ().enabled = false;
+		loadingNotification.transform.GetChild (1).GetComponent<Image> ().enabled = false;
 	}
 	
 	// Update is called once per frame
@@ -128,6 +132,7 @@ public class GlobalSettings : MonoBehaviour {
 			DisplayQuadCams();
 		}
 
+		/*
 		if (dataManager.updating == true) {
 				loadingNotification.GetComponent<Image> ().enabled = true;
 				loadingNotification.transform.GetChild (0).GetComponent<Text> ().enabled = true;
@@ -139,12 +144,28 @@ public class GlobalSettings : MonoBehaviour {
 
 		}
 
-
+	*/
 
 		CameraBackgroundColor ();
 		UpdateMouseText();
 
 	}
+	
+
+	public void setLoadingNotification()
+	{
+		loadingNotification.GetComponent<Image> ().enabled = true;
+		loadingNotification.transform.GetChild (0).GetComponent<Text> ().enabled = true;
+		loadingNotification.transform.GetChild (1).GetComponent<Image> ().enabled = true;
+	}
+
+	public void removeLoadingNotification()
+	{
+		loadingNotification.GetComponent<Image> ().enabled = false;
+		loadingNotification.transform.GetChild (0).GetComponent<Text> ().enabled = false;
+		loadingNotification.transform.GetChild (1).GetComponent<Image> ().enabled = false;
+	}
+
 
 	public void UpdateMouseText(){
 		//get this into 2 decimal places format

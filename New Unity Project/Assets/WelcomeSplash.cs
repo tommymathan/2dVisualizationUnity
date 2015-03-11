@@ -6,6 +6,11 @@ public class WelcomeSplash : MonoBehaviour, IPointerClickHandler {
 
 	public GameObject splash;
 
+	void Start()
+	{
+		splash.GetComponent<RectTransform> ().sizeDelta = new Vector2 (Screen.width * 2, Screen.height);
+	}
+
 	public void OnPointerClick(PointerEventData data)
 	{
 

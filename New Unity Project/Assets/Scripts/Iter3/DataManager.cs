@@ -52,6 +52,10 @@ public class DataManager : MonoBehaviour {
 	void parseDataFile(){
 		++updateCounter;
 		updating = true;
+
+		GlobalSettings gs = GameObject.FindGameObjectWithTag ("GlobalSettingsObject").GetComponent<GlobalSettings> ();
+		gs.setLoadingNotification ();
+
 		dataParser = new DataBuilder (dataPath);
 		dataSet = new DataObject ();
 		dataSet = dataParser.getDataObject();
@@ -75,6 +79,7 @@ public class DataManager : MonoBehaviour {
 		}
 
 		updating = false;
+		gs.removeLoadingNotification ();
 		
 		//Assert that dataSet has more than 4 vectors left after removal
 	}
@@ -88,11 +93,17 @@ public class DataManager : MonoBehaviour {
 	public void NotifyVizualizations(){
 		dataUpdated = false;
 		updating = true;
+
+		GlobalSettings gs = GameObject.FindGameObjectWithTag ("GlobalSettingsObject").GetComponent<GlobalSettings> ();
+		gs.setLoadingNotification ();
+
 		for (int i = 0; i<vizList.Count(); i++) {
 			vizList[i].UpdateData(dataSet);
 		}
 		++updateCounter;
 		updating = false;
+
+		gs.removeLoadingNotification ();
 	}
 	
 	public void SetDataPath(string givenPath){

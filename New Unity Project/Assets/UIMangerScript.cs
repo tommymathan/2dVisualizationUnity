@@ -34,6 +34,12 @@ public class UIMangerScript : MonoBehaviour {
 
 
 	}
+
+	public void AboutUs()
+	{
+		Application.OpenURL(Environment.CurrentDirectory +@"\AboutUs\index.html");
+	}
+
 	public void openButtonClicked()
 	{
 		m_fileBrowser = new FileBrowser(

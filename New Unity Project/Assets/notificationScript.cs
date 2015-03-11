@@ -44,7 +44,10 @@ public class notificationScript : MonoBehaviour {
 	public void notificationOkayButton()
 	{
 		//Animate object
-		animObj (gameObject, -1);
+		//animObj (gameObject, -1);
+		GameObject dataManagerObject = GameObject.FindGameObjectWithTag ("DataManagerTag");
+		//TODO: CHange method name to reflect function
+		dataManagerObject.GetComponent<DataManager> ().SetDataPath (path);
 
 		/**
 		 * Call data management to update
