@@ -17,7 +17,7 @@ public class GlobalSettings : MonoBehaviour {
 	public float globalLineG;
 	public float globalLineB;
 	public Dictionary<GameObject, Color> colorRetainer;
-
+	public bool globalLineColorReset;
 	public bool globalLineUpdateFlag;
 
 	//Global UI Tint
@@ -112,6 +112,7 @@ public class GlobalSettings : MonoBehaviour {
 		globalLineG = 1.0f;
 		globalLineB = 1.0f;
 
+		globalLineColorReset = false;
 		mouseOverUI=false;
 		mouseOverDataTable = false;
 		selection = new HashSet<GameObject>();
@@ -289,6 +290,7 @@ public class GlobalSettings : MonoBehaviour {
 	public void setGlobalLineColor()
 	{	List<GameObject> ls = new List<GameObject>(GameObject.FindGameObjectsWithTag ("vector"));
 
+		globalLineColorReset = true;
 		for( int i = 0; i < ls.Count; i++)
 		{
 			ls[i].GetComponent<MeshRenderer>().material.color = new Color(globalLineR, globalLineG, globalLineB);

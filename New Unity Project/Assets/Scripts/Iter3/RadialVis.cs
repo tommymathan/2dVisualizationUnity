@@ -52,7 +52,7 @@ public class RadialVis : Visualization
 		int[] animation = animationQueue.ToArray ();
 		if (animationQueue.Count > 0) {
 			for (int j = 0; j < animationQueue.Count; j++) {
-				Debug.Log ("we are now exectuing in the radial vis!" + animationQueue.Count + "<size of queue Counter > " + animationCounter);
+				//Debug.Log ("we are now exectuing in the radial vis!" + animationQueue.Count + "<size of queue Counter > " + animationCounter);
 				meshContainmentArray [animation [j]].GetComponent<MeshFilter> ().sharedMesh.Clear ();
 				meshContainmentArray [animation [j]].GetComponent<MeshFilter> ().mesh.Clear ();
 				meshContainmentArray [animation [j]].GetComponent<MeshFilter> ().mesh 

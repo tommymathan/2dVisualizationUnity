@@ -118,6 +118,7 @@ public class MouseCollision : MonoBehaviour {
 			if(go.transform.childCount>1){
 				gs.hoverList.Add(go.transform.GetChild(index).gameObject);
 				if(!gs.colorRetainer.ContainsKey(other.gameObject)){
+					if(!gs.colorRetainer.ContainsKey(go.transform.GetChild(index).gameObject))
 					gs.colorRetainer.Add(go.transform.GetChild(index).gameObject, go.transform.GetChild(index).GetComponent<Renderer>().material.color);
 				}
 			}
@@ -136,7 +137,10 @@ public class MouseCollision : MonoBehaviour {
 		}
 		foreach(GameObject go in gs.camList){
 			if(go.transform.childCount>1){
+				if(gs.colorRetainer.ContainsKey(other.gameObject))
 				go.transform.GetChild(index).gameObject.GetComponent<Renderer>().material.color = gs.colorRetainer[other.gameObject];
+
+				if (gs.hoverList.Contains(go.transform.GetChild(index).gameObject))
 				gs.hoverList.Remove(go.transform.GetChild(index).gameObject);
 			}
 		}
@@ -185,6 +189,7 @@ public class MouseCollision : MonoBehaviour {
 
 	void RevertColors(){
 		foreach(GameObject go in gs.selection){
+			if (gs.colorRetainer.ContainsKey(go))
 			go.GetComponent<MeshRenderer>().material.color = gs.colorRetainer[go];
 		}
 	}
@@ -222,9 +227,10 @@ public class MouseCollision : MonoBehaviour {
 			Material passedMaterial = go.GetComponent<MeshRenderer> ().material;
 			passedMaterial.color = workingColor;
 			//Debug.Log ("Red: " + gs.gLineR + "\nGreen" + gs.gLineG + "\nBlue" + gs.gLineB);
+			if (gs.colorRetainer.ContainsKey(go))
 			gs.colorRetainer[go] = workingColor;
 		}
-		//gs.globalLineUpdateFlag = false;
+		gs.globalLineUpdateFlag = false;
 		gs.selection.Clear ();
 		updateSelectionInGlobalSettings();
 

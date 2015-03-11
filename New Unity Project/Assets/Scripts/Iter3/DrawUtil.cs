@@ -336,7 +336,7 @@ public class DrawUtil
 	//Tony's arrow drawing method 
 	void drawArrowHead (Vector3 point1, Vector3 point2)
 	{
-		float arrowHeadSize = gs.gLOLWidths*10;
+		float arrowHeadSize = gs.gLOLWidths*5;
 		
 		//vector along line
 		Vector3 vec = new Vector3 ();
