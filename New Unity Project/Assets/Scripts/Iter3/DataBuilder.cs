@@ -23,8 +23,19 @@ public class DataBuilder
 	float[] arrayOfMaxes;
 	int NORMALIZATIONSCALAR = 5;
 	bool absoluteNormals =  true;
+	string[] incomingDataFromText = {" "}; 
 	
-	
+
+	public DataBuilder (string[] incData,bool val)
+	{	
+		incomingDataFromText = incData;	
+		Debug.Log (" asdkas " + incomingDataFromText[0]);
+		path += "forestFires.csv"; //Put your file into the datasets folder to test
+		parseDataIntoDataObject ();
+		
+		
+	}//End of databuilder constructor
+
 	public DataBuilder (String incPath)
 	{
 		//Later will set the file path when the constructor is called
@@ -52,7 +63,9 @@ public class DataBuilder
 	
 	private void parseDataIntoDataObject(){
 		//Bring the file in via a file reader, put lines into an array
-		fileLines = System.IO.File.ReadAllLines (path);
+						fileLines = System.IO.File.ReadAllLines (path);
+
+		Debug.Log (" second " + fileLines[0]);
 		//Construct the dataObject
 		makeDataObject ();
 		setUpDataObject ();				

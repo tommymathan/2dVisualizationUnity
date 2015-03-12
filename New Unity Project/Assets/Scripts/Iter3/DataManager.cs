@@ -11,17 +11,24 @@ public class DataManager : MonoBehaviour {
 	private string dataPath;
 	private DataObject dataSet;
 	public DataBuilder dataParser;
+	public DataBuilderWeb dataParserWeb;
 	public int updateCounter;
 	public bool updating = false;
 	
 	// Use this for initialization
 	void Start () {
+
+		dataParserWeb= new DataBuilderWeb();
+		Debug.Log ("Initialzing dataManger");
 		++updateCounter;
 		updating = true;
 		dataUpdated = false;
-		dataParser = new DataBuilder ();
 		dataSet = new DataObject ();
-		dataSet = dataParser.getDataObject();
+		if (!Application.isWebPlayer) {
+			dataParser = new DataBuilder ();
+			dataSet = dataParser.getDataObject();
+		}
+
 		
 		//register all visualizations with this data manager
 		List <GameObject> cameras = new List<GameObject>();
@@ -49,6 +56,33 @@ public class DataManager : MonoBehaviour {
 	void checkNewFile()
 	{
 	}
+
+	public void parseInputText(string val){
+		bool value = true;
+		Debug.Log (val);
+		List<string> fullInput = new List<string> ();
+		fullInput.Add("");
+		int cursor = 0;
+
+		foreach (char c in val) {
+			if(c != ' '){
+				fullInput[cursor] += c;
+			}
+			else{
+				cursor++;
+				fullInput.Add("");
+			}
+		}
+		fullInput.RemoveAt (fullInput.Count-1);
+		foreach (string s in fullInput) {
+			Debug.Log(s);
+				}
+
+		dataParserWeb = new DataBuilderWeb (fullInput.ToArray(),value);
+		dataSet = new DataObject ();
+		dataSet = dataParserWeb.getDataObject();
+		NotifyVizualizations ();
+	}
 	void parseDataFile(){
 		++updateCounter;
 		updating = true;
@@ -61,22 +95,22 @@ public class DataManager : MonoBehaviour {
 		dataSet = dataParser.getDataObject();
 		//TODO: Method to request vectors to graph from user using GUI 
 		//Method returns array of ints describing selected vectors
-		int[] temp = new int[dataSet.labels.Count];
-		//		for (int k =0; k < temp.Length; k++){
-		//			if (k%3==0)
-		//			temp [k] = 1;
+		//int[] temp = new int[dataSet.labels.Count];
+		////		for (int k =0; k < temp.Length; k++){
+		////			if (k%3==0)
+		////			temp [k] = 1;
+		////
+		////		}
 		//
-		//		}
-		
-		
-		for (int i =0; i < dataSet.incomingData.Count-1; i++) {
-			for(int j= (dataSet.incomingData[i].Count-1); j >=0 ; j--){				
-				if(temp[j]== 1) 
-				{
-					dataSet.normalizedData[i].RemoveAt(j);
-				}				
-			}
-		}
+		//
+		//for (int i =0; i < dataSet.incomingData.Count-1; i++) {
+		//	for(int j= (dataSet.incomingData[i].Count-1); j >=0 ; j--){				
+		//		if(temp[j]== 1) 
+		//		{
+		//			dataSet.normalizedData[i].RemoveAt(j);
+		//		}				
+		//	}
+		//}
 
 		updating = false;
 		gs.removeLoadingNotification ();

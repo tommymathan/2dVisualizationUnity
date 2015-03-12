@@ -155,9 +155,11 @@ public class GlobalSettings : MonoBehaviour {
 
 	public void setLoadingNotification()
 	{
-		loadingNotification.GetComponent<Image> ().enabled = true;
-		loadingNotification.transform.GetChild (0).GetComponent<Text> ().enabled = true;
-		loadingNotification.transform.GetChild (1).GetComponent<Image> ().enabled = true;
+		if (loadingNotification != null) {
+						loadingNotification.GetComponent<Image> ().enabled = true;
+						loadingNotification.transform.GetChild (0).GetComponent<Text> ().enabled = true;
+						loadingNotification.transform.GetChild (1).GetComponent<Image> ().enabled = true;
+		}
 	}
 
 	public void removeLoadingNotification()
