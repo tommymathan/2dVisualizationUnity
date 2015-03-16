@@ -42,7 +42,7 @@ public class MouseCollision : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if(Input.GetMouseButtonUp(0)){ // if you clicked nothing and were't dicking with the UI, then assume the user wanted to deselect
-			RevertMouseCollider();
+			//RevertMouseCollider();
 			if((!gs.mouseOverUI)&&(gs.hoverList.Count==0)){
 				RevertColors();
 				gs.selection.Clear();

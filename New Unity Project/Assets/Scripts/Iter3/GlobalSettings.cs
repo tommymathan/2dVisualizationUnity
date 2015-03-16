@@ -349,7 +349,7 @@ public class GlobalSettings : MonoBehaviour {
 			else if(camList[i].name.Equals("CAM_ShiftedPaired")){
 				camList[i].GetComponent<Camera>().backgroundColor = c;
 			}
-			else if(camList[i].name.Equals("CAM_InlineDimensions")){
+			else if(camList[i].name.Equals("CAM_Parallel")){
 				camList[i].GetComponent<Camera>().backgroundColor = c;
 			}
 		}
@@ -419,7 +419,7 @@ public class GlobalSettings : MonoBehaviour {
 			else if(camList[i].name.Equals("CAM_ShiftedPaired")){
 				camList[i].GetComponent<Camera>().rect = new Rect(0f,0f,0.5f,0.5f);
 			}
-			else if(camList[i].name.Equals("CAM_InlineDimensions")){
+			else if(camList[i].name.Equals("CAM_Parallel")){
 				camList[i].GetComponent<Camera>().rect = new Rect(0.5f,0f,1f,0.5f);
 			}
 		}
