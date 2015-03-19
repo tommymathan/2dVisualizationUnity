@@ -146,6 +146,122 @@ Lots of Lines is a data visualization application designed to display multidimen
 		</div>
 		<!-- banner end -->
 
+				<!-- section start -->
+		<!-- ================ -->
+		<div class="default-bg space blue">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-8 col-md-offset-2">
+						<h1 class="text-center" id="manipLine">Visualizations</h1>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- section end -->
+
+						<!-- section start -->
+		<!-- ================ -->
+		<div class="section clearfix object-non-visible" data-animation-effect="fadeIn">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12">
+						<h1 id="openFiles" class="title text-center">Visualization <span>Rundown:</span></h1>
+						<p class="lead text-center">Visualization Rundown: This is a quick and dirty guide to each
+						method of visualization that appears in the Lots of Lines data visualization application. 
+						For a more detailed description of each coordinate system, please visit Dr. Boris Kovalerchuk’s 
+						documentation at this link: http://www.cwu.edu/~borisk/pub/BK3_2014_Visual.pdf</p>
+        </div>
+                    </div>
+                </div>
+            </div>
+		<!-- section end -->
+		
+				<!-- section start -->
+		<!-- ================ -->
+		<div class="section clearfix object-non-visible" data-animation-effect="fadeIn">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12">
+						<h1 id="openFiles" class="title text-center">Collocated <span>Coordinates</span></h1>
+						<p class="lead text-center">	This coordinate system pairs a series of data points against 
+						each other in groups of two as vectors[{x1,x2,x3,x4,x5,x6} becomes {(x1,x2),(x3,x4),(x5,x6)}]. 
+						Once the points are paired up, each pair uses the previous pair as its origin. Note: The first 
+						pair always uses (0, 0) as its origin. Lines are drawn from the origin to each remaining vector 
+						sequentially. Pairing up points in this format provides a lossless representation of the original 
+						dataset because the original dataset can be fully reconstructed from the resulting 2-d visualization.</p>
+						
+						<img style='float:left; margin-right: 20px;' src='images/collocated.png'/>
+        </div>
+                    </div>
+                </div>
+            </div>
+		<!-- section end -->
+		
+						<!-- section start -->
+		<!-- ================ -->
+		<div class="section clearfix object-non-visible" data-animation-effect="fadeIn">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12">
+						<h1 id="openFiles" class="title text-center">Radial <span>Paired</span></h1>
+						<p class="lead text-center">This coordinate system pairs a series of data points against 
+						each other in groups of two as vectors [{x1,x2,x3,x4,x5,x6} becomes {(x1,x2),(x3,x4),(x5,x6)}]. 
+						Once points are paired up, the first vector is designated as the origin. Each remaining vector uses 
+						the initial pair as an origin and lines are drawn from the origin pair out to each remaining vector. 
+						Pairing up points in this format provides a lossless representation of the original dataset 
+						because the original dataset can be fully reconstructed from the resulting 2-d visualization.</p>
+						
+						<img style='float:left; margin-right: 20px;' src='images/radial.png'/>
+        </div>
+                    </div>
+                </div>
+            </div>
+		<!-- section end -->
+		
+		
+						<!-- section start -->
+		<!-- ================ -->
+		<div class="section clearfix object-non-visible" data-animation-effect="fadeIn">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12">
+						<h1 id="openFiles" class="title text-center">Shifted <span>Paired</span></h1>
+						<p class="lead text-center">This coordinate system pairs a series of data points against 
+						each other in groups of two as vectors [{x1,x2,x3,x4,x5,x6} becomes {(x1,x2),(x3,x4),(x5,x6)}]. 
+						Once points are paired up, the first pair is drawn using (0,0) as its origin.
+						Each remaining pair is drawn sequentially using an incremented origin, for example, 
+						item 1 uses (1, 1) as its origin while item 2 uses (2, 2) as its origin, etc… Pairing 
+						up points in this format provides a lossless representation of the original dataset 
+						because the original dataset can be fully reconstructed from the resulting 2-d visualization. </p>
+						
+						<img style='float:left; margin-right: 20px;' src='images/shiftedPaired.png'/>
+        </div>
+                    </div>
+                </div>
+            </div>
+		<!-- section end -->
+		
+		
+						<!-- section start -->
+		<!-- ================ -->
+		<div class="section clearfix object-non-visible" data-animation-effect="fadeIn">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12">
+						<h1 id="openFiles" class="title text-center">Parallel <span>Coordinates</span></h1>
+						<p class="lead text-center">This coordinate system pairs a series of n parallel lines as 
+						with vertices on each parallel axes where the position of the kth axis corresponds to the
+						kth coordinate point. Visualizations in this view are may not have an order, so permuting 
+						your data may yield a fresh view of interesting trends.</p>
+						
+						<img style='float:left; margin-right: 20px;' src='images/parallel.png'/>
+        </div>
+                    </div>
+                </div>
+            </div>
+		<!-- section end -->
+		
+		
 		<!-- section start -->
 		<!-- ================ -->
 		<div class="section clearfix object-non-visible" data-animation-effect="fadeIn">
